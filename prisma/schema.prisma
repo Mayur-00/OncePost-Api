@@ -21,6 +21,7 @@ enum AuthProviderType {
  }
 
  enum SocialPlatforms {
+  LINKEDIN
   LIKENDIN
   TWITTER
   FACEBOOK
@@ -60,20 +61,21 @@ enum AuthProviderType {
 
  model SocialAccount {
   id String @id @default(cuid())
-  owner_id String
+  owner_id String 
   platform  SocialPlatforms
   platform_userid String
   username String?
   display_name String?
   profile_picture String?
   access_token String
-  refresh_token String
+  refresh_token String?
   token_expiry DateTime
   platformData Json? @default("{}")
   isActive Boolean @default(true)
   lastSync DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
+  isExpired Boolean @default(false)
 
   // relation
   owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
@@ -100,13 +102,13 @@ enum AuthProviderType {
 
  model PlatformPost {
   id String @id @default(cuid())
-  post_id String
-  owner_id String
+  post_id String 
+  owner_id String 
   platform String
   account_id String
   platform_post_id String
-  platform_post_url String
-  error String
+  platform_post_url String?
+  error String?
   status PlatfromPostStatus
   postedAt DateTime
   createdAt DateTime @default(now())

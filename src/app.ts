@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
+import connectinRoutes from './routes/connection.routes'
+import linkedinRoutes from "./routes/linkedIn.routes"
 import { handleError } from "./middlewares/error.middleware";
 import cors from "cors";
 import { authorize } from "./middlewares/auth.middleware";
@@ -11,7 +13,7 @@ export const app = express();
 
 app.use(
   cors({
-    origin:"http://localhost:5173",
+    origin:"http://localhost:3000",
     credentials: true,
   })
   
@@ -27,5 +29,6 @@ app.get("/", authorize, (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
-
+app.use('/api/v1/connection', connectinRoutes)
+app.use('/api/v1/linkedin', linkedinRoutes)
 app.use(handleError);

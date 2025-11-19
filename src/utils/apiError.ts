@@ -4,6 +4,7 @@ class ApiError extends Error implements IApiError {
   data: any | null;
   success: boolean;
   errors: any[];
+  stack?: string | undefined;
 
   constructor(
     statusCode: number,
@@ -20,7 +21,7 @@ class ApiError extends Error implements IApiError {
 
     if (stack) {
       this.stack = stack;
-    } else if (typeof (Error as any).captureStackTrace === "function") {
+    } else {
       Error.captureStackTrace(this, this.constructor);
     }
   }

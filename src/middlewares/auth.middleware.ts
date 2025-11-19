@@ -30,7 +30,8 @@ export const authorize:RequestHandler = asyncHandler(async (req:Request, res:Res
     const user = await prisma.user.findUnique({
         where: {
             id: decoded.id
-        }
+        },
+        
     });
   
 
@@ -48,7 +49,7 @@ export const authorize:RequestHandler = asyncHandler(async (req:Request, res:Res
   }
 })
 
-interface myJwtPayload extends jwt.JwtPayload {
+export interface myJwtPayload extends jwt.JwtPayload {
     id:string;
     name?:string;
     email?:string

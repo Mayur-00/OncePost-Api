@@ -2,9 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { ApiError, IApiError } from "../utils/apiError";
 
 
-
-
-
 export const handleError = (err: any, req: Request, res: Response, next: NextFunction) => {
     console.log(err);
     let error: IApiError | ApiError | any = err;
@@ -14,7 +11,9 @@ export const handleError = (err: any, req: Request, res: Response, next: NextFun
     if (!(error instanceof ApiError)) {
         const statusCode = (error && error.statusCode) ? error.statusCode : 500;
         const message = (error && error.message) ? error.message : "Something Went Wrong";
-        error = new ApiError(statusCode, message, (error && error.errors) || [], (error && error.stack) || undefined);
+  
+        
+        error = new ApiError(statusCode, message, error.errors || [],  error.stack );
     }
 
     const response: ResponseType = {
@@ -29,12 +28,10 @@ export const handleError = (err: any, req: Request, res: Response, next: NextFun
     res.status(error.statusCode || 500).json(response);
 };
 
-
-
 export type ResponseType = {
     success:boolean;
     message:string;
     data?:{}
     errors:any[];
     stack?:string
-}
+};

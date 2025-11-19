@@ -1,14 +1,14 @@
-import e, { Request, Response } from "express";
-import { ResponseType } from "../middlewares/error.middleware";
+import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { ApiResponse } from "../utils/apiResponse";
 import { RequestHandler } from "express";
 import { googleAuthClient } from "../config/googleOAuth.config";
 import { ApiError } from "../utils/apiError";
-import { jwtToken } from "../utils/token";
+import { jwtToken } from "../services/jwtCookie.service";
 import prisma from "../config/prisma";
 import bcrypt from "bcrypt";
-import { ref } from "process";
+import jwt from "jsonwebtoken";
+import { myJwtPayload } from "../middlewares/auth.middleware";
 
 export const registerWithGoogle: RequestHandler = asyncHandler(
   async (req: Request, res: Response) => {
@@ -39,22 +39,18 @@ export const registerWithGoogle: RequestHandler = asyncHandler(
       },
     });
 
-  
-
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     };
-    let refreshToken;
-    let accessToken;
 
     if (user) {
-      refreshToken = jwtToken.generateRefreshToken(user.id);
-      accessToken = jwtToken.generateAccessToken(
-        user.id,
-        user.email,
-        user.name
-      );
+      const { accessToken, refreshToken } =
+        jwtToken.generateAccessTokenAndRefreshToken(
+          user.id,
+          user.email,
+          user.name
+        );
 
       await prisma?.user.update({
         where: {
@@ -81,39 +77,38 @@ export const registerWithGoogle: RequestHandler = asyncHandler(
         );
     }
 
-    user = await prisma?.user.create({
+    user = await prisma.user.create({
       data: {
         email: payload.email,
         name: payload.name,
         profile_picture: payload.picture,
         provider_id: payload.sub,
-        provider: "GOOGLE"
+        provider: "GOOGLE",
       },
     });
 
-    accessToken = jwtToken.generateAccessToken(user.id, user.email, user.name);
-    refreshToken = jwtToken.generateRefreshToken(user.id);
-
-    const updatedUser  = await prisma.user.update({
-        where:{
-            id:user.id
-        },
-        data:{
-            refresh_token:refreshToken
-        },
-        select:{
-            name:true,
-            email:true,
-            profile_picture:true,
-            id:true,
-            createdAt:true,
-            updatedAt:true
-        }
+    const { accessToken, refreshToken } =
+      jwtToken.generateAccessTokenAndRefreshToken(
+        user.id,
+        user.email,
+        user.name
+      );
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        refresh_token: refreshToken,
+      },
+      select: {
+        name: true,
+        email: true,
+        profile_picture: true,
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
-
-
-
-
 
     return res
       .status(200)
@@ -161,13 +156,12 @@ export const register: RequestHandler = asyncHandler(
         provider: "CREDENTIAL",
       },
     });
-
-    const refreshToken = jwtToken.generateRefreshToken(newUser.id);
-    const accessToken = jwtToken.generateAccessToken(
-      newUser.id,
-      newUser.email,
-      newUser.name
-    );
+    const { accessToken, refreshToken } =
+      jwtToken.generateAccessTokenAndRefreshToken(
+        newUser.id,
+        newUser.email,
+        newUser.name
+      );
 
     const updatedUser = await prisma.user.update({
       where: {
@@ -176,6 +170,9 @@ export const register: RequestHandler = asyncHandler(
       data: {
         refresh_token: refreshToken,
       },
+      select:{
+        password:false
+      }
     });
 
     const options = {
@@ -201,9 +198,9 @@ export const login: RequestHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      throw new ApiError(401, "name email password is required");
-    }
+    // if (!email || !password) {
+    //   throw new ApiError(401, "name email password is required");
+    // }
 
     const user = await prisma.user.findUnique({
       where: {
@@ -221,12 +218,12 @@ export const login: RequestHandler = asyncHandler(
       throw new ApiError(401, "incorrect Password");
     }
 
-    const refreshToken = jwtToken.generateRefreshToken(user.id);
-    const accessToken = jwtToken.generateAccessToken(
-      user.id,
-      user.email,
-      user.name
-    );
+    const { accessToken, refreshToken } =
+      jwtToken.generateAccessTokenAndRefreshToken(
+        user.id,
+        user.email,
+        user.name
+      );
 
     const options = {
       httpOnly: true,
@@ -277,23 +274,99 @@ export const logout: RequestHandler = asyncHandler(
   }
 );
 
-export const user: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
-  const reqUserId = req.user?.id;
+export const user: RequestHandler = asyncHandler(
+  async (req: Request, res: Response) => {
+    const reqUserId = req.user?.id;
 
-  // If there's no authenticated user id on the request, reject
-  if (!reqUserId) {
-    throw new ApiError(401, "not authenticated");
+    // If there's no authenticated user id on the request, reject
+    if (!reqUserId) {
+      throw new ApiError(401, "not authenticated");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: reqUserId,
+      },
+    include:{
+      connected_accounts:{
+        select:{
+          platform:true,
+          display_name:true,
+          profile_picture:true,
+          username:true
+        }
+      }
+    }
+    });
+    console.log(user)
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, user, "user fetched successfully"));
   }
+);
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: reqUserId,
-    },
-  });
+export const refreshAccessToken: RequestHandler = asyncHandler(
+  async (req: Request, res: Response) => {
+    const incomingRefreshToken =
+      req.cookies.refreshToken || req.body.refreshToken;
 
-  if (!user) {
-    throw new ApiError(404, "User not found");
+    if (!incomingRefreshToken) {
+      console.info('no incoming token')
+      throw new ApiError(401, "unauthorized request");
+    }
+
+    if (!process.env.REFRESH_TOKEN_SECRET) {
+      throw new ApiError(500, "token secret not found");
+    }
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    ) as myJwtPayload;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: decodedToken.id,
+      },
+    });
+
+    if (!user) {
+      throw new ApiError(401, "invalid Refresh Token");
+    }
+
+    if (incomingRefreshToken !== user.refresh_token) {
+      throw new ApiError(401, "Refresh token is expired or used");
+    }
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    const { accessToken, refreshToken } =
+      jwtToken.generateAccessTokenAndRefreshToken(
+        user.id,
+        user.email,
+        user.name
+      );
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json(
+        new ApiResponse(
+          200,
+          {
+            accessToken,
+            refreshToken: refreshToken,
+          },
+          "accessToken refreshed"
+        )
+      );
   }
-
-  res.status(200).json(new ApiResponse(200, user, "user fetched successfully"));
-});
+);

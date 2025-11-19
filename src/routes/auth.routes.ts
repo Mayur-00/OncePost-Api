@@ -1,5 +1,5 @@
 import express from "express";
-import { login, logout, register, registerWithGoogle, user } from "../controllers/user.controller";
+import { login, logout, refreshAccessToken, register, registerWithGoogle, user } from "../controllers/user.controller";
 import { authorize } from "../middlewares/auth.middleware";
 const router = express.Router();
 
@@ -8,5 +8,6 @@ router.post("/register", register);
 router.post('/login', login);
 router.get("/logout",authorize, logout);
 router.get("/user",authorize, user);
+router.get("/refresh", refreshAccessToken);
 
 export default router;
