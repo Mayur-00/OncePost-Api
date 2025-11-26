@@ -1,7 +1,6 @@
 import {app} from './app'
 import connectDb from './lib/db';
-import dotenv from "dotenv";
-dotenv.config();
+
 
 connectDb()
   .then(() => {

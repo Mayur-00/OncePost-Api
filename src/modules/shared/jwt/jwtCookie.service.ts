@@ -1,14 +1,14 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-import { myJwtPayload } from "../middlewares/auth.middleware";
-dotenv.config();
+import { ApiError } from "../../../utils/apiError";
+import logger from "../../../config/logger.config";
+import { myJwtPayload } from "../../../middlewares/auth.middleware";
 
 export class jwtToken {
  
 
   static generateAccessTokenAndRefreshToken = (id: string, email: string, name: string) => {
     if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET ) {
-      throw new Error(
+      throw new ApiError( 500,
         "token secret not found"
       );
     }
@@ -54,11 +54,10 @@ export class jwtToken {
        }
       
     } catch (error) {
-      return {
-        success:false,
-        error:`an error in the verifyAccessTokenAndGetId method : ${error}`
-      };
+      logger.error('jwt token error', {error})
+     throw new ApiError(500, 'server error')
     };
   };
+
 
 };

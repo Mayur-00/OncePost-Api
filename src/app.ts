@@ -1,13 +1,13 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import authRoutes from "./routes/auth.routes";
-import connectinRoutes from './routes/connection.routes'
-import linkedinRoutes from "./routes/linkedIn.routes"
+
 import { handleError } from "./middlewares/error.middleware";
 import cors from "cors";
 import { authorize } from "./middlewares/auth.middleware";
 import { ApiResponse } from "./utils/apiResponse";
 import cookieParser from "cookie-parser";
+import { linkedinRoutes } from "./modules/linkedin";
+import { authRoutes } from "./modules/auth";
 dotenv.config();
 export const app = express();
 
@@ -29,6 +29,5 @@ app.get("/", authorize, (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
-app.use('/api/v1/connection', connectinRoutes)
 app.use('/api/v1/linkedin', linkedinRoutes)
 app.use(handleError);

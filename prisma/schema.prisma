@@ -11,11 +11,11 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+
 }
 
 
-enum AuthProviderType {
+ enum AuthProviderType {
   GOOGLE
   CREDENTIAL
  }
@@ -48,7 +48,7 @@ enum AuthProviderType {
   provider_id String?
   provider AuthProviderType
   profile_picture String?
-  refresh_token String?
+  refresh_token String? 
   createdAt DateTime @default(now())
   updatedAt DateTime  @updatedAt()
 

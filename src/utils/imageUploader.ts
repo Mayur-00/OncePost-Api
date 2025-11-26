@@ -1,8 +1,7 @@
 import { v2 as cloudinary, UploadApiOptions, UploadApiResponse } from 'cloudinary';
 // Don't forget to install @types/multer if you haven't: npm install @types/multer
 import { Express } from 'express'; 
-import dotenv from 'dotenv';
-dotenv.config();
+
 
 
 cloudinary.config({
