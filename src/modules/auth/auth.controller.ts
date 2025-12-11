@@ -1,12 +1,12 @@
 import { Logger } from 'winston';
-import { UserServices } from './auth.services';
+import { UserServices } from './auth.services.js';
 
-import { asyncHandler } from '../../utils/asyncHandler';
+import { asyncHandler } from '../../utils/asyncHandler.js';
 import { RequestHandler, Request, Response } from 'express';
-import { googleLoginSchema, loginSchema, registerUserSchema } from './auth.dto';
-import { jwtToken } from '../shared/jwt/jwtCookie.service';
-import { ApiResponse } from '../../utils/apiResponse';
-import { ApiError } from '../../utils/apiError';
+import { googleLoginSchema, loginSchema, registerUserSchema } from './auth.dto.js';
+import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
+import { ApiResponse } from '../../utils/apiResponse.js';
+import { ApiError } from '../../utils/apiError.js';
 
 export class AuthController {
   constructor(

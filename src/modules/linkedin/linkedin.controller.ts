@@ -1,14 +1,12 @@
 import { RequestHandler, Request, Response } from 'express';
-import { asyncHandler } from '../../utils/asyncHandler';
-import { CreateLinkedinPostSchema, LinkedInCallbackSchema, multerFileSchema } from './linkedin.dto';
+import { asyncHandler } from '../../utils/asyncHandler.js';
+import { CreateLinkedinPostSchema, LinkedInCallbackSchema } from './linkedin.dto.js';
 import { Logger } from 'winston';
-import { jwtToken } from '../shared/jwt/jwtCookie.service';
-import { LinkedinService } from '.';
-import { uploadImageToCloudinary } from '../../utils/imageUploader';
-import { linkedinServices } from './linkedin.services';
-import { ApiError } from '../../utils/apiError';
-import { PostServices } from './post.services';
-import { ApiResponse } from '../../utils/apiResponse';
+import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
+import { linkedinServices } from './linkedin.services.js';
+import { ApiError } from '../../utils/apiError.js';
+import { PostServices } from './post.services.js';
+import { ApiResponse } from '../../utils/apiResponse.js';
 import crypto from 'crypto'
 
 export class LinkedinController {

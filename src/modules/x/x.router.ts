@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import { authorize } from '../../middlewares/auth.middleware';
-import { upload } from '../../config/multerr.config';
-import { XController } from './x.controller';
+import { authorize } from '../../middlewares/auth.middleware.js';
+import { upload } from '../../config/multerr.config.js';
+import { XController } from './x.controller.js';
 
 export function createXRoutes(controller: XController): Router {
   const router = Router();

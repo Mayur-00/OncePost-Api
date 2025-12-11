@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { LinkedinController } from './linkedin.controller';
-import { authorize } from '../../middlewares/auth.middleware';
-import { upload } from '../../config/multerr.config';
+import { LinkedinController } from './linkedin.controller.js';
+import { authorize } from '../../middlewares/auth.middleware.js';
+import { upload } from '../../config/multerr.config.js';
 
 export function createLinkedInRoutes(controller: LinkedinController): Router {
   const router = Router();

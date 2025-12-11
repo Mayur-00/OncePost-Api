@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { ApiError } from '../../../utils/apiError';
-import logger from '../../../config/logger.config';
-import { myJwtPayload } from '../../../middlewares/auth.middleware';
+import { ApiError } from '../../../utils/apiError.js';
+import logger from '../../../config/logger.config.js';
+import { myJwtPayload } from '../../../middlewares/auth.middleware.js';
 
 export class jwtToken {
    generateAccessTokenAndRefreshToken = (id: string, email: string, name: string) => {

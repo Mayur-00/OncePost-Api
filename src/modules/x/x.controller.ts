@@ -1,12 +1,12 @@
 import { Logger } from 'winston';
-import { XServices } from './x.services';
+import { XServices } from './x.services.js';
 import { RequestHandler, Request, Response } from 'express';
-import { asyncHandler } from '../../utils/asyncHandler';
-import { Prisma, PrismaClient } from '../../generated/prisma/client';
-import { ApiError } from '../../utils/apiError';
-import { jwtToken } from '../shared/jwt/jwtCookie.service';
-import { TweetDbRecord, XCallbackSchema, XPublishPostSchema } from './x.dto';
-import { ApiResponse } from '../../utils/apiResponse';
+import { asyncHandler } from '../../utils/asyncHandler.js';
+import { Prisma, PrismaClient } from '../../generated/prisma/client.js';
+import { ApiError } from '../../utils/apiError.js';
+import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
+import { TweetDbRecord, XCallbackSchema, XPublishPostSchema } from './x.dto.js';
+import { ApiResponse } from '../../utils/apiResponse.js';
 import crypto from 'crypto';
 
 export class XController {

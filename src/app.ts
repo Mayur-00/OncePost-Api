@@ -1,15 +1,15 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 
-import { handleError } from './middlewares/error.middleware';
+import { handleError } from './middlewares/error.middleware.js';
 import cors from 'cors';
-import { authorize } from './middlewares/auth.middleware';
-import { ApiResponse } from './utils/apiResponse';
+import { authorize } from './middlewares/auth.middleware.js';
+import { ApiResponse } from './utils/apiResponse.js';
 import cookieParser from 'cookie-parser';
-import { linkedinRoutes } from './modules/linkedin';
-import { authRoutes } from './modules/auth';
-import { XRoutes } from './modules/x';
-import { postRoutes } from './modules/post';
+import { linkedinRoutes } from './modules/linkedin/index.js';
+import { authRoutes } from './modules/auth/index.js';
+import { XRoutes } from './modules/x/index.js';
+import { postRoutes } from './modules/post/index.js';
 dotenv.config();
 export const app = express();
 

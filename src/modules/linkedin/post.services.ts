@@ -1,6 +1,6 @@
-import { PrismaClient } from '../../generated/prisma/client';
+import { PrismaClient } from '../../generated/prisma/client.js';
 import { Logger } from 'winston';
-import { ApiError } from '../../utils/apiError';
+import { ApiError } from '../../utils/apiError.js';
 
 export class PostServices {
   constructor(

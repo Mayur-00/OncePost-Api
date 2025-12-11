@@ -1,10 +1,10 @@
 import axios from "axios";
-import { XServices } from "./x.services";
-import logger from "../../config/logger.config";
-import Prisma from "../../config/prisma"
-import { XController } from "./x.controller";
-import { jwtToken } from "../shared/jwt/jwtCookie.service";
-import { createXRoutes } from "./x.router";
+import { XServices } from "./x.services.js";
+import logger from "../../config/logger.config.js";
+import Prisma from "../../config/prisma.js"
+import { XController } from "./x.controller.js";
+import { jwtToken } from "../shared/jwt/jwtCookie.service.js";
+import { createXRoutes } from "./x.router.js";
 
  export const xServices = new XServices(axios, logger, Prisma);
  export const jwtService = new jwtToken()
@@ -13,5 +13,5 @@ import { createXRoutes } from "./x.router";
  export const XRoutes = createXRoutes(xController);
 
 
-export * from './x.types';
-export * from './x.dto';
+export * from './x.types.js';
+export * from './x.dto.js';

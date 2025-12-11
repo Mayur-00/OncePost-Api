@@ -1,10 +1,10 @@
 import { Logger } from 'winston';
-import { PrismaClient, User } from '../../generated/prisma/client';
+import { PrismaClient, User } from '../../generated/prisma/client.js';
 import { OAuth2Client } from 'google-auth-library';
-import { ApiError } from '../../utils/apiError';
+import { ApiError } from '../../utils/apiError.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { myJwtPayload } from '../../middlewares/auth.middleware';
+import { myJwtPayload } from '../../middlewares/auth.middleware.js';
 
 export class UserServices {
   constructor(

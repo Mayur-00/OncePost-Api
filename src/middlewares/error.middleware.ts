@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ApiError, IApiError } from '../utils/apiError';
+import { ApiError, IApiError } from '../utils/apiError.js';
 import { ZodError } from 'zod';
 
 export const handleError = (err: any, req: Request, res: Response, next:NextFunction) => {

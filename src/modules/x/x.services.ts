@@ -1,11 +1,11 @@
 import axios, { Axios } from 'axios';
 import { Logger } from 'winston';
 import crypto from 'crypto';
-import { PrismaClient, SocialAccount } from '../../generated/prisma/client';
-import { ApiError } from '../../utils/apiError';
-import { XTokenResponse, XUserInfo } from './x.types';
-import { ApiResponse } from '../../utils/apiResponse';
-import { TweetDbRecord, TweetResponse } from './x.dto';
+import { PrismaClient, SocialAccount } from '../../generated/prisma/client.js';
+import { ApiError } from '../../utils/apiError.js';
+import { XTokenResponse, XUserInfo } from './x.types.js';
+import { ApiResponse } from '../../utils/apiResponse.js';
+import { TweetDbRecord, TweetResponse } from './x.dto.js';
 
 import FormData from 'form-data';
 export class XServices {

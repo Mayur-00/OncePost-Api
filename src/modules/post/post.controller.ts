@@ -1,20 +1,20 @@
 import { RequestHandler, Request, Response } from 'express';
 import { Logger } from 'winston';
-import { asyncHandler } from '../../utils/asyncHandler';
+import { asyncHandler } from '../../utils/asyncHandler.js';
 import {
   createPostSchema,
   getPostSchema,
   multerFileSchema,
   publishPostToMultiplePlatfromsSchema,
-} from './post.dto';
-import { PostService } from './post.services';
-import { uploadImageToCloudinary } from '../../utils/imageUploader';
-import { ApiResponse } from '../../utils/apiResponse';
-import { linkedinServices } from '../linkedin/linkedin.services';
-import { ApiError } from '../../utils/apiError';
+} from './post.dto.js';
+import { PostService } from './post.services.js';
+import { uploadImageToCloudinary } from '../../utils/imageUploader.js';
+import { ApiResponse } from '../../utils/apiResponse.js';
+import { linkedinServices } from '../linkedin/linkedin.services.js';
+import { ApiError } from '../../utils/apiError.js';
 import { Multer } from 'multer';
-import { XServices } from '../x/x.services';
-import { TweetDbRecord } from '../x';
+import { XServices } from '../x/x.services.js';
+import { TweetDbRecord } from '../x/x.dto.js';
 
 export class PostController {
   constructor(

@@ -1,11 +1,11 @@
-import { UserServices } from './auth.services';
-import prisma from '../../config/prisma';
-import logger from '../../config/logger.config';
+import { UserServices } from './auth.services.js';
+import prisma from '../../config/prisma.js';
+import logger from '../../config/logger.config.js';
 import axios from 'axios';
-import { googleAuthClient } from '../../config/googleOAuth.config';
-import { AuthController } from './auth.controller';
-import { createAuthRoutes } from './auth.routes';
-import { jwtToken } from '../shared/jwt/jwtCookie.service';
+import { googleAuthClient } from '../../config/googleOAuth.config.js';
+import { AuthController } from './auth.controller.js';
+import { createAuthRoutes } from './auth.routes.js';
+import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
 
 export const userServices = new UserServices(
   prisma,

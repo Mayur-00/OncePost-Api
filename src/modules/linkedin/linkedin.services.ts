@@ -7,9 +7,9 @@ import {
   LinkedinPostPublishResponse,
   LinkedinUserInfoResponse,
   LinkedinUserInfoType,
-} from './linkedin.types';
-import { ApiError } from '../../utils/apiError';
-import { PlatformPost, Post, PrismaClient, SocialAccount } from '../../generated/prisma/client';
+} from './linkedin.types.js';
+import { ApiError } from '../../utils/apiError.js';
+import { PlatformPost, Post, PrismaClient, SocialAccount } from '../../generated/prisma/client.js';
 
 export class linkedinServices {
   constructor(

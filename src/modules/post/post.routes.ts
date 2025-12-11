@@ -1,9 +1,9 @@
 
 
 import { Router } from 'express';
-import { authorize } from '../../middlewares/auth.middleware';
-import { upload } from '../../config/multerr.config';
-import { PostController } from './post.controller';
+import { authorize } from '../../middlewares/auth.middleware.js';
+import { upload } from '../../config/multerr.config.js';
+import { PostController } from './post.controller.js';
 
 export function createPostRoutes(controller: PostController): Router {
   const router = Router();
