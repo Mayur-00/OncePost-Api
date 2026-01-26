@@ -17,7 +17,7 @@ export class jwtToken {
       },
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: '15min',
+        expiresIn: '1h',
       },
     );
     const refreshToken = jwt.sign({ id: id }, process.env.REFRESH_TOKEN_SECRET, {
@@ -53,4 +53,6 @@ export class jwtToken {
       throw new ApiError(500, 'server error');
     }
   };
+
+
 }

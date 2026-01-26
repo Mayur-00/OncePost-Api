@@ -139,7 +139,7 @@ export class PostService {
         return await this.prisma.post.findMany({
           where: {
             owner_id: user_id,
-            content:query
+            content:{contains:query}
           },
 
           include: {

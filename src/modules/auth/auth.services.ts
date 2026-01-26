@@ -80,7 +80,7 @@ export class UserServices {
   }
   async getUserByEmail(email: string) {
     try {
-      return await prisma?.user.findUnique({
+      return await this.prisma.user.findUnique({
         where: {
           email: email,
         },
@@ -131,7 +131,6 @@ export class UserServices {
     email: string,
     provider: string,
     providerid?: string,
-    profilePic?: string,
     refreshToken?: string,
   ): Promise<User> {
     try {
@@ -143,7 +142,6 @@ export class UserServices {
         data: {
           provider: provider === 'GOOGLE' ? 'GOOGLE' : 'CREDENTIAL',
           provider_id: providerid,
-          profile_picture: profilePic,
           refresh_token: refreshToken,
         },
       });

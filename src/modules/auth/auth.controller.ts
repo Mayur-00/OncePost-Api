@@ -12,6 +12,7 @@ import { uploadImageToCloudinary } from '../../utils/imageUploader.js';
 export class AuthController {
   constructor(
     private logger: Logger,
+    
     private userServices: UserServices,
     private jwtToken :jwtToken
   ) {}
@@ -43,7 +44,6 @@ export class AuthController {
         user.email,
         'GOOGLE',
         payload?.sub,
-        payload?.picture,
         refreshToken,
       );
 
@@ -92,6 +92,7 @@ export class AuthController {
 
   handleRegister: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     const { name, email, password } = registerUserSchema.parse(req.body);
+      this.logger.info( ` name: ${name} | email: ${email} | password:${password}`);
 
     const user = await this.userServices.getUserByEmail(email);
 
@@ -130,6 +131,8 @@ export class AuthController {
 
   handleLogin: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     const { email, password } = loginSchema.parse(req.body);
+
+    this.logger.info(`email: ${email} | password:${password}`);
 
     const user = await this.userServices.getUserByEmail(email);
 
@@ -221,9 +224,9 @@ export class AuthController {
       throw new ApiError(500, 'internal server error');
     }
 
-    if (incomingRefreshToken !== user?.refresh_token) {
+    if (incomingRefreshToken !== user.refresh_token) {
       this.logger.error('refresh token comparison failed');
-      throw new ApiError(401, 'invalid token');
+      throw new ApiError(400, 'invalid token');
     }
 
     const options = {
@@ -236,6 +239,12 @@ export class AuthController {
       user.email,
       user.name,
     );
+
+  const updatedUser =  await this.userServices.updateUsersRefreshToken(user.id, refreshToken);
+
+  if(!updatedUser){
+    throw new ApiError(500, 'failed to update user token')
+  }
 
     return res
       .status(200)
@@ -277,7 +286,7 @@ export class AuthController {
       .clearCookie('refreshToken', options)
       .json(new ApiResponse(200, {}, 'Account Deleted Successfully'));
   });
-
+  
   handleProfilePictureUpdate:RequestHandler = asyncHandler(async(req:Request, res:Response) => {
 
     const {imageLink}= updateProfilePictureSchema.parse(req.body)
@@ -288,7 +297,7 @@ export class AuthController {
         this.logger.error(`failed to update the profile picture`)
       };
 
-      res.status(200).json(new ApiResponse(200, {}, 'profile picture updated'))
+      res.status(200).json(new ApiResponse(200, {profile_picture:updatedUser.profile_picture}, 'profile picture updated'))
 
   })
   handleProfileNameUpdate:RequestHandler = asyncHandler(async(req:Request, res:Response) => {
@@ -305,7 +314,7 @@ export class AuthController {
         this.logger.error(`failed to update the profile picture`)
       };
 
-      res.status(200).json(new ApiResponse(200, {}, 'profile name updated'))
+      res.status(200).json(new ApiResponse(200, {name:updatedUser.name}, 'profile name updated'))
 
   })
 }

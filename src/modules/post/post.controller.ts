@@ -87,6 +87,7 @@ export class PostController {
       throw new ApiError(401, 'Unauthorized');
     };
     const {limit,skip, query, type} = getSearchPostsSchema.parse(req.query);
+    this.logger.info(`limit= ${limit} skip=${skip} query=${query} type=${type}`)
 
     const posts = await this.postServices.getPostsByQuery(req.user.id,query, limit, skip, type);
 
@@ -95,136 +96,6 @@ export class PostController {
 
     res.status(200).json(new ApiResponse(200, posts, 'success'));
   });
-  publishPostMultiplePlatforms: RequestHandler = asyncHandler(
-    async (req: Request, res: Response) => {
-      const { content, platforms } = publishPostToMultiplePlatfromsSchema.parse(req.body);
-      const imageFile = req.file as Express.Multer.File;
-
-      if (!req.user) {
-        this.logger.error('UnAuthorized Request');
-        throw new ApiError(401, 'You Are Not Authorized');
-      }
-      let imageUrl;
-      if (imageFile) {
-        imageUrl = (await uploadImageToCloudinary(imageFile.buffer)).secure_url;
-      }
-
-      const post = await this.postServices.createPost(
-        content,
-        imageUrl || '',
-        req.user.id,
-        imageFile ? imageFile.mimetype : '',
-        'CREATED'
-      );
-
-      const result: Record<string, any> = {};
-
-      for (const platform of platforms) {
-        switch (platform) {
-          case 'LINKEDIN':
-            const linkedinAccount = await this.linkedinServices.getUserAccount(req.user.id);
-
-            let linkedinPostid;
-            if (imageFile) {
-              const registerImageResponse = await this.linkedinServices.registerImageUpload(
-                linkedinAccount.access_token,
-                linkedinAccount.platform_userid,
-              );
-
-              const uploadImageBufferResponse = await this.linkedinServices.UploadImageBuffer(
-                registerImageResponse.uploadUrl,
-                imageFile.buffer,
-                linkedinAccount.access_token,
-              );
-
-              if (!uploadImageBufferResponse.success) {
-                this.logger.error(
-                  `linkedin image buffer upload error : ${uploadImageBufferResponse.message}`,
-                );
-                throw new ApiError(500, 'linkedin post failed');
-              }
-              const publishPostResponse = await this.linkedinServices.publishPostWithImage(
-                registerImageResponse.asset,
-                linkedinAccount.access_token,
-                linkedinAccount.platform_userid,
-                content,
-              );
-              linkedinPostid = publishPostResponse.id;
-            } else {
-              const publishTextPostResponse = await this.linkedinServices.publishTextPost(
-                linkedinAccount.platform_userid,
-                content,
-                linkedinAccount.access_token,
-              );
-              linkedinPostid = publishTextPostResponse.id;
-            }
-
-            const linkedinPost = await this.linkedinServices.createLinkedinPostDatabaseRecord(
-              req.user.id,
-              post.id,
-              linkedinAccount.id,
-              'POSTED',
-              linkedinPostid,
-              new Date(Date.now()),
-            );
-            result.linkedin = { success: true, data: linkedinPost };
-            break;
-
-          case 'X':
-            const xAccount = await this.xServices.getActiveXAccount(req.user.id);
-
-            if (!xAccount) {
-              this.logger.error('x account not found');
-              throw new ApiError(404, 'account not found');
-            }
-            const accessToken = await this.xServices.validateAccessToken(xAccount);
-
-            let mediaIds = [];
-
-            if (imageFile) {
-              const mediaid = await this.xServices.uploadMedia(
-                accessToken,
-                imageFile.buffer,
-                imageFile.mimetype,
-              );
-              mediaIds.push(mediaid);
-            }
-            this.logger.info(mediaIds);
-            const response = await this.xServices.publishTweet(
-              post.content || '',
-              mediaIds,
-              accessToken,
-            );
-
-            const data: TweetDbRecord = {
-              ownerId: req.user.id,
-              postId: post.id,
-              accountId: xAccount.id,
-              status: 'POSTED',
-              tweetId: response.data.id,
-            };
-            await this.xServices.createTweetDbRecord(data);
-
-            result.x = { success: true, data: data };
-            break;
-
-          default:
-            result[platform] = {
-              success: false,
-              error: 'Unknown platform',
-            };
-        }
-      }
-
-      this.logger.info('Post published to platforms', {
-        postId: post.id,
-        platforms,
-        results: result,
-      });
-
-      res.status(200).json(new ApiResponse(200, result, 'Post published to platforms'));
-    },
-  );
   publishPostMultiplePlatformsQueued: RequestHandler = asyncHandler(
     async (req: Request, res: Response) => {
       const { content, platforms, imageLink, imageMimeType, scheduledDate } =
@@ -233,7 +104,9 @@ export class PostController {
       if (!req.user) {
         this.logger.error('UnAuthorized Request');
         throw new ApiError(401, 'You Are Not Authorized');
-      }
+      };
+
+
 
       if (scheduledDate) {
         const post = await this.postServices.createPost(

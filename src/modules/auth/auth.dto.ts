@@ -19,10 +19,10 @@ export const googleLoginSchema = z.object({
   token: z.string(),
 });
 export const updateUserSchema = z.object({
-  name:z.string().min(3).max(10),
+  name:z.string().min(3).max(20),
 });
 export const updateProfilePictureSchema = z.object({
-  imageLink:z.string().min(3).max(10),
+  imageLink:z.string().min(30),
 });
 
 export type googleLoginDto = z.infer<typeof googleLoginSchema>;

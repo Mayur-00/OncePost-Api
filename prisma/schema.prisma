@@ -1,168 +1,167 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+  // This is your Prisma schema file,
+  // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+  // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+  // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
-}
+  generator client {
+    provider = "prisma-client"
+    output   = "../src/generated/prisma"
+  }
 
-datasource db {
-  provider = "postgresql"
-  // url = env("DATABASE_URL")
+  datasource db {
+    provider = "postgresql"
 
-}
-
-
- enum AuthProviderType {
-  GOOGLE
-  CREDENTIAL
- }
-
- enum SocialPlatforms {
-  LINKEDIN
-  X
-  FACEBOOK
- }
-
- enum PostStatus {
-  CREATED
-  SCHEDULED
-  UPLOADED
-  PENDING
-  DARFT 
-  FAILED
- }
- enum Provieder {
-  X
-  LINKEDIN
- }
-
- enum PlatfromPostStatus {
-  PENDING
-  POSTED
-  FAILED
-}
-
- model User {
-  id  String @id @default(cuid()) @unique
-  name String
-  email String @unique
-  password String?
-  provider_id String?
-  provider AuthProviderType
-  profile_picture String?
-  refresh_token String? 
-  createdAt DateTime @default(now())
-  updatedAt DateTime  @updatedAt()
-
-  // Relations
-
-  connected_accounts SocialAccount[]
-  posts Post[]
-  platform_post PlatformPost[]
-  Auth_sessions OAuthSession[]
- }
-
- model SocialAccount {
-  id String @id @default(cuid())
-  owner_id String 
-  platform  SocialPlatforms
-  platform_userid String
-  username String?
-  display_name String?
-  profile_picture String?
-  access_token String
-  refresh_token String?
-  token_expiry DateTime
-  platformData Json? @default("{}")
-  isActive Boolean @default(true)
-  lastSync DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
-  isExpired Boolean @default(false)
-
-  // relation
-  owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
-  platform_post PlatformPost[]
-  post_analytics PostAnalytic[]
+  }
 
 
-  @@index([owner_id])
-  @@index([platform])
- }
+  enum AuthProviderType {
+    GOOGLE
+    CREDENTIAL
+  }
 
- model Post {
-  id String @id @default(cuid())
-  owner_id String
-  content String?
-  mediaUrl String?
-  mediaType String?
-  status PostStatus
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
+  enum SocialPlatforms {
+    LINKEDIN
+    X
+    FACEBOOK
+  }
 
-  owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
-  platform_post PlatformPost[]
-    @@index([owner_id, status])
- }
+  enum PostStatus {
+    CREATED
+    SCHEDULED
+    UPLOADED
+    PENDING
+    DARFT 
+    FAILED
+  }
+  enum Provieder {
+    X
+    LINKEDIN
+  }
 
- model PlatformPost {
-  id String @id @default(cuid())
-  post_id String 
-  owner_id String 
-  account_id String
-  platform SocialPlatforms
-  platform_post_id String?
-  platform_post_url String?
-  error String?
-  status PlatfromPostStatus
-  postedAt DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
+  enum PlatfromPostStatus {
+    PENDING
+    POSTED
+    FAILED
+  }
 
-  post Post @relation(fields:[post_id], references:[id], onDelete:Cascade)
-  owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
-  socialAccount SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
-  analytics PostAnalytic[]
+  model User {
+    id  String @id @default(cuid()) @unique
+    name String
+    email String @unique
+    password String?
+    provider_id String?
+    provider AuthProviderType
+    profile_picture String?
+    refresh_token String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime  @updatedAt()
 
-  @@index([post_id])
- }
+    // Relations
 
- model OAuthSession {
-id            String   @id @default(cuid())
-  ownerid       String 
-  provider      SocialPlatforms
-  state         String   @unique
-  codeVerifier  String?   // PKCE code_verifier
-  used          Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  expiresAt     DateTime @default(dbgenerated("NOW() + INTERVAL '10 MINUTES'"))
+    connected_accounts SocialAccount[]
+    posts Post[]
+    platform_post PlatformPost[]
+    Auth_sessions OAuthSession[]
+  }
 
-  owner         User     @relation(fields: [ownerid], references: [id], onDelete: Cascade)
+  model SocialAccount {
+    id String @id @default(cuid())
+    owner_id String 
+    platform  SocialPlatforms
+    platform_userid String
+    username String?
+    display_name String?
+    profile_picture String?
+    access_token String
+    refresh_token String?
+    token_expiry DateTime
+    platformData Json? @default("{}")
+    isActive Boolean @default(true)
+    lastSync DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+    isExpired Boolean @default(false)
 
-  @@index([ownerid])
-  @@index([state])
- }
-
-model PostAnalytic {
-  id String @id @default(cuid())
-  account_id String
-  platform_post_id String
-  platform SocialPlatforms
-  likes Int
-  comments Int
-  reach Float
-  views Int
-  members_added Int
-  reshares Int
-  timestamp DateTime @default(now())
-
-  platform_post PlatformPost @relation(fields: [platform_post_id], references: [id], onDelete: Cascade)
-  socialAccount SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
-}
+    // relation
+    owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
+    platform_post PlatformPost[]
+    post_analytics PostAnalytic[]
 
 
- 
+    @@index([owner_id])
+    @@index([platform])
+  }
+
+  model Post {
+    id String @id @default(cuid())
+    owner_id String
+    content String?
+    mediaUrl String?
+    mediaType String?
+    status PostStatus
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+
+    owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
+    platform_post PlatformPost[]
+      @@index([owner_id, status])
+  }
+
+  model PlatformPost {
+    id String @id @default(cuid())
+    post_id String 
+    owner_id String 
+    account_id String
+    platform SocialPlatforms
+    platform_post_id String?
+    platform_post_url String?
+    error String?
+    status PlatfromPostStatus
+    postedAt DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+
+    post Post @relation(fields:[post_id], references:[id], onDelete:Cascade)
+    owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
+    socialAccount SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
+    analytics PostAnalytic[]
+
+    @@index([post_id])
+  }
+
+  model OAuthSession {
+  id            String   @id @default(cuid())
+    ownerid       String 
+    provider      SocialPlatforms
+    state         String   @unique
+    codeVerifier  String?   // PKCE code_verifier
+    used          Boolean  @default(false)
+    createdAt     DateTime @default(now())
+    expiresAt     DateTime @default(dbgenerated("NOW() + INTERVAL '10 MINUTES'"))
+
+    owner         User     @relation(fields: [ownerid], references: [id], onDelete: Cascade)
+
+    @@index([ownerid])
+    @@index([state])
+  }
+
+  model PostAnalytic {
+    id String @id @default(cuid())
+    account_id String
+    platform_post_id String
+    platform SocialPlatforms
+    likes Int
+    comments Int
+    reach Float
+    views Int
+    members_added Int
+    reshares Int
+    timestamp DateTime @default(now())
+
+    platform_post PlatformPost @relation(fields: [platform_post_id], references: [id], onDelete: Cascade)
+    socialAccount SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  }
+
+
+  

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ApiError, IApiError } from '../utils/apiError.js';
 import { ZodError } from 'zod';
+import logger from '../config/logger.config.js';
 
 export const handleError = (err: any, req: Request, res: Response, next:NextFunction) => {
   console.log(err);
@@ -17,11 +18,13 @@ export const handleError = (err: any, req: Request, res: Response, next:NextFunc
           : 'Validation error';
       const errors = (error as ZodError).issues || [];
       error = new ApiError(statusCode, message, errors, error.stack);
+      logger.error(`Input Validation Error : ${error}`)
     } else {
       const statusCode = error && error.statusCode ? error.statusCode : 500;
       const message = error && error.message ? error.message : 'Something Went Wrong';
 
       error = new ApiError(statusCode, message, error.errors || [], error.stack);
+      logger.error(`Implementation error : ${error}`)
     }
   }
 

@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import prisma from '../config/prisma.js';
 import { User } from '../generated/prisma/client.js';
 import logger from '../config/logger.config.js';
+import { jwtService } from '../modules/auth/index.js';
 
 declare global {
   namespace Express {
@@ -14,21 +15,24 @@ declare global {
   }
 }
 
-export const authorize: RequestHandler = asyncHandler(
-  async (req, res, next) => {
-  
+export const authorize: RequestHandler = asyncHandler(async (req, res, next) => {
+  const accessToken =
+    req.cookies?.accessToken || req.header('Authorization')?.replace('Bearer ', '');
+  const refreshToken = req.cookies?.refreshToken;
 
-    const token = req.cookies?.accessToken || req.header('Authorization')?.replace('Bearer ', '');
+  if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
+    throw new ApiError(500, 'token secret not found');
+  }
 
-    let decoded: myJwtPayload;
+  if (!refreshToken) {
+    throw new ApiError(401, 'Session Expired Please Sign in Again');
+  }
+ let decoded: myJwtPayload;
 
     try {
-      decoded = jwt.verify(
-        token,
-        process.env.ACCESS_TOKEN_SECRET!
-      ) as myJwtPayload;
+      decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!) as myJwtPayload;
     } catch {
-      throw new ApiError(401, "Invalid or expired access token");
+      throw new ApiError(401, 'Invalid or expired access token');
     }
 
     const user = await prisma.user.findUnique({
@@ -36,13 +40,12 @@ export const authorize: RequestHandler = asyncHandler(
     });
 
     if (!user) {
-      throw new ApiError(401, "Invalid access token");
+      throw new ApiError(401, 'Invalid access token');
     }
 
     req.user = user;
     next();
-  }
-);
+});
 
 export interface myJwtPayload extends jwt.JwtPayload {
   id: string;
