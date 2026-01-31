@@ -12,6 +12,8 @@ COPY . .
 
 RUN npm ci
 
+RUN npm run prisma:generate
+
 RUN npm run build
 
 FROM node:22-alpine AS installer
@@ -30,7 +32,6 @@ COPY --from=builder /app/package*.json .
 
 RUN npm ci --omit=dev
 
-RUN npm run prisma:generate
 
 FROM node:22-alpine AS runner
 
