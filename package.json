@@ -7,10 +7,15 @@
     "dev": "tsx watch ./src/server.ts",
     "build": "tsc",
     "start": "node ./dist/server.js",
+    "docker-start": "npm run migrate && npm run start",
     "worker:dev-post": "tsx watch ./src/workers/start-worker.ts",
     "worker:post": "node ./dist/workers/start-worker.js",
     "lint": "eslint \"{src,test}/**/*.ts\"",
-    "lint:fix": "eslint \"{src,test}/**/*.ts\" --fix"
+    "lint:fix": "eslint \"{src,test}/**/*.ts\" --fix",
+    "prisma:generate": " prisma generate",
+    "migration:dev": " prisma migrate dev ",
+    "migrate": " prisma migrate deploy "
+
   },
   "keywords": [],
   "author": "",

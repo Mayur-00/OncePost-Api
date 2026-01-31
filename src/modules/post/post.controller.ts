@@ -98,7 +98,7 @@ export class PostController {
   });
   publishPostMultiplePlatformsQueued: RequestHandler = asyncHandler(
     async (req: Request, res: Response) => {
-      const { content, platforms, imageLink, imageMimeType, scheduledDate } =
+      const { content, platforms, imageLink, imageMimeType, scheduledDateAndTime } =
         publishPostToMultiplePlatfromsSchemaQueued.parse(req.body);
 
       if (!req.user) {
@@ -108,7 +108,7 @@ export class PostController {
 
 
 
-      if (scheduledDate) {
+      if (scheduledDateAndTime) {
         const post = await this.postServices.createPost(
           content,
           imageLink || '',
@@ -118,7 +118,7 @@ export class PostController {
         );
 
         const now = new Date();
-        const delay = scheduledDate.getTime() - now.getTime();
+        const delay = scheduledDateAndTime.getTime() - now.getTime();
 
         if (delay < 0) {
           throw new ApiError(401, 'Scheduled time must be in the future');

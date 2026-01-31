@@ -48,9 +48,7 @@ const format = winston.format.combine(
 const transports = [
   // Allow the use the console to print the messages
   new winston.transports.Console(),
-  new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-  new winston.transports.File({ filename: 'logs/info.log', level: 'info' }),
-  new winston.transports.File({ filename: 'logs/http.log', level: 'http' }),
+
 ];
 
 // Create the logger instance that has to be exported
