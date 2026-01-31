@@ -7,7 +7,7 @@
     "dev": "tsx watch ./src/server.ts",
     "build": "tsc",
     "start": "node ./dist/server.js",
-    "docker-start": "npm run migrate && npm run start",
+    "docker-start": "npm run start",
     "worker:dev-post": "tsx watch ./src/workers/start-worker.ts",
     "worker:post": "node ./dist/workers/start-worker.js",
     "lint": "eslint \"{src,test}/**/*.ts\"",
