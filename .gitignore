@@ -37,4 +37,4 @@ temp/
 # Miscellaneous
 .cache/
 .tmp/
-/src/generated/prisma
+
