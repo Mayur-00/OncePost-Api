@@ -24,12 +24,14 @@
     LINKEDIN
     X
     FACEBOOK
+    NONE
   }
 
   enum PostStatus {
     CREATED
     SCHEDULED
     UPLOADED
+    PUBLISHED
     PENDING
     DARFT 
     FAILED
@@ -100,6 +102,7 @@
     mediaUrl String?
     mediaType String?
     status PostStatus
+    scheduled_for SocialPlatforms[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 
