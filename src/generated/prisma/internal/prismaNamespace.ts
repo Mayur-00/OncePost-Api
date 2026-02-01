@@ -937,6 +937,7 @@ export const PostScalarFieldEnum = {
   mediaUrl: 'mediaUrl',
   mediaType: 'mediaType',
   status: 'status',
+  scheduled_for: 'scheduled_for',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

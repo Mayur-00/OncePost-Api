@@ -20,7 +20,8 @@ export type AuthProviderType = (typeof AuthProviderType)[keyof typeof AuthProvid
 export const SocialPlatforms = {
   LINKEDIN: 'LINKEDIN',
   X: 'X',
-  FACEBOOK: 'FACEBOOK'
+  FACEBOOK: 'FACEBOOK',
+  NONE: 'NONE'
 } as const
 
 export type SocialPlatforms = (typeof SocialPlatforms)[keyof typeof SocialPlatforms]
@@ -30,6 +31,7 @@ export const PostStatus = {
   CREATED: 'CREATED',
   SCHEDULED: 'SCHEDULED',
   UPLOADED: 'UPLOADED',
+  PUBLISHED: 'PUBLISHED',
   PENDING: 'PENDING',
   DARFT: 'DARFT',
   FAILED: 'FAILED'

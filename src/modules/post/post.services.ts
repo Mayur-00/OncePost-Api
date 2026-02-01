@@ -1,5 +1,5 @@
 import { Logger } from 'winston';
-import { Post, PostStatus, PrismaClient } from '../../generated/prisma/client.js';
+import { Post, PostStatus, PrismaClient, SocialPlatforms } from '../../generated/prisma/client.js';
 import { ApiError } from '../../utils/apiError.js';
 import { getSearchPostsDTO } from './post.dto.js';
 import { QUERY_TYPE } from './post.types.js';
@@ -16,6 +16,7 @@ export class PostService {
     user_id: string,
     mimeType: string,
     status: PostStatus,
+    scheduled_for?: SocialPlatforms[]
   ) {
     try {
       const post = await this.prisma.post.create({
@@ -25,6 +26,7 @@ export class PostService {
           owner_id: user_id,
           status: status,
           mediaType: mimeType,
+          scheduled_for: scheduled_for || []
         },
       });
 

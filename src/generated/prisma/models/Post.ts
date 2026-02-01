@@ -53,6 +53,7 @@ export type PostCountAggregateOutputType = {
   mediaUrl: number
   mediaType: number
   status: number
+  scheduled_for: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -88,6 +89,7 @@ export type PostCountAggregateInputType = {
   mediaUrl?: true
   mediaType?: true
   status?: true
+  scheduled_for?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -172,6 +174,7 @@ export type PostGroupByOutputType = {
   mediaUrl: string | null
   mediaType: string | null
   status: $Enums.PostStatus
+  scheduled_for: $Enums.SocialPlatforms[]
   createdAt: Date
   updatedAt: Date
   _count: PostCountAggregateOutputType | null
@@ -204,6 +207,7 @@ export type PostWhereInput = {
   mediaUrl?: Prisma.StringNullableFilter<"Post"> | string | null
   mediaType?: Prisma.StringNullableFilter<"Post"> | string | null
   status?: Prisma.EnumPostStatusFilter<"Post"> | $Enums.PostStatus
+  scheduled_for?: Prisma.EnumSocialPlatformsNullableListFilter<"Post">
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -217,6 +221,7 @@ export type PostOrderByWithRelationInput = {
   mediaUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   mediaType?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  scheduled_for?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   owner?: Prisma.UserOrderByWithRelationInput
@@ -233,6 +238,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   mediaUrl?: Prisma.StringNullableFilter<"Post"> | string | null
   mediaType?: Prisma.StringNullableFilter<"Post"> | string | null
   status?: Prisma.EnumPostStatusFilter<"Post"> | $Enums.PostStatus
+  scheduled_for?: Prisma.EnumSocialPlatformsNullableListFilter<"Post">
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -246,6 +252,7 @@ export type PostOrderByWithAggregationInput = {
   mediaUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   mediaType?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  scheduled_for?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PostCountOrderByAggregateInput
@@ -263,6 +270,7 @@ export type PostScalarWhereWithAggregatesInput = {
   mediaUrl?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
   mediaType?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
   status?: Prisma.EnumPostStatusWithAggregatesFilter<"Post"> | $Enums.PostStatus
+  scheduled_for?: Prisma.EnumSocialPlatformsNullableListFilter<"Post">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
 }
@@ -273,6 +281,7 @@ export type PostCreateInput = {
   mediaUrl?: string | null
   mediaType?: string | null
   status: $Enums.PostStatus
+  scheduled_for?: Prisma.PostCreatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Date | string
   updatedAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -286,6 +295,7 @@ export type PostUncheckedCreateInput = {
   mediaUrl?: string | null
   mediaType?: string | null
   status: $Enums.PostStatus
+  scheduled_for?: Prisma.PostCreatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Date | string
   updatedAt?: Date | string
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutPostInput
@@ -297,6 +307,7 @@ export type PostUpdateInput = {
   mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -310,6 +321,7 @@ export type PostUncheckedUpdateInput = {
   mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutPostNestedInput
@@ -322,6 +334,7 @@ export type PostCreateManyInput = {
   mediaUrl?: string | null
   mediaType?: string | null
   status: $Enums.PostStatus
+  scheduled_for?: Prisma.PostCreatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -332,6 +345,7 @@ export type PostUpdateManyMutationInput = {
   mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -343,6 +357,7 @@ export type PostUncheckedUpdateManyInput = {
   mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -357,6 +372,14 @@ export type PostOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type EnumSocialPlatformsNullableListFilter<$PrismaModel = never> = {
+  equals?: $Enums.SocialPlatforms[] | Prisma.ListEnumSocialPlatformsFieldRefInput<$PrismaModel> | null
+  has?: $Enums.SocialPlatforms | Prisma.EnumSocialPlatformsFieldRefInput<$PrismaModel> | null
+  hasEvery?: $Enums.SocialPlatforms[] | Prisma.ListEnumSocialPlatformsFieldRefInput<$PrismaModel>
+  hasSome?: $Enums.SocialPlatforms[] | Prisma.ListEnumSocialPlatformsFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type PostCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   owner_id?: Prisma.SortOrder
@@ -364,6 +387,7 @@ export type PostCountOrderByAggregateInput = {
   mediaUrl?: Prisma.SortOrder
   mediaType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  scheduled_for?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -437,8 +461,17 @@ export type PostUncheckedUpdateManyWithoutOwnerNestedInput = {
   deleteMany?: Prisma.PostScalarWhereInput | Prisma.PostScalarWhereInput[]
 }
 
+export type PostCreatescheduled_forInput = {
+  set: $Enums.SocialPlatforms[]
+}
+
 export type EnumPostStatusFieldUpdateOperationsInput = {
   set?: $Enums.PostStatus
+}
+
+export type PostUpdatescheduled_forInput = {
+  set?: $Enums.SocialPlatforms[]
+  push?: $Enums.SocialPlatforms | $Enums.SocialPlatforms[]
 }
 
 export type PostCreateNestedOneWithoutPlatform_postInput = {
@@ -461,6 +494,7 @@ export type PostCreateWithoutOwnerInput = {
   mediaUrl?: string | null
   mediaType?: string | null
   status: $Enums.PostStatus
+  scheduled_for?: Prisma.PostCreatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Date | string
   updatedAt?: Date | string
   platform_post?: Prisma.PlatformPostCreateNestedManyWithoutPostInput
@@ -472,6 +506,7 @@ export type PostUncheckedCreateWithoutOwnerInput = {
   mediaUrl?: string | null
   mediaType?: string | null
   status: $Enums.PostStatus
+  scheduled_for?: Prisma.PostCreatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Date | string
   updatedAt?: Date | string
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutPostInput
@@ -513,6 +548,7 @@ export type PostScalarWhereInput = {
   mediaUrl?: Prisma.StringNullableFilter<"Post"> | string | null
   mediaType?: Prisma.StringNullableFilter<"Post"> | string | null
   status?: Prisma.EnumPostStatusFilter<"Post"> | $Enums.PostStatus
+  scheduled_for?: Prisma.EnumSocialPlatformsNullableListFilter<"Post">
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
 }
@@ -523,6 +559,7 @@ export type PostCreateWithoutPlatform_postInput = {
   mediaUrl?: string | null
   mediaType?: string | null
   status: $Enums.PostStatus
+  scheduled_for?: Prisma.PostCreatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Date | string
   updatedAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutPostsInput
@@ -535,6 +572,7 @@ export type PostUncheckedCreateWithoutPlatform_postInput = {
   mediaUrl?: string | null
   mediaType?: string | null
   status: $Enums.PostStatus
+  scheduled_for?: Prisma.PostCreatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -561,6 +599,7 @@ export type PostUpdateWithoutPlatform_postInput = {
   mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
@@ -573,6 +612,7 @@ export type PostUncheckedUpdateWithoutPlatform_postInput = {
   mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -583,6 +623,7 @@ export type PostCreateManyOwnerInput = {
   mediaUrl?: string | null
   mediaType?: string | null
   status: $Enums.PostStatus
+  scheduled_for?: Prisma.PostCreatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -593,6 +634,7 @@ export type PostUpdateWithoutOwnerInput = {
   mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   platform_post?: Prisma.PlatformPostUpdateManyWithoutPostNestedInput
@@ -604,6 +646,7 @@ export type PostUncheckedUpdateWithoutOwnerInput = {
   mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutPostNestedInput
@@ -615,6 +658,7 @@ export type PostUncheckedUpdateManyWithoutOwnerInput = {
   mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -657,6 +701,7 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   mediaUrl?: boolean
   mediaType?: boolean
   status?: boolean
+  scheduled_for?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -671,6 +716,7 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   mediaUrl?: boolean
   mediaType?: boolean
   status?: boolean
+  scheduled_for?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -683,6 +729,7 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   mediaUrl?: boolean
   mediaType?: boolean
   status?: boolean
+  scheduled_for?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -695,11 +742,12 @@ export type PostSelectScalar = {
   mediaUrl?: boolean
   mediaType?: boolean
   status?: boolean
+  scheduled_for?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "owner_id" | "content" | "mediaUrl" | "mediaType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "owner_id" | "content" | "mediaUrl" | "mediaType" | "status" | "scheduled_for" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   platform_post?: boolean | Prisma.Post$platform_postArgs<ExtArgs>
@@ -725,6 +773,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     mediaUrl: string | null
     mediaType: string | null
     status: $Enums.PostStatus
+    scheduled_for: $Enums.SocialPlatforms[]
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["post"]>
@@ -1158,6 +1207,7 @@ export interface PostFieldRefs {
   readonly mediaUrl: Prisma.FieldRef<"Post", 'String'>
   readonly mediaType: Prisma.FieldRef<"Post", 'String'>
   readonly status: Prisma.FieldRef<"Post", 'PostStatus'>
+  readonly scheduled_for: Prisma.FieldRef<"Post", 'SocialPlatforms[]'>
   readonly createdAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Post", 'DateTime'>
 }
