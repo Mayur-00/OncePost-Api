@@ -56,7 +56,8 @@ export const ModelName = {
   Post: 'Post',
   PlatformPost: 'PlatformPost',
   OAuthSession: 'OAuthSession',
-  PostAnalytic: 'PostAnalytic'
+  PostAnalytic: 'PostAnalytic',
+  job: 'job'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -121,6 +122,7 @@ export const PostScalarFieldEnum = {
   mediaType: 'mediaType',
   status: 'status',
   scheduled_for: 'scheduled_for',
+  scheduledAt: 'scheduledAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -139,6 +141,7 @@ export const PlatformPostScalarFieldEnum = {
   error: 'error',
   status: 'status',
   postedAt: 'postedAt',
+  failedAt: 'failedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -175,6 +178,20 @@ export const PostAnalyticScalarFieldEnum = {
 } as const
 
 export type PostAnalyticScalarFieldEnum = (typeof PostAnalyticScalarFieldEnum)[keyof typeof PostAnalyticScalarFieldEnum]
+
+
+export const JobScalarFieldEnum = {
+  id: 'id',
+  owner_id: 'owner_id',
+  job_type: 'job_type',
+  related_post_id: 'related_post_id',
+  platforms: 'platforms',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
 
 
 export const SortOrder = {

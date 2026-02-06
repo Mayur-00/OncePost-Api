@@ -69,3 +69,8 @@ export type OAuthSession = Prisma.OAuthSessionModel
  * 
  */
 export type PostAnalytic = Prisma.PostAnalyticModel
+/**
+ * Model job
+ * 
+ */
+export type job = Prisma.jobModel

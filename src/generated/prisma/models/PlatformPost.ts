@@ -35,6 +35,7 @@ export type PlatformPostMinAggregateOutputType = {
   error: string | null
   status: $Enums.PlatfromPostStatus | null
   postedAt: Date | null
+  failedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +51,7 @@ export type PlatformPostMaxAggregateOutputType = {
   error: string | null
   status: $Enums.PlatfromPostStatus | null
   postedAt: Date | null
+  failedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -65,6 +67,7 @@ export type PlatformPostCountAggregateOutputType = {
   error: number
   status: number
   postedAt: number
+  failedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -82,6 +85,7 @@ export type PlatformPostMinAggregateInputType = {
   error?: true
   status?: true
   postedAt?: true
+  failedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -97,6 +101,7 @@ export type PlatformPostMaxAggregateInputType = {
   error?: true
   status?: true
   postedAt?: true
+  failedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +117,7 @@ export type PlatformPostCountAggregateInputType = {
   error?: true
   status?: true
   postedAt?: true
+  failedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -199,7 +205,8 @@ export type PlatformPostGroupByOutputType = {
   platform_post_url: string | null
   error: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date
+  postedAt: Date | null
+  failedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: PlatformPostCountAggregateOutputType | null
@@ -235,7 +242,8 @@ export type PlatformPostWhereInput = {
   platform_post_url?: Prisma.StringNullableFilter<"PlatformPost"> | string | null
   error?: Prisma.StringNullableFilter<"PlatformPost"> | string | null
   status?: Prisma.EnumPlatfromPostStatusFilter<"PlatformPost"> | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFilter<"PlatformPost"> | Date | string
+  postedAt?: Prisma.DateTimeNullableFilter<"PlatformPost"> | Date | string | null
+  failedAt?: Prisma.DateTimeNullableFilter<"PlatformPost"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PlatformPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlatformPost"> | Date | string
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
@@ -254,7 +262,8 @@ export type PlatformPostOrderByWithRelationInput = {
   platform_post_url?: Prisma.SortOrderInput | Prisma.SortOrder
   error?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
-  postedAt?: Prisma.SortOrder
+  postedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  failedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   post?: Prisma.PostOrderByWithRelationInput
@@ -276,7 +285,8 @@ export type PlatformPostWhereUniqueInput = Prisma.AtLeast<{
   platform_post_url?: Prisma.StringNullableFilter<"PlatformPost"> | string | null
   error?: Prisma.StringNullableFilter<"PlatformPost"> | string | null
   status?: Prisma.EnumPlatfromPostStatusFilter<"PlatformPost"> | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFilter<"PlatformPost"> | Date | string
+  postedAt?: Prisma.DateTimeNullableFilter<"PlatformPost"> | Date | string | null
+  failedAt?: Prisma.DateTimeNullableFilter<"PlatformPost"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PlatformPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlatformPost"> | Date | string
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
@@ -295,7 +305,8 @@ export type PlatformPostOrderByWithAggregationInput = {
   platform_post_url?: Prisma.SortOrderInput | Prisma.SortOrder
   error?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
-  postedAt?: Prisma.SortOrder
+  postedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  failedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PlatformPostCountOrderByAggregateInput
@@ -316,7 +327,8 @@ export type PlatformPostScalarWhereWithAggregatesInput = {
   platform_post_url?: Prisma.StringNullableWithAggregatesFilter<"PlatformPost"> | string | null
   error?: Prisma.StringNullableWithAggregatesFilter<"PlatformPost"> | string | null
   status?: Prisma.EnumPlatfromPostStatusWithAggregatesFilter<"PlatformPost"> | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeWithAggregatesFilter<"PlatformPost"> | Date | string
+  postedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PlatformPost"> | Date | string | null
+  failedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PlatformPost"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PlatformPost"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PlatformPost"> | Date | string
 }
@@ -328,7 +340,8 @@ export type PlatformPostCreateInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   post: Prisma.PostCreateNestedOneWithoutPlatform_postInput
@@ -347,7 +360,8 @@ export type PlatformPostUncheckedCreateInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   analytics?: Prisma.PostAnalyticUncheckedCreateNestedManyWithoutPlatform_postInput
@@ -360,7 +374,8 @@ export type PlatformPostUpdateInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   post?: Prisma.PostUpdateOneRequiredWithoutPlatform_postNestedInput
@@ -379,7 +394,8 @@ export type PlatformPostUncheckedUpdateInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   analytics?: Prisma.PostAnalyticUncheckedUpdateManyWithoutPlatform_postNestedInput
@@ -395,7 +411,8 @@ export type PlatformPostCreateManyInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -407,7 +424,8 @@ export type PlatformPostUpdateManyMutationInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -422,7 +440,8 @@ export type PlatformPostUncheckedUpdateManyInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -448,6 +467,7 @@ export type PlatformPostCountOrderByAggregateInput = {
   error?: Prisma.SortOrder
   status?: Prisma.SortOrder
   postedAt?: Prisma.SortOrder
+  failedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -463,6 +483,7 @@ export type PlatformPostMaxOrderByAggregateInput = {
   error?: Prisma.SortOrder
   status?: Prisma.SortOrder
   postedAt?: Prisma.SortOrder
+  failedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -478,6 +499,7 @@ export type PlatformPostMinOrderByAggregateInput = {
   error?: Prisma.SortOrder
   status?: Prisma.SortOrder
   postedAt?: Prisma.SortOrder
+  failedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -638,7 +660,8 @@ export type PlatformPostCreateWithoutOwnerInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   post: Prisma.PostCreateNestedOneWithoutPlatform_postInput
@@ -655,7 +678,8 @@ export type PlatformPostUncheckedCreateWithoutOwnerInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   analytics?: Prisma.PostAnalyticUncheckedCreateNestedManyWithoutPlatform_postInput
@@ -700,7 +724,8 @@ export type PlatformPostScalarWhereInput = {
   platform_post_url?: Prisma.StringNullableFilter<"PlatformPost"> | string | null
   error?: Prisma.StringNullableFilter<"PlatformPost"> | string | null
   status?: Prisma.EnumPlatfromPostStatusFilter<"PlatformPost"> | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFilter<"PlatformPost"> | Date | string
+  postedAt?: Prisma.DateTimeNullableFilter<"PlatformPost"> | Date | string | null
+  failedAt?: Prisma.DateTimeNullableFilter<"PlatformPost"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PlatformPost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlatformPost"> | Date | string
 }
@@ -712,7 +737,8 @@ export type PlatformPostCreateWithoutSocialAccountInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   post: Prisma.PostCreateNestedOneWithoutPlatform_postInput
@@ -729,7 +755,8 @@ export type PlatformPostUncheckedCreateWithoutSocialAccountInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   analytics?: Prisma.PostAnalyticUncheckedCreateNestedManyWithoutPlatform_postInput
@@ -768,7 +795,8 @@ export type PlatformPostCreateWithoutPostInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutPlatform_postInput
@@ -785,7 +813,8 @@ export type PlatformPostUncheckedCreateWithoutPostInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   analytics?: Prisma.PostAnalyticUncheckedCreateNestedManyWithoutPlatform_postInput
@@ -824,7 +853,8 @@ export type PlatformPostCreateWithoutAnalyticsInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   post: Prisma.PostCreateNestedOneWithoutPlatform_postInput
@@ -842,7 +872,8 @@ export type PlatformPostUncheckedCreateWithoutAnalyticsInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -870,7 +901,8 @@ export type PlatformPostUpdateWithoutAnalyticsInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   post?: Prisma.PostUpdateOneRequiredWithoutPlatform_postNestedInput
@@ -888,7 +920,8 @@ export type PlatformPostUncheckedUpdateWithoutAnalyticsInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -902,7 +935,8 @@ export type PlatformPostCreateManyOwnerInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -914,7 +948,8 @@ export type PlatformPostUpdateWithoutOwnerInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   post?: Prisma.PostUpdateOneRequiredWithoutPlatform_postNestedInput
@@ -931,7 +966,8 @@ export type PlatformPostUncheckedUpdateWithoutOwnerInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   analytics?: Prisma.PostAnalyticUncheckedUpdateManyWithoutPlatform_postNestedInput
@@ -946,7 +982,8 @@ export type PlatformPostUncheckedUpdateManyWithoutOwnerInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -960,7 +997,8 @@ export type PlatformPostCreateManySocialAccountInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -972,7 +1010,8 @@ export type PlatformPostUpdateWithoutSocialAccountInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   post?: Prisma.PostUpdateOneRequiredWithoutPlatform_postNestedInput
@@ -989,7 +1028,8 @@ export type PlatformPostUncheckedUpdateWithoutSocialAccountInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   analytics?: Prisma.PostAnalyticUncheckedUpdateManyWithoutPlatform_postNestedInput
@@ -1004,7 +1044,8 @@ export type PlatformPostUncheckedUpdateManyWithoutSocialAccountInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1018,7 +1059,8 @@ export type PlatformPostCreateManyPostInput = {
   platform_post_url?: string | null
   error?: string | null
   status: $Enums.PlatfromPostStatus
-  postedAt: Date | string
+  postedAt?: Date | string | null
+  failedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1030,7 +1072,8 @@ export type PlatformPostUpdateWithoutPostInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutPlatform_postNestedInput
@@ -1047,7 +1090,8 @@ export type PlatformPostUncheckedUpdateWithoutPostInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   analytics?: Prisma.PostAnalyticUncheckedUpdateManyWithoutPlatform_postNestedInput
@@ -1062,7 +1106,8 @@ export type PlatformPostUncheckedUpdateManyWithoutPostInput = {
   platform_post_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   error?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatfromPostStatusFieldUpdateOperationsInput | $Enums.PlatfromPostStatus
-  postedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1109,6 +1154,7 @@ export type PlatformPostSelect<ExtArgs extends runtime.Types.Extensions.Internal
   error?: boolean
   status?: boolean
   postedAt?: boolean
+  failedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
@@ -1129,6 +1175,7 @@ export type PlatformPostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   error?: boolean
   status?: boolean
   postedAt?: boolean
+  failedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
@@ -1147,6 +1194,7 @@ export type PlatformPostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   error?: boolean
   status?: boolean
   postedAt?: boolean
+  failedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
@@ -1165,11 +1213,12 @@ export type PlatformPostSelectScalar = {
   error?: boolean
   status?: boolean
   postedAt?: boolean
+  failedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PlatformPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "post_id" | "owner_id" | "account_id" | "platform" | "platform_post_id" | "platform_post_url" | "error" | "status" | "postedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["platformPost"]>
+export type PlatformPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "post_id" | "owner_id" | "account_id" | "platform" | "platform_post_id" | "platform_post_url" | "error" | "status" | "postedAt" | "failedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["platformPost"]>
 export type PlatformPostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1206,7 +1255,8 @@ export type $PlatformPostPayload<ExtArgs extends runtime.Types.Extensions.Intern
     platform_post_url: string | null
     error: string | null
     status: $Enums.PlatfromPostStatus
-    postedAt: Date
+    postedAt: Date | null
+    failedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["platformPost"]>
@@ -1646,6 +1696,7 @@ export interface PlatformPostFieldRefs {
   readonly error: Prisma.FieldRef<"PlatformPost", 'String'>
   readonly status: Prisma.FieldRef<"PlatformPost", 'PlatfromPostStatus'>
   readonly postedAt: Prisma.FieldRef<"PlatformPost", 'DateTime'>
+  readonly failedAt: Prisma.FieldRef<"PlatformPost", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"PlatformPost", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PlatformPost", 'DateTime'>
 }

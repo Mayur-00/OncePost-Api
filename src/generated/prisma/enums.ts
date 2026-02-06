@@ -55,3 +55,19 @@ export const PlatfromPostStatus = {
 } as const
 
 export type PlatfromPostStatus = (typeof PlatfromPostStatus)[keyof typeof PlatfromPostStatus]
+
+
+export const JobType = {
+  PUBLISH_POST: 'PUBLISH_POST',
+  SCHEDULE_POST: 'SCHEDULE_POST'
+} as const
+
+export type JobType = (typeof JobType)[keyof typeof JobType]
+
+
+export const JobStatus = {
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+} as const
+
+export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus]

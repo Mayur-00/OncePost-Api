@@ -46,6 +46,16 @@
     POSTED
     FAILED
   }
+  
+  enum JobType {
+    PUBLISH_POST
+    SCHEDULE_POST
+  }
+
+  enum JobStatus {
+    COMPLETED
+    FAILED
+  }
 
   model User {
     id  String @id @default(cuid()) @unique
@@ -65,6 +75,7 @@
     posts Post[]
     platform_post PlatformPost[]
     Auth_sessions OAuthSession[]
+    user_job job[]
   }
 
   model SocialAccount {
@@ -103,11 +114,13 @@
     mediaType String?
     status PostStatus
     scheduled_for SocialPlatforms[]
+    scheduledAt DateTime?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 
     owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
     platform_post PlatformPost[]
+    related_job job[]
       @@index([owner_id, status])
   }
 
@@ -121,7 +134,8 @@
     platform_post_url String?
     error String?
     status PlatfromPostStatus
-    postedAt DateTime
+    postedAt DateTime?
+    failedAt DateTime?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 
@@ -130,11 +144,12 @@
     socialAccount SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
     analytics PostAnalytic[]
 
-    @@index([post_id])
+    @@index([post_id, platform])
   }
 
   model OAuthSession {
-  id            String   @id @default(cuid())
+
+    id            String   @id @default(cuid())
     ownerid       String 
     provider      SocialPlatforms
     state         String   @unique
@@ -165,6 +180,27 @@
     platform_post PlatformPost @relation(fields: [platform_post_id], references: [id], onDelete: Cascade)
     socialAccount SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
   }
+
+  model job {
+    id String @id @default(cuid())
+    owner_id String 
+    job_type JobType
+    related_post_id String
+    platforms SocialPlatforms[]
+    status JobStatus
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+
+    // relations 
+
+    owner User @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+    related_post Post @relation(fields: [related_post_id], references: [id], onDelete: Cascade)
+
+    @@index([owner_id, job_type, status])
+  }
+
+  
+
 
 
   

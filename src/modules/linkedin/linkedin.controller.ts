@@ -62,7 +62,7 @@ export class LinkedinController {
     this.logger.info('user linkedin connection success', {
       email: userInfoResponse.email,
     });
-    res.status(200).redirect(`${process.env.FRONTEND_URI}/home`);
+    res.status(200).redirect(`${process.env.FRONTEND_URI}/dashboard`);
   });
 
   createLinkedinPost: RequestHandler = asyncHandler(async (req: Request, res: Response) => {

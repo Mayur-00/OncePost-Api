@@ -389,7 +389,8 @@ export const ModelName = {
   Post: 'Post',
   PlatformPost: 'PlatformPost',
   OAuthSession: 'OAuthSession',
-  PostAnalytic: 'PostAnalytic'
+  PostAnalytic: 'PostAnalytic',
+  job: 'job'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "socialAccount" | "post" | "platformPost" | "oAuthSession" | "postAnalytic"
+    modelProps: "user" | "socialAccount" | "post" | "platformPost" | "oAuthSession" | "postAnalytic" | "job"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +854,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    job: {
+      payload: Prisma.$jobPayload<ExtArgs>
+      fields: Prisma.jobFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.jobFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.jobFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
+        }
+        findFirst: {
+          args: Prisma.jobFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.jobFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
+        }
+        findMany: {
+          args: Prisma.jobFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>[]
+        }
+        create: {
+          args: Prisma.jobCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
+        }
+        createMany: {
+          args: Prisma.jobCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.jobCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>[]
+        }
+        delete: {
+          args: Prisma.jobDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
+        }
+        update: {
+          args: Prisma.jobUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
+        }
+        deleteMany: {
+          args: Prisma.jobDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.jobUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.jobUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>[]
+        }
+        upsert: {
+          args: Prisma.jobUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
+        }
+        aggregate: {
+          args: Prisma.JobAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateJob>
+        }
+        groupBy: {
+          args: Prisma.jobGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.jobCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -938,6 +1013,7 @@ export const PostScalarFieldEnum = {
   mediaType: 'mediaType',
   status: 'status',
   scheduled_for: 'scheduled_for',
+  scheduledAt: 'scheduledAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -956,6 +1032,7 @@ export const PlatformPostScalarFieldEnum = {
   error: 'error',
   status: 'status',
   postedAt: 'postedAt',
+  failedAt: 'failedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -992,6 +1069,20 @@ export const PostAnalyticScalarFieldEnum = {
 } as const
 
 export type PostAnalyticScalarFieldEnum = (typeof PostAnalyticScalarFieldEnum)[keyof typeof PostAnalyticScalarFieldEnum]
+
+
+export const JobScalarFieldEnum = {
+  id: 'id',
+  owner_id: 'owner_id',
+  job_type: 'job_type',
+  related_post_id: 'related_post_id',
+  platforms: 'platforms',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1173,6 +1264,34 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
+
+/**
+ * Reference to a field of type 'JobType'
+ */
+export type EnumJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobType'>
+    
+
+
+/**
+ * Reference to a field of type 'JobType[]'
+ */
+export type ListEnumJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'JobStatus'
+ */
+export type EnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'JobStatus[]'
+ */
+export type ListEnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1274,6 +1393,7 @@ export type GlobalOmitConfig = {
   platformPost?: Prisma.PlatformPostOmit
   oAuthSession?: Prisma.OAuthSessionOmit
   postAnalytic?: Prisma.PostAnalyticOmit
+  job?: Prisma.jobOmit
 }
 
 /* Types for Logging */

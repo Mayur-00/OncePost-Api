@@ -20,11 +20,20 @@ export class linkedinHandler {
       const account = await this.linkedinServices.getUserAccount(userId);
       if (!account) {
         throw new Error('No active LinkedIn account found');
+        
+      }
+
+      const postDbRecord = await this.linkedinServices.createEmptyLinkedinPostDbRecord(userId, postId, account.id);
+
+       if (!postDbRecord) {
+        throw new Error('Failed to create db record');
+        
       }
 
       // Validate token
       const result = await this.linkedinServices.validateAccessToken(account);
       if (!result.success) {
+        await this.linkedinServices.flagPostFailed(postDbRecord.id, 'Account Expired');
         throw new Error('Account expired');
       }
 
@@ -46,6 +55,7 @@ export class linkedinHandler {
         );
 
         if (!upload.success) {
+            await this.linkedinServices.flagPostFailed(postDbRecord.id, 'Image Upload Failed');
           throw new Error('Failed to upload image');
         }
 
@@ -65,13 +75,9 @@ export class linkedinHandler {
       }
 
       // Save to DB
-      const platformPost =  await this.linkedinServices.createLinkedinPostDatabaseRecord(
-        userId,
-        postId,
-        account.id,
-        'POSTED',
-        publishPost.id,
-        new Date()
+      const platformPost =  await this.linkedinServices.updateLinkedinPostSuccess(
+        postDbRecord.id,
+        publishPost.id
       );
 
       

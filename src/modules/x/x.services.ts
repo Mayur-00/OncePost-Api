@@ -345,9 +345,63 @@ const payload: any = { text };
       throw new ApiError(500, 'internal server error')
     }
   };
+
+  async createEmptyTweetDbRecord(user_id:string, post_id:string,X_db_account_id:string ){
+    try {
+        return await this.prismaClient.platformPost.create({
+        data:{
+         owner_id:user_id,
+         post_id:post_id,
+         account_id:X_db_account_id,
+         platform:'X',
+         status:'PENDING',
+
+        }
+         });
+
+    } catch (error) {
+      this.logger.error(`failed to create db record ${error}`);
+      throw new ApiError(500, 'internal server error')
+    }
+  };
+
+   async updateLinkedinPostSuccess(x_tweet_db_id:string, x_tweet_publish_id:string) {  
+    try {
+      return await this.prismaClient.platformPost.update({
+        where:{
+          id:x_tweet_db_id
+        },
+        data:{
+          platform_post_id:x_tweet_publish_id,
+          platform_post_url:`https://x.com/i/web/status/${x_tweet_publish_id}`,
+         status:'POSTED',
+         postedAt:new Date(Date.now())
+
+        }
+      
+      });
+    } catch(error){
+   this.logger.error(`failed to update db record ${error}`);
+      throw new ApiError(500, 'internal server error')
+    }
 };
 
-
-
-
-  
+  async flagTweetPublishFailed( platform_Post_id:string, error:string) {
+    try {
+      return await this.prismaClient.platformPost.update({
+        where:{
+          id:platform_Post_id
+        },
+        data:{
+          error:error,
+          status:'FAILED',
+          failedAt:new Date(Date.now())
+        }
+      
+      })
+    } catch (error) {
+      this.logger.error(`failed to flag failed Post : ${error}`);
+      throw new ApiError(500, 'internal server error');
+    }
+  }
+}

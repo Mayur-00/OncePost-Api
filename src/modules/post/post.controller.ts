@@ -115,6 +115,8 @@ export class PostController {
           req.user.id,
           imageMimeType || '',
           'SCHEDULED',
+          platforms,
+          scheduledDateAndTime
         );
 
         const now = new Date();

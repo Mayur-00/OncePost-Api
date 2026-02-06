@@ -16,7 +16,8 @@ export class PostService {
     user_id: string,
     mimeType: string,
     status: PostStatus,
-    scheduled_for?: SocialPlatforms[]
+    scheduled_for?: SocialPlatforms[],
+    scheduledAt?:Date
   ) {
     try {
       const post = await this.prisma.post.create({
@@ -26,10 +27,10 @@ export class PostService {
           owner_id: user_id,
           status: status,
           mediaType: mimeType,
-          scheduled_for: scheduled_for || []
+          scheduled_for: scheduled_for || [],
+          scheduledAt:scheduledAt
         },
       });
-
       this.logger.info('Post Created', { postid: post.id });
 
       return post;

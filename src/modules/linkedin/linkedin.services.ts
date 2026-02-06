@@ -484,6 +484,7 @@ export class linkedinServices {
       throw new ApiError(500, 'internal server error')
     }
   };
+
   async isAlreadyPosted( postid:string, ){
     try {
        return  await this.prisma.platformPost.findFirst({
@@ -499,5 +500,64 @@ export class linkedinServices {
       throw new ApiError(500, 'internal server error')
     }
   };
+
+  async flagPostFailed( platform_Post_id:string, error:string) {
+    try {
+      return await this.prisma.platformPost.update({
+        where:{
+          id:platform_Post_id
+        },
+        data:{
+          error:error,
+          status:'FAILED',
+          failedAt:new Date(Date.now())
+        }
+      
+      })
+    } catch (error) {
+      this.logger.error(`failed to flag failed Post : ${error}`);
+      throw new ApiError(500, 'internal server error');
+    }
+  }
+
+  async createEmptyLinkedinPostDbRecord(user_id:string, post_id:string, linkedin_account_id:string,) {  
+    try {
+      return await this.prisma.platformPost.create({
+        data:{
+         owner_id:user_id,
+         post_id:post_id,
+         account_id:linkedin_account_id,
+         platform:'LINKEDIN',
+         status:'PENDING',
+
+        }
+      
+      })
+    } catch (error) {
+      this.logger.error(`failed to create sample linkedin post : ${error}`)
+      throw new ApiError(500, 'internal server error');
+    }
+  }
+  async updateLinkedinPostSuccess(linkedin_post_db_id:string, linkedin_post_publish_id:string) {  
+    try {
+      return await this.prisma.platformPost.update({
+        where:{
+          id:linkedin_post_db_id
+        },
+        data:{
+          platform_post_id:linkedin_post_publish_id,
+          platform_post_url:`https://www.linkedin.com/feed/update/${linkedin_post_publish_id}/ `,
+         status:'POSTED',
+         postedAt:new Date(Date.now())
+
+        }
+      
+      })
+    } catch (error) {
+      this.logger.error(`failed to create sample linkedin post : ${error}`)
+      throw new ApiError(500, 'internal server error');
+    }
+  }
+
 
 }

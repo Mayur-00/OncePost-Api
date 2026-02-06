@@ -6,7 +6,7 @@ import { redisConnection } from "../config/redis.config.js";
 export const postQueue = new Queue('post', {
     connection: redisConnection,
       defaultJobOptions: {
-    attempts: 2,
+    attempts: 1,
     backoff: {
       type: "exponential",
       delay: 5000,
