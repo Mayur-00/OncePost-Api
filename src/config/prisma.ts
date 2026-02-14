@@ -15,7 +15,6 @@ const connectionString = process.env.DATABASE_URL;
 // Debug: Check if URL is loaded
 if (!connectionString) {
   console.error('❌ DATABASE_URL is not set!');
-  console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('DATABASE') || k.includes('DB')));
   throw new Error('DATABASE_URL environment variable is required');
 }
 

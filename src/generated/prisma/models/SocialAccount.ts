@@ -618,10 +618,6 @@ export type EnumSocialPlatformsFieldUpdateOperationsInput = {
   set?: $Enums.SocialPlatforms
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type SocialAccountCreateNestedOneWithoutPlatform_postInput = {
   create?: Prisma.XOR<Prisma.SocialAccountCreateWithoutPlatform_postInput, Prisma.SocialAccountUncheckedCreateWithoutPlatform_postInput>
   connectOrCreate?: Prisma.SocialAccountCreateOrConnectWithoutPlatform_postInput

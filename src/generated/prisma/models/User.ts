@@ -33,6 +33,7 @@ export type UserMinAggregateOutputType = {
   provider: $Enums.AuthProviderType | null
   profile_picture: string | null
   refresh_token: string | null
+  isOnboarded: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +47,7 @@ export type UserMaxAggregateOutputType = {
   provider: $Enums.AuthProviderType | null
   profile_picture: string | null
   refresh_token: string | null
+  isOnboarded: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +61,7 @@ export type UserCountAggregateOutputType = {
   provider: number
   profile_picture: number
   refresh_token: number
+  isOnboarded: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,6 +77,7 @@ export type UserMinAggregateInputType = {
   provider?: true
   profile_picture?: true
   refresh_token?: true
+  isOnboarded?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -87,6 +91,7 @@ export type UserMaxAggregateInputType = {
   provider?: true
   profile_picture?: true
   refresh_token?: true
+  isOnboarded?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +105,7 @@ export type UserCountAggregateInputType = {
   provider?: true
   profile_picture?: true
   refresh_token?: true
+  isOnboarded?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -186,6 +192,7 @@ export type UserGroupByOutputType = {
   provider: $Enums.AuthProviderType
   profile_picture: string | null
   refresh_token: string | null
+  isOnboarded: boolean
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -220,6 +227,7 @@ export type UserWhereInput = {
   provider?: Prisma.EnumAuthProviderTypeFilter<"User"> | $Enums.AuthProviderType
   profile_picture?: Prisma.StringNullableFilter<"User"> | string | null
   refresh_token?: Prisma.StringNullableFilter<"User"> | string | null
+  isOnboarded?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   connected_accounts?: Prisma.SocialAccountListRelationFilter
@@ -227,6 +235,8 @@ export type UserWhereInput = {
   platform_post?: Prisma.PlatformPostListRelationFilter
   Auth_sessions?: Prisma.OAuthSessionListRelationFilter
   user_job?: Prisma.JobListRelationFilter
+  subscriptions?: Prisma.SubscriptionListRelationFilter
+  transactions?: Prisma.TransactionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -238,6 +248,7 @@ export type UserOrderByWithRelationInput = {
   provider?: Prisma.SortOrder
   profile_picture?: Prisma.SortOrderInput | Prisma.SortOrder
   refresh_token?: Prisma.SortOrderInput | Prisma.SortOrder
+  isOnboarded?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   connected_accounts?: Prisma.SocialAccountOrderByRelationAggregateInput
@@ -245,6 +256,8 @@ export type UserOrderByWithRelationInput = {
   platform_post?: Prisma.PlatformPostOrderByRelationAggregateInput
   Auth_sessions?: Prisma.OAuthSessionOrderByRelationAggregateInput
   user_job?: Prisma.jobOrderByRelationAggregateInput
+  subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
+  transactions?: Prisma.TransactionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -259,6 +272,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   provider?: Prisma.EnumAuthProviderTypeFilter<"User"> | $Enums.AuthProviderType
   profile_picture?: Prisma.StringNullableFilter<"User"> | string | null
   refresh_token?: Prisma.StringNullableFilter<"User"> | string | null
+  isOnboarded?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   connected_accounts?: Prisma.SocialAccountListRelationFilter
@@ -266,6 +280,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   platform_post?: Prisma.PlatformPostListRelationFilter
   Auth_sessions?: Prisma.OAuthSessionListRelationFilter
   user_job?: Prisma.JobListRelationFilter
+  subscriptions?: Prisma.SubscriptionListRelationFilter
+  transactions?: Prisma.TransactionListRelationFilter
 }, "id" | "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -277,6 +293,7 @@ export type UserOrderByWithAggregationInput = {
   provider?: Prisma.SortOrder
   profile_picture?: Prisma.SortOrderInput | Prisma.SortOrder
   refresh_token?: Prisma.SortOrderInput | Prisma.SortOrder
+  isOnboarded?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -296,6 +313,7 @@ export type UserScalarWhereWithAggregatesInput = {
   provider?: Prisma.EnumAuthProviderTypeWithAggregatesFilter<"User"> | $Enums.AuthProviderType
   profile_picture?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   refresh_token?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  isOnboarded?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -309,6 +327,7 @@ export type UserCreateInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   connected_accounts?: Prisma.SocialAccountCreateNestedManyWithoutOwnerInput
@@ -316,6 +335,8 @@ export type UserCreateInput = {
   platform_post?: Prisma.PlatformPostCreateNestedManyWithoutOwnerInput
   Auth_sessions?: Prisma.OAuthSessionCreateNestedManyWithoutOwnerInput
   user_job?: Prisma.jobCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -327,6 +348,7 @@ export type UserUncheckedCreateInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   connected_accounts?: Prisma.SocialAccountUncheckedCreateNestedManyWithoutOwnerInput
@@ -334,6 +356,8 @@ export type UserUncheckedCreateInput = {
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutOwnerInput
   Auth_sessions?: Prisma.OAuthSessionUncheckedCreateNestedManyWithoutOwnerInput
   user_job?: Prisma.jobUncheckedCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -345,6 +369,7 @@ export type UserUpdateInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   connected_accounts?: Prisma.SocialAccountUpdateManyWithoutOwnerNestedInput
@@ -352,6 +377,8 @@ export type UserUpdateInput = {
   platform_post?: Prisma.PlatformPostUpdateManyWithoutOwnerNestedInput
   Auth_sessions?: Prisma.OAuthSessionUpdateManyWithoutOwnerNestedInput
   user_job?: Prisma.jobUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -363,6 +390,7 @@ export type UserUncheckedUpdateInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   connected_accounts?: Prisma.SocialAccountUncheckedUpdateManyWithoutOwnerNestedInput
@@ -370,6 +398,8 @@ export type UserUncheckedUpdateInput = {
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutOwnerNestedInput
   Auth_sessions?: Prisma.OAuthSessionUncheckedUpdateManyWithoutOwnerNestedInput
   user_job?: Prisma.jobUncheckedUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -381,6 +411,7 @@ export type UserCreateManyInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -394,6 +425,7 @@ export type UserUpdateManyMutationInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -407,6 +439,7 @@ export type UserUncheckedUpdateManyInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -420,6 +453,7 @@ export type UserCountOrderByAggregateInput = {
   provider?: Prisma.SortOrder
   profile_picture?: Prisma.SortOrder
   refresh_token?: Prisma.SortOrder
+  isOnboarded?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -433,6 +467,7 @@ export type UserMaxOrderByAggregateInput = {
   provider?: Prisma.SortOrder
   profile_picture?: Prisma.SortOrder
   refresh_token?: Prisma.SortOrder
+  isOnboarded?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -446,6 +481,7 @@ export type UserMinOrderByAggregateInput = {
   provider?: Prisma.SortOrder
   profile_picture?: Prisma.SortOrder
   refresh_token?: Prisma.SortOrder
+  isOnboarded?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -465,6 +501,10 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type EnumAuthProviderTypeFieldUpdateOperationsInput = {
   set?: $Enums.AuthProviderType
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -541,6 +581,34 @@ export type UserUpdateOneRequiredWithoutUser_jobNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUser_jobInput, Prisma.UserUpdateWithoutUser_jobInput>, Prisma.UserUncheckedUpdateWithoutUser_jobInput>
 }
 
+export type UserCreateNestedOneWithoutSubscriptionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionsInput, Prisma.UserUncheckedCreateWithoutSubscriptionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubscriptionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSubscriptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionsInput, Prisma.UserUncheckedCreateWithoutSubscriptionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubscriptionsInput
+  upsert?: Prisma.UserUpsertWithoutSubscriptionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.UserUpdateWithoutSubscriptionsInput>, Prisma.UserUncheckedUpdateWithoutSubscriptionsInput>
+}
+
+export type UserCreateNestedOneWithoutTransactionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTransactionsInput, Prisma.UserUncheckedCreateWithoutTransactionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransactionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTransactionsInput, Prisma.UserUncheckedCreateWithoutTransactionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransactionsInput
+  upsert?: Prisma.UserUpsertWithoutTransactionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTransactionsInput, Prisma.UserUpdateWithoutTransactionsInput>, Prisma.UserUncheckedUpdateWithoutTransactionsInput>
+}
+
 export type UserCreateWithoutConnected_accountsInput = {
   id?: string
   name: string
@@ -550,12 +618,15 @@ export type UserCreateWithoutConnected_accountsInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   posts?: Prisma.PostCreateNestedManyWithoutOwnerInput
   platform_post?: Prisma.PlatformPostCreateNestedManyWithoutOwnerInput
   Auth_sessions?: Prisma.OAuthSessionCreateNestedManyWithoutOwnerInput
   user_job?: Prisma.jobCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConnected_accountsInput = {
@@ -567,12 +638,15 @@ export type UserUncheckedCreateWithoutConnected_accountsInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutOwnerInput
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutOwnerInput
   Auth_sessions?: Prisma.OAuthSessionUncheckedCreateNestedManyWithoutOwnerInput
   user_job?: Prisma.jobUncheckedCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConnected_accountsInput = {
@@ -600,12 +674,15 @@ export type UserUpdateWithoutConnected_accountsInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   posts?: Prisma.PostUpdateManyWithoutOwnerNestedInput
   platform_post?: Prisma.PlatformPostUpdateManyWithoutOwnerNestedInput
   Auth_sessions?: Prisma.OAuthSessionUpdateManyWithoutOwnerNestedInput
   user_job?: Prisma.jobUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConnected_accountsInput = {
@@ -617,12 +694,15 @@ export type UserUncheckedUpdateWithoutConnected_accountsInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   posts?: Prisma.PostUncheckedUpdateManyWithoutOwnerNestedInput
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutOwnerNestedInput
   Auth_sessions?: Prisma.OAuthSessionUncheckedUpdateManyWithoutOwnerNestedInput
   user_job?: Prisma.jobUncheckedUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
@@ -634,12 +714,15 @@ export type UserCreateWithoutPostsInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   connected_accounts?: Prisma.SocialAccountCreateNestedManyWithoutOwnerInput
   platform_post?: Prisma.PlatformPostCreateNestedManyWithoutOwnerInput
   Auth_sessions?: Prisma.OAuthSessionCreateNestedManyWithoutOwnerInput
   user_job?: Prisma.jobCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
@@ -651,12 +734,15 @@ export type UserUncheckedCreateWithoutPostsInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   connected_accounts?: Prisma.SocialAccountUncheckedCreateNestedManyWithoutOwnerInput
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutOwnerInput
   Auth_sessions?: Prisma.OAuthSessionUncheckedCreateNestedManyWithoutOwnerInput
   user_job?: Prisma.jobUncheckedCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -684,12 +770,15 @@ export type UserUpdateWithoutPostsInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   connected_accounts?: Prisma.SocialAccountUpdateManyWithoutOwnerNestedInput
   platform_post?: Prisma.PlatformPostUpdateManyWithoutOwnerNestedInput
   Auth_sessions?: Prisma.OAuthSessionUpdateManyWithoutOwnerNestedInput
   user_job?: Prisma.jobUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
@@ -701,12 +790,15 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   connected_accounts?: Prisma.SocialAccountUncheckedUpdateManyWithoutOwnerNestedInput
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutOwnerNestedInput
   Auth_sessions?: Prisma.OAuthSessionUncheckedUpdateManyWithoutOwnerNestedInput
   user_job?: Prisma.jobUncheckedUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlatform_postInput = {
@@ -718,12 +810,15 @@ export type UserCreateWithoutPlatform_postInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   connected_accounts?: Prisma.SocialAccountCreateNestedManyWithoutOwnerInput
   posts?: Prisma.PostCreateNestedManyWithoutOwnerInput
   Auth_sessions?: Prisma.OAuthSessionCreateNestedManyWithoutOwnerInput
   user_job?: Prisma.jobCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPlatform_postInput = {
@@ -735,12 +830,15 @@ export type UserUncheckedCreateWithoutPlatform_postInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   connected_accounts?: Prisma.SocialAccountUncheckedCreateNestedManyWithoutOwnerInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutOwnerInput
   Auth_sessions?: Prisma.OAuthSessionUncheckedCreateNestedManyWithoutOwnerInput
   user_job?: Prisma.jobUncheckedCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPlatform_postInput = {
@@ -768,12 +866,15 @@ export type UserUpdateWithoutPlatform_postInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   connected_accounts?: Prisma.SocialAccountUpdateManyWithoutOwnerNestedInput
   posts?: Prisma.PostUpdateManyWithoutOwnerNestedInput
   Auth_sessions?: Prisma.OAuthSessionUpdateManyWithoutOwnerNestedInput
   user_job?: Prisma.jobUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlatform_postInput = {
@@ -785,12 +886,15 @@ export type UserUncheckedUpdateWithoutPlatform_postInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   connected_accounts?: Prisma.SocialAccountUncheckedUpdateManyWithoutOwnerNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutOwnerNestedInput
   Auth_sessions?: Prisma.OAuthSessionUncheckedUpdateManyWithoutOwnerNestedInput
   user_job?: Prisma.jobUncheckedUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuth_sessionsInput = {
@@ -802,12 +906,15 @@ export type UserCreateWithoutAuth_sessionsInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   connected_accounts?: Prisma.SocialAccountCreateNestedManyWithoutOwnerInput
   posts?: Prisma.PostCreateNestedManyWithoutOwnerInput
   platform_post?: Prisma.PlatformPostCreateNestedManyWithoutOwnerInput
   user_job?: Prisma.jobCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuth_sessionsInput = {
@@ -819,12 +926,15 @@ export type UserUncheckedCreateWithoutAuth_sessionsInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   connected_accounts?: Prisma.SocialAccountUncheckedCreateNestedManyWithoutOwnerInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutOwnerInput
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutOwnerInput
   user_job?: Prisma.jobUncheckedCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuth_sessionsInput = {
@@ -852,12 +962,15 @@ export type UserUpdateWithoutAuth_sessionsInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   connected_accounts?: Prisma.SocialAccountUpdateManyWithoutOwnerNestedInput
   posts?: Prisma.PostUpdateManyWithoutOwnerNestedInput
   platform_post?: Prisma.PlatformPostUpdateManyWithoutOwnerNestedInput
   user_job?: Prisma.jobUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuth_sessionsInput = {
@@ -869,12 +982,15 @@ export type UserUncheckedUpdateWithoutAuth_sessionsInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   connected_accounts?: Prisma.SocialAccountUncheckedUpdateManyWithoutOwnerNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutOwnerNestedInput
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutOwnerNestedInput
   user_job?: Prisma.jobUncheckedUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUser_jobInput = {
@@ -886,12 +1002,15 @@ export type UserCreateWithoutUser_jobInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   connected_accounts?: Prisma.SocialAccountCreateNestedManyWithoutOwnerInput
   posts?: Prisma.PostCreateNestedManyWithoutOwnerInput
   platform_post?: Prisma.PlatformPostCreateNestedManyWithoutOwnerInput
   Auth_sessions?: Prisma.OAuthSessionCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUser_jobInput = {
@@ -903,12 +1022,15 @@ export type UserUncheckedCreateWithoutUser_jobInput = {
   provider: $Enums.AuthProviderType
   profile_picture?: string | null
   refresh_token?: string | null
+  isOnboarded?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   connected_accounts?: Prisma.SocialAccountUncheckedCreateNestedManyWithoutOwnerInput
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutOwnerInput
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutOwnerInput
   Auth_sessions?: Prisma.OAuthSessionUncheckedCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUser_jobInput = {
@@ -936,12 +1058,15 @@ export type UserUpdateWithoutUser_jobInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   connected_accounts?: Prisma.SocialAccountUpdateManyWithoutOwnerNestedInput
   posts?: Prisma.PostUpdateManyWithoutOwnerNestedInput
   platform_post?: Prisma.PlatformPostUpdateManyWithoutOwnerNestedInput
   Auth_sessions?: Prisma.OAuthSessionUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUser_jobInput = {
@@ -953,12 +1078,207 @@ export type UserUncheckedUpdateWithoutUser_jobInput = {
   provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
   profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   connected_accounts?: Prisma.SocialAccountUncheckedUpdateManyWithoutOwnerNestedInput
   posts?: Prisma.PostUncheckedUpdateManyWithoutOwnerNestedInput
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutOwnerNestedInput
   Auth_sessions?: Prisma.OAuthSessionUncheckedUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSubscriptionsInput = {
+  id?: string
+  name: string
+  email: string
+  password?: string | null
+  provider_id?: string | null
+  provider: $Enums.AuthProviderType
+  profile_picture?: string | null
+  refresh_token?: string | null
+  isOnboarded?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  connected_accounts?: Prisma.SocialAccountCreateNestedManyWithoutOwnerInput
+  posts?: Prisma.PostCreateNestedManyWithoutOwnerInput
+  platform_post?: Prisma.PlatformPostCreateNestedManyWithoutOwnerInput
+  Auth_sessions?: Prisma.OAuthSessionCreateNestedManyWithoutOwnerInput
+  user_job?: Prisma.jobCreateNestedManyWithoutOwnerInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSubscriptionsInput = {
+  id?: string
+  name: string
+  email: string
+  password?: string | null
+  provider_id?: string | null
+  provider: $Enums.AuthProviderType
+  profile_picture?: string | null
+  refresh_token?: string | null
+  isOnboarded?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  connected_accounts?: Prisma.SocialAccountUncheckedCreateNestedManyWithoutOwnerInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutOwnerInput
+  platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutOwnerInput
+  Auth_sessions?: Prisma.OAuthSessionUncheckedCreateNestedManyWithoutOwnerInput
+  user_job?: Prisma.jobUncheckedCreateNestedManyWithoutOwnerInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSubscriptionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionsInput, Prisma.UserUncheckedCreateWithoutSubscriptionsInput>
+}
+
+export type UserUpsertWithoutSubscriptionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSubscriptionsInput, Prisma.UserUncheckedUpdateWithoutSubscriptionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionsInput, Prisma.UserUncheckedCreateWithoutSubscriptionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSubscriptionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSubscriptionsInput, Prisma.UserUncheckedUpdateWithoutSubscriptionsInput>
+}
+
+export type UserUpdateWithoutSubscriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
+  profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  connected_accounts?: Prisma.SocialAccountUpdateManyWithoutOwnerNestedInput
+  posts?: Prisma.PostUpdateManyWithoutOwnerNestedInput
+  platform_post?: Prisma.PlatformPostUpdateManyWithoutOwnerNestedInput
+  Auth_sessions?: Prisma.OAuthSessionUpdateManyWithoutOwnerNestedInput
+  user_job?: Prisma.jobUpdateManyWithoutOwnerNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSubscriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
+  profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  connected_accounts?: Prisma.SocialAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutOwnerNestedInput
+  platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutOwnerNestedInput
+  Auth_sessions?: Prisma.OAuthSessionUncheckedUpdateManyWithoutOwnerNestedInput
+  user_job?: Prisma.jobUncheckedUpdateManyWithoutOwnerNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutTransactionsInput = {
+  id?: string
+  name: string
+  email: string
+  password?: string | null
+  provider_id?: string | null
+  provider: $Enums.AuthProviderType
+  profile_picture?: string | null
+  refresh_token?: string | null
+  isOnboarded?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  connected_accounts?: Prisma.SocialAccountCreateNestedManyWithoutOwnerInput
+  posts?: Prisma.PostCreateNestedManyWithoutOwnerInput
+  platform_post?: Prisma.PlatformPostCreateNestedManyWithoutOwnerInput
+  Auth_sessions?: Prisma.OAuthSessionCreateNestedManyWithoutOwnerInput
+  user_job?: Prisma.jobCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutTransactionsInput = {
+  id?: string
+  name: string
+  email: string
+  password?: string | null
+  provider_id?: string | null
+  provider: $Enums.AuthProviderType
+  profile_picture?: string | null
+  refresh_token?: string | null
+  isOnboarded?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  connected_accounts?: Prisma.SocialAccountUncheckedCreateNestedManyWithoutOwnerInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutOwnerInput
+  platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutOwnerInput
+  Auth_sessions?: Prisma.OAuthSessionUncheckedCreateNestedManyWithoutOwnerInput
+  user_job?: Prisma.jobUncheckedCreateNestedManyWithoutOwnerInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutTransactionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTransactionsInput, Prisma.UserUncheckedCreateWithoutTransactionsInput>
+}
+
+export type UserUpsertWithoutTransactionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTransactionsInput, Prisma.UserUncheckedUpdateWithoutTransactionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTransactionsInput, Prisma.UserUncheckedCreateWithoutTransactionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTransactionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTransactionsInput, Prisma.UserUncheckedUpdateWithoutTransactionsInput>
+}
+
+export type UserUpdateWithoutTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
+  profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  connected_accounts?: Prisma.SocialAccountUpdateManyWithoutOwnerNestedInput
+  posts?: Prisma.PostUpdateManyWithoutOwnerNestedInput
+  platform_post?: Prisma.PlatformPostUpdateManyWithoutOwnerNestedInput
+  Auth_sessions?: Prisma.OAuthSessionUpdateManyWithoutOwnerNestedInput
+  user_job?: Prisma.jobUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  provider?: Prisma.EnumAuthProviderTypeFieldUpdateOperationsInput | $Enums.AuthProviderType
+  profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOnboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  connected_accounts?: Prisma.SocialAccountUncheckedUpdateManyWithoutOwnerNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutOwnerNestedInput
+  platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutOwnerNestedInput
+  Auth_sessions?: Prisma.OAuthSessionUncheckedUpdateManyWithoutOwnerNestedInput
+  user_job?: Prisma.jobUncheckedUpdateManyWithoutOwnerNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -972,6 +1292,8 @@ export type UserCountOutputType = {
   platform_post: number
   Auth_sessions: number
   user_job: number
+  subscriptions: number
+  transactions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -980,6 +1302,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   platform_post?: boolean | UserCountOutputTypeCountPlatform_postArgs
   Auth_sessions?: boolean | UserCountOutputTypeCountAuth_sessionsArgs
   user_job?: boolean | UserCountOutputTypeCountUser_jobArgs
+  subscriptions?: boolean | UserCountOutputTypeCountSubscriptionsArgs
+  transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
 }
 
 /**
@@ -1027,6 +1351,20 @@ export type UserCountOutputTypeCountUser_jobArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.jobWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SubscriptionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TransactionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1037,6 +1375,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   provider?: boolean
   profile_picture?: boolean
   refresh_token?: boolean
+  isOnboarded?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   connected_accounts?: boolean | Prisma.User$connected_accountsArgs<ExtArgs>
@@ -1044,6 +1383,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   platform_post?: boolean | Prisma.User$platform_postArgs<ExtArgs>
   Auth_sessions?: boolean | Prisma.User$Auth_sessionsArgs<ExtArgs>
   user_job?: boolean | Prisma.User$user_jobArgs<ExtArgs>
+  subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
+  transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1056,6 +1397,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   provider?: boolean
   profile_picture?: boolean
   refresh_token?: boolean
+  isOnboarded?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1069,6 +1411,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   provider?: boolean
   profile_picture?: boolean
   refresh_token?: boolean
+  isOnboarded?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1082,17 +1425,20 @@ export type UserSelectScalar = {
   provider?: boolean
   profile_picture?: boolean
   refresh_token?: boolean
+  isOnboarded?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "provider_id" | "provider" | "profile_picture" | "refresh_token" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "provider_id" | "provider" | "profile_picture" | "refresh_token" | "isOnboarded" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   connected_accounts?: boolean | Prisma.User$connected_accountsArgs<ExtArgs>
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
   platform_post?: boolean | Prisma.User$platform_postArgs<ExtArgs>
   Auth_sessions?: boolean | Prisma.User$Auth_sessionsArgs<ExtArgs>
   user_job?: boolean | Prisma.User$user_jobArgs<ExtArgs>
+  subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
+  transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1106,6 +1452,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     platform_post: Prisma.$PlatformPostPayload<ExtArgs>[]
     Auth_sessions: Prisma.$OAuthSessionPayload<ExtArgs>[]
     user_job: Prisma.$jobPayload<ExtArgs>[]
+    subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
+    transactions: Prisma.$TransactionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1116,6 +1464,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     provider: $Enums.AuthProviderType
     profile_picture: string | null
     refresh_token: string | null
+    isOnboarded: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1517,6 +1866,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   platform_post<T extends Prisma.User$platform_postArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$platform_postArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Auth_sessions<T extends Prisma.User$Auth_sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$Auth_sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OAuthSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   user_job<T extends Prisma.User$user_jobArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$user_jobArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$jobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  subscriptions<T extends Prisma.User$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  transactions<T extends Prisma.User$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1554,6 +1905,7 @@ export interface UserFieldRefs {
   readonly provider: Prisma.FieldRef<"User", 'AuthProviderType'>
   readonly profile_picture: Prisma.FieldRef<"User", 'String'>
   readonly refresh_token: Prisma.FieldRef<"User", 'String'>
+  readonly isOnboarded: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -2061,6 +2413,54 @@ export type User$user_jobArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.JobScalarFieldEnum | Prisma.JobScalarFieldEnum[]
+}
+
+/**
+ * User.subscriptions
+ */
+export type User$subscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Subscription
+   */
+  select?: Prisma.SubscriptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Subscription
+   */
+  omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
+  where?: Prisma.SubscriptionWhereInput
+  orderBy?: Prisma.SubscriptionOrderByWithRelationInput | Prisma.SubscriptionOrderByWithRelationInput[]
+  cursor?: Prisma.SubscriptionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SubscriptionScalarFieldEnum | Prisma.SubscriptionScalarFieldEnum[]
+}
+
+/**
+ * User.transactions
+ */
+export type User$transactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Transaction
+   */
+  select?: Prisma.TransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Transaction
+   */
+  omit?: Prisma.TransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TransactionInclude<ExtArgs> | null
+  where?: Prisma.TransactionWhereInput
+  orderBy?: Prisma.TransactionOrderByWithRelationInput | Prisma.TransactionOrderByWithRelationInput[]
+  cursor?: Prisma.TransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TransactionScalarFieldEnum | Prisma.TransactionScalarFieldEnum[]
 }
 
 /**

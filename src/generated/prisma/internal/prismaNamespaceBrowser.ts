@@ -57,7 +57,10 @@ export const ModelName = {
   PlatformPost: 'PlatformPost',
   OAuthSession: 'OAuthSession',
   PostAnalytic: 'PostAnalytic',
-  job: 'job'
+  job: 'job',
+  SubscriptionPlan: 'SubscriptionPlan',
+  Subscription: 'Subscription',
+  Transaction: 'Transaction'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -85,6 +88,7 @@ export const UserScalarFieldEnum = {
   provider: 'provider',
   profile_picture: 'profile_picture',
   refresh_token: 'refresh_token',
+  isOnboarded: 'isOnboarded',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -192,6 +196,62 @@ export const JobScalarFieldEnum = {
 } as const
 
 export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
+
+
+export const SubscriptionPlanScalarFieldEnum = {
+  id: 'id',
+  plan_tier: 'plan_tier',
+  price: 'price',
+  currency: 'currency',
+  description: 'description',
+  features: 'features',
+  maxPostsPerMonth: 'maxPostsPerMonth',
+  maxSocialAccounts: 'maxSocialAccounts',
+  analyticsEnabled: 'analyticsEnabled',
+  schedulingEnabled: 'schedulingEnabled',
+  prioritySupport: 'prioritySupport',
+  customBranding: 'customBranding',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionPlanScalarFieldEnum = (typeof SubscriptionPlanScalarFieldEnum)[keyof typeof SubscriptionPlanScalarFieldEnum]
+
+
+export const SubscriptionScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  plan_tier_id: 'plan_tier_id',
+  status: 'status',
+  razorpay_subscription_id: 'razorpay_subscription_id',
+  current_period_start: 'current_period_start',
+  current_period_end: 'current_period_end',
+  cancelled_at: 'cancelled_at',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+export const TransactionScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  subscription_id: 'subscription_id',
+  razorpay_payment_id: 'razorpay_payment_id',
+  razorpay_order_id: 'razorpay_order_id',
+  razorpay_signature: 'razorpay_signature',
+  amount: 'amount',
+  currency: 'currency',
+  status: 'status',
+  type: 'type',
+  description: 'description',
+  failure_reason: 'failure_reason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
 export const SortOrder = {

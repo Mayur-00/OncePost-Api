@@ -57,6 +57,30 @@
     FAILED
   }
 
+  enum PlanTier {
+    FREE
+    BASIC 
+    PRO
+  }
+
+  enum TransactionStatus {
+    PENDING
+    COMPLETED
+    FAILED
+    REFUNDED
+  }
+
+  enum TransactionType {
+    SUBSCRIPTION_UPGRADE
+    SUBSCRIPTION_RENEWAL
+  }
+
+  enum SubscriptionStatus {
+    ACTIVE
+    CANCELLED
+    EXPIRED
+  }
+
   model User {
     id  String @id @default(cuid()) @unique
     name String
@@ -66,6 +90,7 @@
     provider AuthProviderType
     profile_picture String?
     refresh_token String?
+    isOnboarded Boolean @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime  @updatedAt()
 
@@ -76,6 +101,8 @@
     platform_post PlatformPost[]
     Auth_sessions OAuthSession[]
     user_job job[]
+    subscriptions Subscription[]
+    transactions Transaction[]
   }
 
   model SocialAccount {
@@ -105,6 +132,8 @@
     @@index([owner_id])
     @@index([platform])
   }
+
+  
 
   model Post {
     id String @id @default(cuid())
@@ -198,6 +227,71 @@
 
     @@index([owner_id, job_type, status])
   }
+
+  model SubscriptionPlan {
+    id String @id @default(cuid())
+    plan_tier PlanTier @unique
+    price Float // Price in INR
+    currency String @default("INR")
+    description String
+    features String[] // Array of feature descriptions
+    maxPostsPerMonth Int
+    maxSocialAccounts Int
+    analyticsEnabled Boolean @default(false)
+    schedulingEnabled Boolean @default(false)
+    prioritySupport Boolean @default(false)
+    customBranding Boolean @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+
+    subscriptions Subscription[]
+  }
+
+  model Subscription {
+    id String @id @default(cuid())
+    user_id String
+    plan_tier_id String
+    status SubscriptionStatus // active, cancelled, expired
+    razorpay_subscription_id String? // For reference if needed
+    current_period_start DateTime
+    current_period_end DateTime
+    cancelled_at DateTime?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+
+    user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    plan SubscriptionPlan @relation(fields: [plan_tier_id], references: [id])
+    transactions Transaction[]
+
+    @@index([user_id])
+    @@index([status])
+  }
+
+  model Transaction {
+    id String @id @default(cuid())
+    user_id String
+    subscription_id String
+    razorpay_payment_id String @unique
+    razorpay_order_id String @unique
+    razorpay_signature String?
+    amount Float // Amount in INR
+    currency String @default("INR")
+    status TransactionStatus @default(PENDING)
+    type TransactionType
+    description String?
+    failure_reason String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+
+    user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    subscription Subscription @relation(fields: [subscription_id], references: [id], onDelete: Cascade)
+
+    @@index([user_id])
+    @@index([status])
+    @@index([razorpay_payment_id])
+  }
+
+
 
   
 

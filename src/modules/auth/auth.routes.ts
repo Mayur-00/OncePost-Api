@@ -13,6 +13,7 @@ export function createAuthRoutes(controller: AuthController): Router {
   router.get('/user', authorize, controller.user);
   router.patch('/user', authorize, controller.handleProfileNameUpdate);
   router.put('/user', authorize, controller.handleProfilePictureUpdate);
+  router.delete('/user', authorize, controller.handleDeleteAccountRequest);
   router.get('/logout', authorize, controller.handleLogout);
   router.get('/delete', authorize, controller.handleDeleteAccountRequest);
 

@@ -14,8 +14,8 @@
     "lint:fix": "eslint \"{src,test}/**/*.ts\" --fix",
     "prisma:generate": " prisma generate",
     "migration:dev": " prisma migrate dev ",
-    "migrate": " prisma migrate deploy "
-
+    "migrate": " prisma migrate deploy ",
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -39,6 +39,7 @@
     "multer": "^2.0.2",
     "oauth-1.0a": "^2.2.6",
     "pg": "^8.17.2",
+    "razorpay": "^2.9.6",
     "redis": "^5.10.0",
     "socket.io": "^4.8.1",
     "socketio": "^1.0.0",
