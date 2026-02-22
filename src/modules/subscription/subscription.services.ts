@@ -133,13 +133,12 @@ export class SubscriptionService {
   async handleSuccessfulPayment({
   transactionId,
   paymentId,
-  eventId,
 }: {
   transactionId: string;
   paymentId: string;
-  eventId: string;
+
 }) {
-  await this.prismaClient.$transaction(async (tx) => {
+   await this.prismaClient.$transaction(async (tx) => {
     const transaction = await tx.transaction.findUnique({
       where: { id: transactionId },
     });

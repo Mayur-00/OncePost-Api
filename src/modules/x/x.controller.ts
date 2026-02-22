@@ -2,9 +2,9 @@ import { Logger } from 'winston';
 import { XServices } from './x.services.js';
 import { RequestHandler, Request, Response } from 'express';
 import { asyncHandler } from '../../utils/asyncHandler.js';
-import { Prisma, PrismaClient } from '../../generated/prisma/client.js';
+import { PrismaClient } from '../../generated/prisma/client.js';
 import { ApiError } from '../../utils/apiError.js';
-import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
+
 import { TweetDbRecord, XCallbackSchema, XPublishPostSchema } from './x.dto.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
 import crypto from 'crypto';
@@ -14,7 +14,7 @@ export class XController {
     private logger: Logger,
     private XServices: XServices,
     private prismaClient: PrismaClient,
-    private jwtServices: jwtToken,
+
   ) {}
 
   getAuth: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -23,7 +23,9 @@ export class XController {
     if (!req.user) {
       this.logger.error('req.user not found');
       throw new ApiError(400, 'UnAuthorized');
-    }
+    };
+
+
     const state = crypto.randomBytes(32).toString('hex');
     await this.XServices.createOAuthSession(req.user.id, code_verifier, state);
 

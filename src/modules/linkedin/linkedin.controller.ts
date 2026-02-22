@@ -8,13 +8,13 @@ import { ApiError } from '../../utils/apiError.js';
 import { PostServices } from './post.services.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
 import crypto from 'crypto'
+import { PrismaClient } from '../../generated/prisma/client.js';
 
 export class LinkedinController {
   constructor(
     private linkedinService: linkedinServices,
-    private postServices: PostServices,
     private logger: Logger,
-    private jwtToken: jwtToken,
+  
   ) {}
 
   startAuth : RequestHandler = asyncHandler(async (req:Request, res:Response) => {
@@ -23,6 +23,8 @@ export class LinkedinController {
       this.logger.error("unAuthorized Request");
       throw new ApiError(401, "UnAuthorized");
     };
+
+    const userid = req.user.id
     const state = crypto.randomBytes(32).toString('hex');
 
     const session = await this.linkedinService.createOAuthSession(req.user.id, state );
@@ -56,8 +58,7 @@ export class LinkedinController {
       accessTokenServiceResponse,
       userid,
     );
-
-    await this.linkedinService.markSessionAsUsed(session.id);
+       await this.linkedinService.markSessionAsUsed(session.id);
 
     this.logger.info('user linkedin connection success', {
       email: userInfoResponse.email,

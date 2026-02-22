@@ -19,6 +19,6 @@ export const postServices = new PostServices(prisma, logger);
 
 export const jwtService = new jwtToken()
 
-export const linkedinController = new LinkedinController(LinkedinService, postServices, logger,jwtService );
+export const linkedinController = new LinkedinController(LinkedinService, logger);
 
 export const linkedinRoutes = createLinkedInRoutes(linkedinController);

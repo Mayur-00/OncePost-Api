@@ -59,11 +59,14 @@ export class SubscriptionControllerClass {
             throw new ApiError(401, 'payment is not valid')
         };
 
-        const subscription = await this.subscriptionService.activateSubscription(subscription_id)
+         await this.subscriptionService.handleSuccessfulPayment({ transactionId:transaction.id, paymentId:payment_id})
+
+          this.logger.info(
+        `Subscription activated for transaction ${transaction.id}`
+      );
 
         return res.status(200).json(new ApiResponse(200, {
             user:req.user,
-            subscription:subscription,
             transaction_id:transaction.id
         }, 'payment conformed and subscription created'))
 
@@ -136,7 +139,7 @@ export class SubscriptionControllerClass {
       await this.subscriptionService.handleSuccessfulPayment({
         transactionId: transaction.id,
         paymentId: razorpayPaymentId,
-        eventId: eventId,
+      
       });
 
       this.logger.info(

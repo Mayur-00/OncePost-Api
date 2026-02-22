@@ -38,8 +38,7 @@ export class PostService {
       this.logger.error("Couldn't Create Post ", { error: error });
       throw new ApiError(500, 'Internal Server Error');
     }
-  }
-
+  };
   async updatePost(new_content: string, new_media_url: string, user_id: string) {
     try {
       return await this.prisma.post.update({
@@ -56,8 +55,7 @@ export class PostService {
       this.logger.error("Couldn't Update The Post ", { error: error });
       throw new ApiError(500, 'Internal Server Error');
     }
-  }
-
+  };
   async deletePost(user_id: string, post_id: string) {
     try {
       const post = await this.prisma.post.delete({
@@ -74,8 +72,7 @@ export class PostService {
       this.logger.error("Couldn't Delete The Post ", { error: error });
       throw new ApiError(500, 'Internal Server Error');
     }
-  }
-
+  };
   async getPostById(post_id: string) {
     try {
       const post = await this.prisma.post.findUnique({
@@ -101,7 +98,6 @@ export class PostService {
       throw new ApiError(500, 'Internal Server Error');
     }
   }
-
   async getAllPosts(user_id: string, limit: number, skip: number) {
     try {
       return await this.prisma.post.findMany({
@@ -204,6 +200,72 @@ export class PostService {
     } catch (error) {
       this.logger.error(`post updation failed with error ${error}`);
       throw new ApiError(500, 'internal server error');
+    }
+  };
+  async isServiceAvailable (user_id:string){
+    try {
+      const userSubscription = await this.prisma.subscription.findFirst({
+        where:{
+          user_id:user_id,
+          status:'ACTIVE'
+        }
+      });
+
+      if(!userSubscription){
+        this.logger.error('no user subscription found')
+        throw new ApiError(404, 'No Active User Subscription')
+      };
+
+      if(userSubscription.end_date <= new Date()){
+
+        this.logger.error(`subscription expired, id:  ${userSubscription.id}`)
+        await this.prisma.subscription.update({
+          where:{
+            id:userSubscription.id
+          },
+          data:{
+            status:'EXPIRED'
+          }
+        });
+        throw new ApiError(403, 'Subscription Expired')
+      };
+
+      if(userSubscription.post_creation_remaining <= 0 ){
+        return false
+      }
+      return true
+
+    } catch (error) {
+      this.logger.error(`failed to check post service available, error: ${error}`);
+      throw new ApiError(500, 'Internal Server Error')
+    }
+  };
+  async LogUsage(user_id:string,){
+    try {
+      const subscription = await this.prisma.subscription.findFirst({
+        where:{
+          user_id:user_id,
+          status:'ACTIVE'
+        }
+      });
+
+      if(!subscription){
+        this.logger.error(`subscription not found with user id : ${user_id}`)
+        throw new ApiError(404, 'subscription not found')
+      }
+
+      await this.prisma.subscription.update({
+        where:{
+          id:subscription.id
+        },
+        data:{
+          post_creation_remaining: subscription?.post_creation_remaining -1 ,
+
+        }
+      })
+    } catch (error) {
+      this.logger.error(`couldn't log usage, error: ${error}`);
+      throw new ApiError(500, 'Internal Server Error')
     }
   }
 }

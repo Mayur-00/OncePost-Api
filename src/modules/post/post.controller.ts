@@ -7,26 +7,22 @@ import {
   getPostsSchema,
   getSearchPostsSchema,
   multerFileSchema,
-  publishPostToMultiplePlatfromsSchema,
   publishPostToMultiplePlatfromsSchemaQueued,
 } from './post.dto.js';
 import { PostService } from './post.services.js';
 import { uploadImageToCloudinary } from '../../utils/imageUploader.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
-import { linkedinServices } from '../linkedin/linkedin.services.js';
+
 import { ApiError } from '../../utils/apiError.js';
-import { Multer } from 'multer';
-import { XServices } from '../x/x.services.js';
-import { TweetDbRecord } from '../x/x.dto.js';
 import { postQueue } from '../../queues/queues.js';
 import { jobBody } from '../../workers/worker.types.js';
+import {PrismaClient } from '../../generated/prisma/client.js';
 
 export class PostController {
   constructor(
     private logger: Logger,
     private postServices: PostService,
-    private linkedinServices: linkedinServices,
-    private xServices: XServices,
+    private prismaClient : PrismaClient
   ) {}
 
   createPost: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -106,6 +102,15 @@ export class PostController {
         throw new ApiError(401, 'You Are Not Authorized');
       };
 
+      const userid = req.user.id
+
+      const isServiceAvailable = await this.postServices.isServiceAvailable(req.user.id);
+
+      if(!isServiceAvailable){
+        this.logger.error(`service no longer availble `);
+        throw new ApiError(403, 'Posing Limit Exceeded')   
+      }
+
 
 
       if (scheduledDateAndTime) {
@@ -132,10 +137,14 @@ export class PostController {
           userid: req.user.id,
         };
 
-        postQueue.add('post', data, {
+      await this.prismaClient.$transaction(async () => {
+          postQueue.add('post', data, {
           delay: delay,
           jobId: post.id,
         });
+
+        await this.postServices.LogUsage(userid)
+      })
 
           this.logger.info('Post Scheduled Successfuly');
           res.status(200).json(new ApiResponse(203, 'Scheduled successFully'));

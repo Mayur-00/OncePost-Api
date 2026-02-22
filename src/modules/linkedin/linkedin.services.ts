@@ -36,7 +36,7 @@ export class linkedinServices {
       this.logger.error('an error occured while creation oauth session', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
 
   async getOAuthSession(state: string) {
     try {
@@ -58,14 +58,14 @@ export class linkedinServices {
       this.logger.error('an error occured while geting oauth session from db', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
 
   async markSessionAsUsed(sessionId: string) {
     await this.prisma.oAuthSession.update({
       where: { id: sessionId },
       data: { used: true },
     });
-  }
+  };
 
   generateAuthUrl(state: string):String {
     this.logger.info(`clientID: ${this.Config.clientID} , redirectUri: ${this.Config.redirectUri}`)
@@ -78,7 +78,7 @@ export class linkedinServices {
     });
 
     return `https://www.linkedin.com/oauth/v2/authorization?${params}`;
-  }
+  };
 
   async getAccessToken(code: string): Promise<linkedinAccessTokenResponse> {
     try {
@@ -161,7 +161,7 @@ export class linkedinServices {
       // Generic error
       throw new ApiError(500, 'Failed to authenticate with LinkedIn');
     }
-  }
+  };
 
   async getUserInfo(accessToken: string): Promise<LinkedinUserInfoResponse> {
     try {
@@ -181,7 +181,7 @@ export class linkedinServices {
       this.logger.error('failed to get user info', { error });
       throw new ApiError(500, 'failed to get user info');
     }
-  }
+  };
 
   async publishTextPost(
     linkedinUserId: string,
@@ -221,7 +221,7 @@ export class linkedinServices {
       this.logger.info('Post Publising Failed', { error });
       throw new ApiError(500, 'Post Publish Failed');
     }
-  }
+  };
 
   async registerImageUpload(
     access_token: string,
@@ -264,7 +264,7 @@ export class linkedinServices {
       this.logger.error('Media Registeration Failed', { error });
       throw new ApiError(500, 'Media Registeration Failed');
     }
-  }
+  };
 
   async UploadImageBuffer(uploadUrl: string, imageBuffer: Buffer, access_token: string) {
     try {
@@ -285,7 +285,7 @@ export class linkedinServices {
       this.logger.error('image buffer upload failed', { error });
       throw new ApiError(500, 'media buffer upload Failed');
     }
-  }
+  };
 
   async publishPostWithImage(
     asset: string,
@@ -332,7 +332,7 @@ export class linkedinServices {
       this.logger.error('Post Publishing Failed', { error });
       throw new ApiError(500, 'Post Publishing Failed');
     }
-  }
+  };
 
   async createUsersLinkedinConnectionDatabaseRecord(
     user_info: LinkedinUserInfoType,
@@ -361,7 +361,7 @@ export class linkedinServices {
       this.logger.error('Social Account Database Record Creation Failed', { error: error });
       throw new ApiError(500, 'Account Creation Failed');
     }
-  }
+  };
 
   async createLinkedinPostDatabaseRecord(
     user_id: string,
@@ -391,7 +391,7 @@ export class linkedinServices {
       this.logger.error('Db Record Creation Failed : ', { error });
       throw new ApiError(500, 'database linkedin post creation failed');
     }
-  }
+  };
 
   async getUserAccount(userid: string): Promise<SocialAccount> {
     try {
@@ -414,7 +414,7 @@ export class linkedinServices {
       this.logger.error('account fetch Failed : ', { error });
       throw new ApiError(500, 'database linkedin account fetch failed');
     }
-  }
+  };
 
   async getImageBufferFromCloudinary(image_url: string) {
     try {
@@ -424,7 +424,7 @@ export class linkedinServices {
       this.logger.info('an error occured while getting image from cloudinary', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
 
   async getPostFromDb(postId: string, userId: string) {
     try {
@@ -440,7 +440,7 @@ export class linkedinServices {
       this.logger.error('an error occured while getting the post', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
 
   async validateAccessToken(account:SocialAccount){
     try {
@@ -465,7 +465,7 @@ export class linkedinServices {
       this.logger.error(`an error occured while validating accessToken : ${error}`);
       throw new ApiError(500, "internal server error")
     }
-  }
+  };
 
   async flagPostSuccess( postid:string, linkedin_post_id:string,){
     try {
@@ -518,7 +518,7 @@ export class linkedinServices {
       this.logger.error(`failed to flag failed Post : ${error}`);
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
 
   async createEmptyLinkedinPostDbRecord(user_id:string, post_id:string, linkedin_account_id:string,) {  
     try {
@@ -537,7 +537,7 @@ export class linkedinServices {
       this.logger.error(`failed to create sample linkedin post : ${error}`)
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
   async updateLinkedinPostSuccess(linkedin_post_db_id:string, linkedin_post_publish_id:string) {  
     try {
       return await this.prisma.platformPost.update({
@@ -557,7 +557,6 @@ export class linkedinServices {
       this.logger.error(`failed to create sample linkedin post : ${error}`)
       throw new ApiError(500, 'internal server error');
     }
-  }
-
+  };
 
 }

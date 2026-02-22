@@ -30,7 +30,8 @@ export class XServices {
       code_verifier,
       code_challenge: hash,
     };
-  }
+  };
+
   async getOAuthSession(state: string) {
     try {
       const session = await this.prismaClient.oAuthSession.findUnique({
@@ -51,14 +52,15 @@ export class XServices {
       this.logger.error('an error occured while geting oauth session from db', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
 
   async markSessionAsUsed(sessionId: string) {
     await this.prismaClient.oAuthSession.update({
       where: { id: sessionId },
       data: { used: true },
     });
-  }
+  };
+
   async createOAuthSession(userid: string, code_verifier: string, state: string) {
     try {
       this.logger.info(`session creation, codeVerifier:${code_verifier}`);
@@ -74,7 +76,8 @@ export class XServices {
       this.logger.error('an error occured while creation oauth session', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
+
   async getAccessToken(code_verifier: string, code: string) {
     const clientId = process.env.X_CLIENT_ID!;
     const clientSecret = process.env.X_CLIENT_SECRET!;
@@ -101,7 +104,8 @@ export class XServices {
     );
 
     return tokenRes;
-  }
+  };
+
   async getXUserInfo(accessToken: string) {
     try {
       const response = await this.httpClient.get<XUserInfo>('https://api.twitter.com/2/users/me', {
@@ -118,7 +122,8 @@ export class XServices {
       this.logger.error('an error occured while asking for user info', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
+
   async createDbUsersXConnection(userId: string, userInfo: XUserInfo, tokenObj: XTokenResponse) {
     try {
       return await this.prismaClient.socialAccount.create({
@@ -139,7 +144,8 @@ export class XServices {
       this.logger.error('an error occured while saving user info into db', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
+
   async refreshAccessToken(refreshToken: string) {
     try {
       const clientId = process.env.X_CLIENT_ID!;
@@ -165,7 +171,8 @@ export class XServices {
       this.logger.error(`an error occured while refreshing accessToken`, { error: error });
       throw new ApiError(500, 'account expired reconnect your account');
     }
-  }
+  };
+
   async getActiveXAccount(userid: string) {
     try {
       return await this.prismaClient.socialAccount.findFirst({
@@ -178,7 +185,8 @@ export class XServices {
       this.logger.error('cannot get x active account', { error: error });
       throw new ApiError(500, 'account not found');
     }
-  }
+  };
+
   async validateAccessToken(account: SocialAccount) {
     try {
       const now = Date.now();
@@ -209,35 +217,41 @@ export class XServices {
       this.logger.error('an error occured while validating access token', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
-  async publishTweet(text: string, mediaIds: string[], accessToken: string): Promise<TweetResponse> {
+  };
+
+  async publishTweet(
+    text: string,
+    mediaIds: string[],
+    accessToken: string,
+  ): Promise<TweetResponse> {
     try {
-const payload: any = { text };
+      const payload: any = { text };
 
-    // Only add media if mediaIds exist and array is not empty
-    if (mediaIds && mediaIds.length > 0) {
-      payload.media = {
-        media_ids: mediaIds,
-      };
-    }
+      // Only add media if mediaIds exist and array is not empty
+      if (mediaIds && mediaIds.length > 0) {
+        payload.media = {
+          media_ids: mediaIds,
+        };
+      }
 
-    const tweet = await this.httpClient.post<TweetResponse>(
-      'https://api.x.com/2/tweets',
-      payload,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+      const tweet = await this.httpClient.post<TweetResponse>(
+        'https://api.x.com/2/tweets',
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
         },
-      },
-    );
+      );
 
-    return tweet.data;
+      return tweet.data;
     } catch (error) {
       this.logger.error(`an error occured while publishing the tweet ${error}`);
       throw new ApiError(500, 'publishing tweets failed');
     }
-  }
+  };
+
   async uploadMedia(accessToken: string, buffer: Buffer, mimetype: string) {
     try {
       const form = new FormData();
@@ -255,14 +269,14 @@ const payload: any = { text };
         },
       });
       this.logger.info(`image upload response : ${res.data}`);
-      console.log(res.data )
-      console.log(res.data.data )
+      console.log(res.data);
+      console.log(res.data.data);
       return res.data.data.id;
     } catch (error) {
       this.logger.error(`unable to upload media error:${error}`);
       throw new ApiError(500, 'image upload failed');
     }
-  }
+  };
 
   async getPost(post_id: string, userid: string) {
     try {
@@ -277,7 +291,7 @@ const payload: any = { text };
       this.logger.info('an error occured while geting post ', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
 
   async getImageBufferFromCloudinary(image_url: string) {
     try {
@@ -287,7 +301,7 @@ const payload: any = { text };
       this.logger.info('an error occured while getting image from cloudinary', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
 
   async createTweetDbRecord(data: TweetDbRecord) {
     try {
@@ -295,7 +309,7 @@ const payload: any = { text };
         data: {
           owner_id: data.ownerId,
           post_id: data.postId,
-          account_id:data.accountId,
+          account_id: data.accountId,
           platform: 'X',
           platform_post_id: data.tweetId || '',
           platform_post_url: `https://x.com/i/web/status/${data.tweetId}` || '',
@@ -311,97 +325,91 @@ const payload: any = { text };
     }
   };
 
-  async flagTweetSuccess(postid:string, x_tweet_id:string){
+  async flagTweetSuccess(postid: string, x_tweet_id: string) {
     try {
       return this.prismaClient.platformPost.update({
-        where:{
-          id:postid
+        where: {
+          id: postid,
         },
-        data:{
-          status:'POSTED',
-          platform_post_id:x_tweet_id,
-          platform_post_url: `https://x.com/i/web/status/${x_tweet_id}` 
-        }
-      })
+        data: {
+          status: 'POSTED',
+          platform_post_id: x_tweet_id,
+          platform_post_url: `https://x.com/i/web/status/${x_tweet_id}`,
+        },
+      });
     } catch (error) {
       this.logger.error(`failed to flag tweet ${error}`);
-      throw new ApiError(500, 'internal server error')
+      throw new ApiError(500, 'internal server error');
     }
   };
 
-  async isAlreadyPosted( postid:string, ){
+  async isAlreadyPosted(postid: string) {
     try {
-         return  await this.prismaClient.platformPost.findFirst({
-        where:{
-          id:postid,
-          platform:'X',
-          status:'POSTED'
-          
-        }
-         });
-
+      return await this.prismaClient.platformPost.findFirst({
+        where: {
+          id: postid,
+          platform: 'X',
+          status: 'POSTED',
+        },
+      });
     } catch (error) {
       this.logger.error(`failed to check ${error}`);
-      throw new ApiError(500, 'internal server error')
+      throw new ApiError(500, 'internal server error');
     }
   };
 
-  async createEmptyTweetDbRecord(user_id:string, post_id:string,X_db_account_id:string ){
+  async createEmptyTweetDbRecord(user_id: string, post_id: string, X_db_account_id: string) {
     try {
-        return await this.prismaClient.platformPost.create({
-        data:{
-         owner_id:user_id,
-         post_id:post_id,
-         account_id:X_db_account_id,
-         platform:'X',
-         status:'PENDING',
-
-        }
-         });
-
+      return await this.prismaClient.platformPost.create({
+        data: {
+          owner_id: user_id,
+          post_id: post_id,
+          account_id: X_db_account_id,
+          platform: 'X',
+          status: 'PENDING',
+        },
+      });
     } catch (error) {
       this.logger.error(`failed to create db record ${error}`);
-      throw new ApiError(500, 'internal server error')
+      throw new ApiError(500, 'internal server error');
     }
   };
 
-   async updateLinkedinPostSuccess(x_tweet_db_id:string, x_tweet_publish_id:string) {  
+  async updateLinkedinPostSuccess(x_tweet_db_id: string, x_tweet_publish_id: string) {
     try {
       return await this.prismaClient.platformPost.update({
-        where:{
-          id:x_tweet_db_id
+        where: {
+          id: x_tweet_db_id,
         },
-        data:{
-          platform_post_id:x_tweet_publish_id,
-          platform_post_url:`https://x.com/i/web/status/${x_tweet_publish_id}`,
-         status:'POSTED',
-         postedAt:new Date(Date.now())
-
-        }
-      
+        data: {
+          platform_post_id: x_tweet_publish_id,
+          platform_post_url: `https://x.com/i/web/status/${x_tweet_publish_id}`,
+          status: 'POSTED',
+          postedAt: new Date(Date.now()),
+        },
       });
-    } catch(error){
-   this.logger.error(`failed to update db record ${error}`);
-      throw new ApiError(500, 'internal server error')
+    } catch (error) {
+      this.logger.error(`failed to update db record ${error}`);
+      throw new ApiError(500, 'internal server error');
     }
-};
+  };
 
-  async flagTweetPublishFailed( platform_Post_id:string, error:string) {
+  async flagTweetPublishFailed(platform_Post_id: string, error: string) {
     try {
       return await this.prismaClient.platformPost.update({
-        where:{
-          id:platform_Post_id
+        where: {
+          id: platform_Post_id,
         },
-        data:{
-          error:error,
-          status:'FAILED',
-          failedAt:new Date(Date.now())
-        }
-      
-      })
+        data: {
+          error: error,
+          status: 'FAILED',
+          failedAt: new Date(Date.now()),
+        },
+      });
     } catch (error) {
       this.logger.error(`failed to flag failed Post : ${error}`);
       throw new ApiError(500, 'internal server error');
     }
-  }
+  };
+
 }
