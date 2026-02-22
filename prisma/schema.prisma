@@ -63,24 +63,6 @@
     PRO
   }
 
-  enum TransactionStatus {
-    PENDING
-    COMPLETED
-    FAILED
-    REFUNDED
-  }
-
-  enum TransactionType {
-    SUBSCRIPTION_UPGRADE
-    SUBSCRIPTION_RENEWAL
-  }
-
-  enum SubscriptionStatus {
-    ACTIVE
-    CANCELLED
-    EXPIRED
-  }
-
   model User {
     id  String @id @default(cuid()) @unique
     name String
@@ -230,8 +212,8 @@
 
   model SubscriptionPlan {
     id String @id @default(cuid())
-    plan_tier PlanTier @unique
-    price Float // Price in INR
+    plan_tier PlanTier 
+    price Int // Price in INR
     currency String @default("INR")
     description String
     features String[] // Array of feature descriptions
@@ -240,46 +222,70 @@
     analyticsEnabled Boolean @default(false)
     schedulingEnabled Boolean @default(false)
     prioritySupport Boolean @default(false)
-    customBranding Boolean @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 
     subscriptions Subscription[]
   }
 
+   enum SubscriptionStatus {
+    ACTIVE
+    CANCELLED
+    PENDING
+    EXPIRED
+    FAILED
+  }
+
   model Subscription {
     id String @id @default(cuid())
     user_id String
-    plan_tier_id String
+    plan_id String
     status SubscriptionStatus // active, cancelled, expired
-    razorpay_subscription_id String? // For reference if needed
-    current_period_start DateTime
-    current_period_end DateTime
+    start_date DateTime
+    end_date DateTime
     cancelled_at DateTime?
+    cancellation_reason String?
+    platform_connections_remaining Int
+    post_creation_remaining Int
+    failure_reason String?
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 
     user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    plan SubscriptionPlan @relation(fields: [plan_tier_id], references: [id])
+    plan SubscriptionPlan @relation(fields: [plan_id], references: [id])
     transactions Transaction[]
 
     @@index([user_id])
     @@index([status])
   }
 
+
+    enum TransactionStatus {
+    PENDING
+    COMPLETED
+    FAILED
+    REFUNDED
+  }
+
+  enum TransactionType {
+    SUBSCRIPTION_UPGRADE
+    SUBSCRIPTION_RENEWAL
+  }
+
   model Transaction {
     id String @id @default(cuid())
     user_id String
     subscription_id String
-    razorpay_payment_id String @unique
     razorpay_order_id String @unique
+    razorpay_payment_id String?
     razorpay_signature String?
-    amount Float // Amount in INR
+    amount Int // Amount in INR
     currency String @default("INR")
     status TransactionStatus @default(PENDING)
     type TransactionType
-    description String?
     failure_reason String?
+    webhook_processed Boolean @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt()
 

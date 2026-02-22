@@ -7,6 +7,7 @@ import { RequestHandler, Request, Response } from 'express';
 import { initateOrderSchema, verifyPaymentSchema } from "./subscription.dto.js";
 import { ApiError } from "../../utils/apiError.js";
 import { ApiResponse } from "../../utils/apiResponse.js";
+import { RazorpayPaymentEntitySchema, RazorpayWebhookSchema } from "../razorpay/razorpay.dto.js";
 
 
 
@@ -29,38 +30,36 @@ export class SubscriptionControllerClass {
             throw new ApiError(404, 'plan not found')
         };
 
-        const order = await this.razorpayServices.createOrder(plan.price *100, plan.currency);
+        const subscription = await this.subscriptionService.createSubscription(userid, plan);
 
-        return res.status(201).json(new ApiResponse(201,{order:order, plan_id:plan.id}, 'subscripton order created' ))
+        const createOrderResponse = await this.razorpayServices.createOrder(plan.price *100, plan.currency, subscription.id ,userid );
+
+        return res.status(201).json(new ApiResponse(201,{order:createOrderResponse.order, subscription_id:subscription.id, transaction_id: createOrderResponse.transaction_id}, 'subscripton order created' ))
     });
 
     verifyPaymentAndActivateSubscription :RequestHandler = asyncHandler(async (req:Request, res:Response) => {
 
-        const { order_id,  payment_id, payment_signature, plan_id} = verifyPaymentSchema.parse(req.body);
+        const { order_id,  payment_id, payment_signature,subscription_id, transaction_id } = verifyPaymentSchema.parse(req.body);
 
         const userid = req.user?.id;
 
         if(!userid){
             throw new ApiError(401, 'unauthorized')
         }
+        const transaction = await this.razorpayServices.getTransactionById(transaction_id);
 
-        const plan  = await this.subscriptionService.getSubscriptionPlanById(plan_id);
-
-        if(!plan) {
-            this.logger.error(`plan not found with id : ${plan_id}`);
-            throw new ApiError(404, 'plan not found');
-        };
-
-        const isPaymentVerified = this.razorpayServices.varifyPaymentSignature(order_id, payment_id, payment_signature);
+        if(!transaction){
+            this.logger.error('transaction detailes not found');
+            throw new ApiError(404, 'Transaction not found')
+        }
+        const isPaymentVerified = this.razorpayServices.varifyPaymentSignatureAndFlagTransactionCompleated(order_id, payment_id, payment_signature, transaction.id);
 
         if(!isPaymentVerified){
             this.logger.error(`the payment is not verified or currupt`);
             throw new ApiError(401, 'payment is not valid')
         };
 
-        const subscription = await this.subscriptionService.createSubscription(userid, plan.id);
-
-        const transaction = await this.razorpayServices.saveTransactionInDb({user_id:userid, amount:plan.price, currency:plan.currency ,description:'transaction for subscription plan purchase', razorpay_order_id:order_id, razorpay_payment_id:payment_id, razorpay_signature:payment_signature ,status:'COMPLETED',subscription_id:subscription.id, type:"SUBSCRIPTION_UPGRADE" });
+        const subscription = await this.subscriptionService.activateSubscription(subscription_id)
 
         return res.status(200).json(new ApiResponse(200, {
             user:req.user,
@@ -70,4 +69,93 @@ export class SubscriptionControllerClass {
 
 
     });
+
+   webhookHandler : RequestHandler = asyncHandler(async (req:Request, res:Response) => {
+    
+    const signature = req.headers["x-razorpay-signature"] as string;
+
+    if (!signature) {
+      this.logger.error("Missing Razorpay webhook signature");
+      throw new ApiError(400, "Invalid webhook request");
+    }
+
+    
+    const isValid = this.razorpayServices.verifyWebhookSignature(
+      req.body, // Buffer
+      signature
+    );
+
+    if (!isValid) {
+      this.logger.error("Invalid Razorpay webhook signature");
+      throw new ApiError(400, "Webhook signature verification failed");
+    };
+
+    const {event, payload} = RazorpayWebhookSchema.parse(req.body.toString());
+
+
+    const eventId: string = payload.payment.entity.id;
+    const eventType: string = event;
+
+    this.logger.info(`Webhook received: ${eventType} | ${eventId}`);
+
+    const alreadyProcessed = await this.razorpayServices.isWebookAlreadyProcessed(payload.payment.entity.order_id! );
+
+     if (alreadyProcessed) {
+      this.logger.info(`Webhook already processed: ${eventId}`);
+      return res.status(200).json({ status: "already processed" });
+    };
+
+    if (event === "payment.captured") {
+     const payment = payload.payment.entity;
+
+      const razorpayOrderId = payment.order_id;
+      const razorpayPaymentId = payment.id;
+      const amount = payment.amount;
+
+      const transaction =
+        await this.razorpayServices.getTransactionByOrderId(
+          razorpayOrderId!
+        );
+
+      if (!transaction) {
+        this.logger.error(
+          `Transaction not found for order: ${razorpayOrderId}`
+        );
+        return res.status(200).json({ status: "ignored" });
+      }
+
+      // 🚨 Amount validation
+      if (transaction.amount !== amount) {
+        this.logger.error(
+          `Amount mismatch for transaction ${transaction.id}`
+        );
+        throw new ApiError(400, "Amount mismatch");
+      }
+
+      // 🔥 5️⃣ Atomic Update (VERY IMPORTANT)
+      await this.subscriptionService.handleSuccessfulPayment({
+        transactionId: transaction.id,
+        paymentId: razorpayPaymentId,
+        eventId: eventId,
+      });
+
+      this.logger.info(
+        `Subscription activated for transaction ${transaction.id}`
+      );
+    } else if (event === "payment.failed") {
+      const payment = payload.payment.entity;
+      const razorpayOrderId = payment.order_id;
+
+      await this.subscriptionService.handleFailedPayment(
+        razorpayOrderId!,
+        eventId
+      );
+
+      this.logger.warn(`Payment failed for order: ${razorpayOrderId}`);
+    } else {
+      console.log("Unhandled webhook event:", event);
+    };
+
+    return res.status(200).json({ status: "ok" });
+   })
 }

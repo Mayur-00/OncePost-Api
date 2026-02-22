@@ -49,7 +49,6 @@ export type SubscriptionPlanMinAggregateOutputType = {
   analyticsEnabled: boolean | null
   schedulingEnabled: boolean | null
   prioritySupport: boolean | null
-  customBranding: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -65,7 +64,6 @@ export type SubscriptionPlanMaxAggregateOutputType = {
   analyticsEnabled: boolean | null
   schedulingEnabled: boolean | null
   prioritySupport: boolean | null
-  customBranding: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -82,7 +80,6 @@ export type SubscriptionPlanCountAggregateOutputType = {
   analyticsEnabled: number
   schedulingEnabled: number
   prioritySupport: number
-  customBranding: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -112,7 +109,6 @@ export type SubscriptionPlanMinAggregateInputType = {
   analyticsEnabled?: true
   schedulingEnabled?: true
   prioritySupport?: true
-  customBranding?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -128,7 +124,6 @@ export type SubscriptionPlanMaxAggregateInputType = {
   analyticsEnabled?: true
   schedulingEnabled?: true
   prioritySupport?: true
-  customBranding?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -145,7 +140,6 @@ export type SubscriptionPlanCountAggregateInputType = {
   analyticsEnabled?: true
   schedulingEnabled?: true
   prioritySupport?: true
-  customBranding?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -249,7 +243,6 @@ export type SubscriptionPlanGroupByOutputType = {
   analyticsEnabled: boolean
   schedulingEnabled: boolean
   prioritySupport: boolean
-  customBranding: boolean
   createdAt: Date
   updatedAt: Date
   _count: SubscriptionPlanCountAggregateOutputType | null
@@ -280,7 +273,7 @@ export type SubscriptionPlanWhereInput = {
   NOT?: Prisma.SubscriptionPlanWhereInput | Prisma.SubscriptionPlanWhereInput[]
   id?: Prisma.StringFilter<"SubscriptionPlan"> | string
   plan_tier?: Prisma.EnumPlanTierFilter<"SubscriptionPlan"> | $Enums.PlanTier
-  price?: Prisma.FloatFilter<"SubscriptionPlan"> | number
+  price?: Prisma.IntFilter<"SubscriptionPlan"> | number
   currency?: Prisma.StringFilter<"SubscriptionPlan"> | string
   description?: Prisma.StringFilter<"SubscriptionPlan"> | string
   features?: Prisma.StringNullableListFilter<"SubscriptionPlan">
@@ -289,7 +282,6 @@ export type SubscriptionPlanWhereInput = {
   analyticsEnabled?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   schedulingEnabled?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   prioritySupport?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
-  customBranding?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   subscriptions?: Prisma.SubscriptionListRelationFilter
@@ -307,7 +299,6 @@ export type SubscriptionPlanOrderByWithRelationInput = {
   analyticsEnabled?: Prisma.SortOrder
   schedulingEnabled?: Prisma.SortOrder
   prioritySupport?: Prisma.SortOrder
-  customBranding?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   subscriptions?: Prisma.SubscriptionOrderByRelationAggregateInput
@@ -315,11 +306,11 @@ export type SubscriptionPlanOrderByWithRelationInput = {
 
 export type SubscriptionPlanWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  plan_tier?: $Enums.PlanTier
   AND?: Prisma.SubscriptionPlanWhereInput | Prisma.SubscriptionPlanWhereInput[]
   OR?: Prisma.SubscriptionPlanWhereInput[]
   NOT?: Prisma.SubscriptionPlanWhereInput | Prisma.SubscriptionPlanWhereInput[]
-  price?: Prisma.FloatFilter<"SubscriptionPlan"> | number
+  plan_tier?: Prisma.EnumPlanTierFilter<"SubscriptionPlan"> | $Enums.PlanTier
+  price?: Prisma.IntFilter<"SubscriptionPlan"> | number
   currency?: Prisma.StringFilter<"SubscriptionPlan"> | string
   description?: Prisma.StringFilter<"SubscriptionPlan"> | string
   features?: Prisma.StringNullableListFilter<"SubscriptionPlan">
@@ -328,11 +319,10 @@ export type SubscriptionPlanWhereUniqueInput = Prisma.AtLeast<{
   analyticsEnabled?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   schedulingEnabled?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   prioritySupport?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
-  customBranding?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   subscriptions?: Prisma.SubscriptionListRelationFilter
-}, "id" | "plan_tier">
+}, "id">
 
 export type SubscriptionPlanOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -346,7 +336,6 @@ export type SubscriptionPlanOrderByWithAggregationInput = {
   analyticsEnabled?: Prisma.SortOrder
   schedulingEnabled?: Prisma.SortOrder
   prioritySupport?: Prisma.SortOrder
-  customBranding?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SubscriptionPlanCountOrderByAggregateInput
@@ -362,7 +351,7 @@ export type SubscriptionPlanScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SubscriptionPlanScalarWhereWithAggregatesInput | Prisma.SubscriptionPlanScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"SubscriptionPlan"> | string
   plan_tier?: Prisma.EnumPlanTierWithAggregatesFilter<"SubscriptionPlan"> | $Enums.PlanTier
-  price?: Prisma.FloatWithAggregatesFilter<"SubscriptionPlan"> | number
+  price?: Prisma.IntWithAggregatesFilter<"SubscriptionPlan"> | number
   currency?: Prisma.StringWithAggregatesFilter<"SubscriptionPlan"> | string
   description?: Prisma.StringWithAggregatesFilter<"SubscriptionPlan"> | string
   features?: Prisma.StringNullableListFilter<"SubscriptionPlan">
@@ -371,7 +360,6 @@ export type SubscriptionPlanScalarWhereWithAggregatesInput = {
   analyticsEnabled?: Prisma.BoolWithAggregatesFilter<"SubscriptionPlan"> | boolean
   schedulingEnabled?: Prisma.BoolWithAggregatesFilter<"SubscriptionPlan"> | boolean
   prioritySupport?: Prisma.BoolWithAggregatesFilter<"SubscriptionPlan"> | boolean
-  customBranding?: Prisma.BoolWithAggregatesFilter<"SubscriptionPlan"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionPlan"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionPlan"> | Date | string
 }
@@ -388,7 +376,6 @@ export type SubscriptionPlanCreateInput = {
   analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
-  customBranding?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutPlanInput
@@ -406,7 +393,6 @@ export type SubscriptionPlanUncheckedCreateInput = {
   analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
-  customBranding?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutPlanInput
@@ -415,7 +401,7 @@ export type SubscriptionPlanUncheckedCreateInput = {
 export type SubscriptionPlanUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   plan_tier?: Prisma.EnumPlanTierFieldUpdateOperationsInput | $Enums.PlanTier
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
@@ -424,7 +410,6 @@ export type SubscriptionPlanUpdateInput = {
   analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customBranding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUpdateManyWithoutPlanNestedInput
@@ -433,7 +418,7 @@ export type SubscriptionPlanUpdateInput = {
 export type SubscriptionPlanUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   plan_tier?: Prisma.EnumPlanTierFieldUpdateOperationsInput | $Enums.PlanTier
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
@@ -442,7 +427,6 @@ export type SubscriptionPlanUncheckedUpdateInput = {
   analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customBranding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
@@ -460,7 +444,6 @@ export type SubscriptionPlanCreateManyInput = {
   analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
-  customBranding?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -468,7 +451,7 @@ export type SubscriptionPlanCreateManyInput = {
 export type SubscriptionPlanUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   plan_tier?: Prisma.EnumPlanTierFieldUpdateOperationsInput | $Enums.PlanTier
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
@@ -477,7 +460,6 @@ export type SubscriptionPlanUpdateManyMutationInput = {
   analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customBranding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -485,7 +467,7 @@ export type SubscriptionPlanUpdateManyMutationInput = {
 export type SubscriptionPlanUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   plan_tier?: Prisma.EnumPlanTierFieldUpdateOperationsInput | $Enums.PlanTier
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
@@ -494,7 +476,6 @@ export type SubscriptionPlanUncheckedUpdateManyInput = {
   analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customBranding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -519,7 +500,6 @@ export type SubscriptionPlanCountOrderByAggregateInput = {
   analyticsEnabled?: Prisma.SortOrder
   schedulingEnabled?: Prisma.SortOrder
   prioritySupport?: Prisma.SortOrder
-  customBranding?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -541,7 +521,6 @@ export type SubscriptionPlanMaxOrderByAggregateInput = {
   analyticsEnabled?: Prisma.SortOrder
   schedulingEnabled?: Prisma.SortOrder
   prioritySupport?: Prisma.SortOrder
-  customBranding?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -557,7 +536,6 @@ export type SubscriptionPlanMinOrderByAggregateInput = {
   analyticsEnabled?: Prisma.SortOrder
   schedulingEnabled?: Prisma.SortOrder
   prioritySupport?: Prisma.SortOrder
-  customBranding?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -612,7 +590,6 @@ export type SubscriptionPlanCreateWithoutSubscriptionsInput = {
   analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
-  customBranding?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -629,7 +606,6 @@ export type SubscriptionPlanUncheckedCreateWithoutSubscriptionsInput = {
   analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
-  customBranding?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -653,7 +629,7 @@ export type SubscriptionPlanUpdateToOneWithWhereWithoutSubscriptionsInput = {
 export type SubscriptionPlanUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   plan_tier?: Prisma.EnumPlanTierFieldUpdateOperationsInput | $Enums.PlanTier
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
@@ -662,7 +638,6 @@ export type SubscriptionPlanUpdateWithoutSubscriptionsInput = {
   analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customBranding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -670,7 +645,7 @@ export type SubscriptionPlanUpdateWithoutSubscriptionsInput = {
 export type SubscriptionPlanUncheckedUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   plan_tier?: Prisma.EnumPlanTierFieldUpdateOperationsInput | $Enums.PlanTier
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
@@ -679,7 +654,6 @@ export type SubscriptionPlanUncheckedUpdateWithoutSubscriptionsInput = {
   analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customBranding?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -727,7 +701,6 @@ export type SubscriptionPlanSelect<ExtArgs extends runtime.Types.Extensions.Inte
   analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
-  customBranding?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   subscriptions?: boolean | Prisma.SubscriptionPlan$subscriptionsArgs<ExtArgs>
@@ -746,7 +719,6 @@ export type SubscriptionPlanSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
-  customBranding?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["subscriptionPlan"]>
@@ -763,7 +735,6 @@ export type SubscriptionPlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
-  customBranding?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["subscriptionPlan"]>
@@ -780,12 +751,11 @@ export type SubscriptionPlanSelectScalar = {
   analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
-  customBranding?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SubscriptionPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "plan_tier" | "price" | "currency" | "description" | "features" | "maxPostsPerMonth" | "maxSocialAccounts" | "analyticsEnabled" | "schedulingEnabled" | "prioritySupport" | "customBranding" | "createdAt" | "updatedAt", ExtArgs["result"]["subscriptionPlan"]>
+export type SubscriptionPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "plan_tier" | "price" | "currency" | "description" | "features" | "maxPostsPerMonth" | "maxSocialAccounts" | "analyticsEnabled" | "schedulingEnabled" | "prioritySupport" | "createdAt" | "updatedAt", ExtArgs["result"]["subscriptionPlan"]>
 export type SubscriptionPlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subscriptions?: boolean | Prisma.SubscriptionPlan$subscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.SubscriptionPlanCountOutputTypeDefaultArgs<ExtArgs>
@@ -810,7 +780,6 @@ export type $SubscriptionPlanPayload<ExtArgs extends runtime.Types.Extensions.In
     analyticsEnabled: boolean
     schedulingEnabled: boolean
     prioritySupport: boolean
-    customBranding: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["subscriptionPlan"]>
@@ -1239,7 +1208,7 @@ export interface Prisma__SubscriptionPlanClient<T, Null = never, ExtArgs extends
 export interface SubscriptionPlanFieldRefs {
   readonly id: Prisma.FieldRef<"SubscriptionPlan", 'String'>
   readonly plan_tier: Prisma.FieldRef<"SubscriptionPlan", 'PlanTier'>
-  readonly price: Prisma.FieldRef<"SubscriptionPlan", 'Float'>
+  readonly price: Prisma.FieldRef<"SubscriptionPlan", 'Int'>
   readonly currency: Prisma.FieldRef<"SubscriptionPlan", 'String'>
   readonly description: Prisma.FieldRef<"SubscriptionPlan", 'String'>
   readonly features: Prisma.FieldRef<"SubscriptionPlan", 'String[]'>
@@ -1248,7 +1217,6 @@ export interface SubscriptionPlanFieldRefs {
   readonly analyticsEnabled: Prisma.FieldRef<"SubscriptionPlan", 'Boolean'>
   readonly schedulingEnabled: Prisma.FieldRef<"SubscriptionPlan", 'Boolean'>
   readonly prioritySupport: Prisma.FieldRef<"SubscriptionPlan", 'Boolean'>
-  readonly customBranding: Prisma.FieldRef<"SubscriptionPlan", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"SubscriptionPlan", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"SubscriptionPlan", 'DateTime'>
 }

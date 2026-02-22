@@ -1323,7 +1323,6 @@ export const SubscriptionPlanScalarFieldEnum = {
   analyticsEnabled: 'analyticsEnabled',
   schedulingEnabled: 'schedulingEnabled',
   prioritySupport: 'prioritySupport',
-  customBranding: 'customBranding',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1334,12 +1333,15 @@ export type SubscriptionPlanScalarFieldEnum = (typeof SubscriptionPlanScalarFiel
 export const SubscriptionScalarFieldEnum = {
   id: 'id',
   user_id: 'user_id',
-  plan_tier_id: 'plan_tier_id',
+  plan_id: 'plan_id',
   status: 'status',
-  razorpay_subscription_id: 'razorpay_subscription_id',
-  current_period_start: 'current_period_start',
-  current_period_end: 'current_period_end',
+  start_date: 'start_date',
+  end_date: 'end_date',
   cancelled_at: 'cancelled_at',
+  cancellation_reason: 'cancellation_reason',
+  platform_connections_remaining: 'platform_connections_remaining',
+  post_creation_remaining: 'post_creation_remaining',
+  failure_reason: 'failure_reason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1351,15 +1353,15 @@ export const TransactionScalarFieldEnum = {
   id: 'id',
   user_id: 'user_id',
   subscription_id: 'subscription_id',
-  razorpay_payment_id: 'razorpay_payment_id',
   razorpay_order_id: 'razorpay_order_id',
+  razorpay_payment_id: 'razorpay_payment_id',
   razorpay_signature: 'razorpay_signature',
   amount: 'amount',
   currency: 'currency',
   status: 'status',
   type: 'type',
-  description: 'description',
   failure_reason: 'failure_reason',
+  webhook_processed: 'webhook_processed',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

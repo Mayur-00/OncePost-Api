@@ -38,15 +38,15 @@ export type TransactionMinAggregateOutputType = {
   id: string | null
   user_id: string | null
   subscription_id: string | null
-  razorpay_payment_id: string | null
   razorpay_order_id: string | null
+  razorpay_payment_id: string | null
   razorpay_signature: string | null
   amount: number | null
   currency: string | null
   status: $Enums.TransactionStatus | null
   type: $Enums.TransactionType | null
-  description: string | null
   failure_reason: string | null
+  webhook_processed: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -55,15 +55,15 @@ export type TransactionMaxAggregateOutputType = {
   id: string | null
   user_id: string | null
   subscription_id: string | null
-  razorpay_payment_id: string | null
   razorpay_order_id: string | null
+  razorpay_payment_id: string | null
   razorpay_signature: string | null
   amount: number | null
   currency: string | null
   status: $Enums.TransactionStatus | null
   type: $Enums.TransactionType | null
-  description: string | null
   failure_reason: string | null
+  webhook_processed: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,15 +72,15 @@ export type TransactionCountAggregateOutputType = {
   id: number
   user_id: number
   subscription_id: number
-  razorpay_payment_id: number
   razorpay_order_id: number
+  razorpay_payment_id: number
   razorpay_signature: number
   amount: number
   currency: number
   status: number
   type: number
-  description: number
   failure_reason: number
+  webhook_processed: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -99,15 +99,15 @@ export type TransactionMinAggregateInputType = {
   id?: true
   user_id?: true
   subscription_id?: true
-  razorpay_payment_id?: true
   razorpay_order_id?: true
+  razorpay_payment_id?: true
   razorpay_signature?: true
   amount?: true
   currency?: true
   status?: true
   type?: true
-  description?: true
   failure_reason?: true
+  webhook_processed?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -116,15 +116,15 @@ export type TransactionMaxAggregateInputType = {
   id?: true
   user_id?: true
   subscription_id?: true
-  razorpay_payment_id?: true
   razorpay_order_id?: true
+  razorpay_payment_id?: true
   razorpay_signature?: true
   amount?: true
   currency?: true
   status?: true
   type?: true
-  description?: true
   failure_reason?: true
+  webhook_processed?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -133,15 +133,15 @@ export type TransactionCountAggregateInputType = {
   id?: true
   user_id?: true
   subscription_id?: true
-  razorpay_payment_id?: true
   razorpay_order_id?: true
+  razorpay_payment_id?: true
   razorpay_signature?: true
   amount?: true
   currency?: true
   status?: true
   type?: true
-  description?: true
   failure_reason?: true
+  webhook_processed?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -237,15 +237,15 @@ export type TransactionGroupByOutputType = {
   id: string
   user_id: string
   subscription_id: string
-  razorpay_payment_id: string
   razorpay_order_id: string
+  razorpay_payment_id: string | null
   razorpay_signature: string | null
   amount: number
   currency: string
   status: $Enums.TransactionStatus
   type: $Enums.TransactionType
-  description: string | null
   failure_reason: string | null
+  webhook_processed: boolean
   createdAt: Date
   updatedAt: Date
   _count: TransactionCountAggregateOutputType | null
@@ -277,15 +277,15 @@ export type TransactionWhereInput = {
   id?: Prisma.StringFilter<"Transaction"> | string
   user_id?: Prisma.StringFilter<"Transaction"> | string
   subscription_id?: Prisma.StringFilter<"Transaction"> | string
-  razorpay_payment_id?: Prisma.StringFilter<"Transaction"> | string
   razorpay_order_id?: Prisma.StringFilter<"Transaction"> | string
+  razorpay_payment_id?: Prisma.StringNullableFilter<"Transaction"> | string | null
   razorpay_signature?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  amount?: Prisma.FloatFilter<"Transaction"> | number
+  amount?: Prisma.IntFilter<"Transaction"> | number
   currency?: Prisma.StringFilter<"Transaction"> | string
   status?: Prisma.EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
-  description?: Prisma.StringNullableFilter<"Transaction"> | string | null
   failure_reason?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  webhook_processed?: Prisma.BoolFilter<"Transaction"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -296,15 +296,15 @@ export type TransactionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   subscription_id?: Prisma.SortOrder
-  razorpay_payment_id?: Prisma.SortOrder
   razorpay_order_id?: Prisma.SortOrder
+  razorpay_payment_id?: Prisma.SortOrderInput | Prisma.SortOrder
   razorpay_signature?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
   failure_reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  webhook_processed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -313,39 +313,39 @@ export type TransactionOrderByWithRelationInput = {
 
 export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  razorpay_payment_id?: string
   razorpay_order_id?: string
   AND?: Prisma.TransactionWhereInput | Prisma.TransactionWhereInput[]
   OR?: Prisma.TransactionWhereInput[]
   NOT?: Prisma.TransactionWhereInput | Prisma.TransactionWhereInput[]
   user_id?: Prisma.StringFilter<"Transaction"> | string
   subscription_id?: Prisma.StringFilter<"Transaction"> | string
+  razorpay_payment_id?: Prisma.StringNullableFilter<"Transaction"> | string | null
   razorpay_signature?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  amount?: Prisma.FloatFilter<"Transaction"> | number
+  amount?: Prisma.IntFilter<"Transaction"> | number
   currency?: Prisma.StringFilter<"Transaction"> | string
   status?: Prisma.EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
-  description?: Prisma.StringNullableFilter<"Transaction"> | string | null
   failure_reason?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  webhook_processed?: Prisma.BoolFilter<"Transaction"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   subscription?: Prisma.XOR<Prisma.SubscriptionScalarRelationFilter, Prisma.SubscriptionWhereInput>
-}, "id" | "razorpay_payment_id" | "razorpay_order_id">
+}, "id" | "razorpay_order_id">
 
 export type TransactionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   subscription_id?: Prisma.SortOrder
-  razorpay_payment_id?: Prisma.SortOrder
   razorpay_order_id?: Prisma.SortOrder
+  razorpay_payment_id?: Prisma.SortOrderInput | Prisma.SortOrder
   razorpay_signature?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
   failure_reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  webhook_processed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TransactionCountOrderByAggregateInput
@@ -362,30 +362,30 @@ export type TransactionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   user_id?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   subscription_id?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
-  razorpay_payment_id?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   razorpay_order_id?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
+  razorpay_payment_id?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   razorpay_signature?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
-  amount?: Prisma.FloatWithAggregatesFilter<"Transaction"> | number
+  amount?: Prisma.IntWithAggregatesFilter<"Transaction"> | number
   currency?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   status?: Prisma.EnumTransactionStatusWithAggregatesFilter<"Transaction"> | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeWithAggregatesFilter<"Transaction"> | $Enums.TransactionType
-  description?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   failure_reason?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  webhook_processed?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
 }
 
 export type TransactionCreateInput = {
   id?: string
-  razorpay_payment_id: string
   razorpay_order_id: string
+  razorpay_payment_id?: string | null
   razorpay_signature?: string | null
   amount: number
   currency?: string
   status?: $Enums.TransactionStatus
   type: $Enums.TransactionType
-  description?: string | null
   failure_reason?: string | null
+  webhook_processed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTransactionsInput
@@ -396,30 +396,30 @@ export type TransactionUncheckedCreateInput = {
   id?: string
   user_id: string
   subscription_id: string
-  razorpay_payment_id: string
   razorpay_order_id: string
+  razorpay_payment_id?: string | null
   razorpay_signature?: string | null
   amount: number
   currency?: string
   status?: $Enums.TransactionStatus
   type: $Enums.TransactionType
-  description?: string | null
   failure_reason?: string | null
+  webhook_processed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type TransactionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpay_payment_id?: Prisma.StringFieldUpdateOperationsInput | string
   razorpay_order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  razorpay_payment_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   razorpay_signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhook_processed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTransactionsNestedInput
@@ -430,15 +430,15 @@ export type TransactionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   subscription_id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpay_payment_id?: Prisma.StringFieldUpdateOperationsInput | string
   razorpay_order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  razorpay_payment_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   razorpay_signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhook_processed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -447,30 +447,30 @@ export type TransactionCreateManyInput = {
   id?: string
   user_id: string
   subscription_id: string
-  razorpay_payment_id: string
   razorpay_order_id: string
+  razorpay_payment_id?: string | null
   razorpay_signature?: string | null
   amount: number
   currency?: string
   status?: $Enums.TransactionStatus
   type: $Enums.TransactionType
-  description?: string | null
   failure_reason?: string | null
+  webhook_processed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type TransactionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpay_payment_id?: Prisma.StringFieldUpdateOperationsInput | string
   razorpay_order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  razorpay_payment_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   razorpay_signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhook_processed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -479,15 +479,15 @@ export type TransactionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   subscription_id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpay_payment_id?: Prisma.StringFieldUpdateOperationsInput | string
   razorpay_order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  razorpay_payment_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   razorpay_signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhook_processed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -506,15 +506,15 @@ export type TransactionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   subscription_id?: Prisma.SortOrder
-  razorpay_payment_id?: Prisma.SortOrder
   razorpay_order_id?: Prisma.SortOrder
+  razorpay_payment_id?: Prisma.SortOrder
   razorpay_signature?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  description?: Prisma.SortOrder
   failure_reason?: Prisma.SortOrder
+  webhook_processed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -527,15 +527,15 @@ export type TransactionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   subscription_id?: Prisma.SortOrder
-  razorpay_payment_id?: Prisma.SortOrder
   razorpay_order_id?: Prisma.SortOrder
+  razorpay_payment_id?: Prisma.SortOrder
   razorpay_signature?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  description?: Prisma.SortOrder
   failure_reason?: Prisma.SortOrder
+  webhook_processed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -544,15 +544,15 @@ export type TransactionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   subscription_id?: Prisma.SortOrder
-  razorpay_payment_id?: Prisma.SortOrder
   razorpay_order_id?: Prisma.SortOrder
+  razorpay_payment_id?: Prisma.SortOrder
   razorpay_signature?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  description?: Prisma.SortOrder
   failure_reason?: Prisma.SortOrder
+  webhook_processed?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -655,15 +655,15 @@ export type EnumTransactionTypeFieldUpdateOperationsInput = {
 
 export type TransactionCreateWithoutUserInput = {
   id?: string
-  razorpay_payment_id: string
   razorpay_order_id: string
+  razorpay_payment_id?: string | null
   razorpay_signature?: string | null
   amount: number
   currency?: string
   status?: $Enums.TransactionStatus
   type: $Enums.TransactionType
-  description?: string | null
   failure_reason?: string | null
+  webhook_processed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   subscription: Prisma.SubscriptionCreateNestedOneWithoutTransactionsInput
@@ -672,15 +672,15 @@ export type TransactionCreateWithoutUserInput = {
 export type TransactionUncheckedCreateWithoutUserInput = {
   id?: string
   subscription_id: string
-  razorpay_payment_id: string
   razorpay_order_id: string
+  razorpay_payment_id?: string | null
   razorpay_signature?: string | null
   amount: number
   currency?: string
   status?: $Enums.TransactionStatus
   type: $Enums.TransactionType
-  description?: string | null
   failure_reason?: string | null
+  webhook_processed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -718,30 +718,30 @@ export type TransactionScalarWhereInput = {
   id?: Prisma.StringFilter<"Transaction"> | string
   user_id?: Prisma.StringFilter<"Transaction"> | string
   subscription_id?: Prisma.StringFilter<"Transaction"> | string
-  razorpay_payment_id?: Prisma.StringFilter<"Transaction"> | string
   razorpay_order_id?: Prisma.StringFilter<"Transaction"> | string
+  razorpay_payment_id?: Prisma.StringNullableFilter<"Transaction"> | string | null
   razorpay_signature?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  amount?: Prisma.FloatFilter<"Transaction"> | number
+  amount?: Prisma.IntFilter<"Transaction"> | number
   currency?: Prisma.StringFilter<"Transaction"> | string
   status?: Prisma.EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
-  description?: Prisma.StringNullableFilter<"Transaction"> | string | null
   failure_reason?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  webhook_processed?: Prisma.BoolFilter<"Transaction"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
 }
 
 export type TransactionCreateWithoutSubscriptionInput = {
   id?: string
-  razorpay_payment_id: string
   razorpay_order_id: string
+  razorpay_payment_id?: string | null
   razorpay_signature?: string | null
   amount: number
   currency?: string
   status?: $Enums.TransactionStatus
   type: $Enums.TransactionType
-  description?: string | null
   failure_reason?: string | null
+  webhook_processed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutTransactionsInput
@@ -750,15 +750,15 @@ export type TransactionCreateWithoutSubscriptionInput = {
 export type TransactionUncheckedCreateWithoutSubscriptionInput = {
   id?: string
   user_id: string
-  razorpay_payment_id: string
   razorpay_order_id: string
+  razorpay_payment_id?: string | null
   razorpay_signature?: string | null
   amount: number
   currency?: string
   status?: $Enums.TransactionStatus
   type: $Enums.TransactionType
-  description?: string | null
   failure_reason?: string | null
+  webhook_processed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -792,30 +792,30 @@ export type TransactionUpdateManyWithWhereWithoutSubscriptionInput = {
 export type TransactionCreateManyUserInput = {
   id?: string
   subscription_id: string
-  razorpay_payment_id: string
   razorpay_order_id: string
+  razorpay_payment_id?: string | null
   razorpay_signature?: string | null
   amount: number
   currency?: string
   status?: $Enums.TransactionStatus
   type: $Enums.TransactionType
-  description?: string | null
   failure_reason?: string | null
+  webhook_processed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type TransactionUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpay_payment_id?: Prisma.StringFieldUpdateOperationsInput | string
   razorpay_order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  razorpay_payment_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   razorpay_signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhook_processed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscription?: Prisma.SubscriptionUpdateOneRequiredWithoutTransactionsNestedInput
@@ -824,15 +824,15 @@ export type TransactionUpdateWithoutUserInput = {
 export type TransactionUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   subscription_id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpay_payment_id?: Prisma.StringFieldUpdateOperationsInput | string
   razorpay_order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  razorpay_payment_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   razorpay_signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhook_processed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -840,15 +840,15 @@ export type TransactionUncheckedUpdateWithoutUserInput = {
 export type TransactionUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   subscription_id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpay_payment_id?: Prisma.StringFieldUpdateOperationsInput | string
   razorpay_order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  razorpay_payment_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   razorpay_signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhook_processed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -856,30 +856,30 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
 export type TransactionCreateManySubscriptionInput = {
   id?: string
   user_id: string
-  razorpay_payment_id: string
   razorpay_order_id: string
+  razorpay_payment_id?: string | null
   razorpay_signature?: string | null
   amount: number
   currency?: string
   status?: $Enums.TransactionStatus
   type: $Enums.TransactionType
-  description?: string | null
   failure_reason?: string | null
+  webhook_processed?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type TransactionUpdateWithoutSubscriptionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpay_payment_id?: Prisma.StringFieldUpdateOperationsInput | string
   razorpay_order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  razorpay_payment_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   razorpay_signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhook_processed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutTransactionsNestedInput
@@ -888,15 +888,15 @@ export type TransactionUpdateWithoutSubscriptionInput = {
 export type TransactionUncheckedUpdateWithoutSubscriptionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpay_payment_id?: Prisma.StringFieldUpdateOperationsInput | string
   razorpay_order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  razorpay_payment_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   razorpay_signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhook_processed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -904,15 +904,15 @@ export type TransactionUncheckedUpdateWithoutSubscriptionInput = {
 export type TransactionUncheckedUpdateManyWithoutSubscriptionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpay_payment_id?: Prisma.StringFieldUpdateOperationsInput | string
   razorpay_order_id?: Prisma.StringFieldUpdateOperationsInput | string
+  razorpay_payment_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   razorpay_signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhook_processed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -923,15 +923,15 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   user_id?: boolean
   subscription_id?: boolean
-  razorpay_payment_id?: boolean
   razorpay_order_id?: boolean
+  razorpay_payment_id?: boolean
   razorpay_signature?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
   type?: boolean
-  description?: boolean
   failure_reason?: boolean
+  webhook_processed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -942,15 +942,15 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   user_id?: boolean
   subscription_id?: boolean
-  razorpay_payment_id?: boolean
   razorpay_order_id?: boolean
+  razorpay_payment_id?: boolean
   razorpay_signature?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
   type?: boolean
-  description?: boolean
   failure_reason?: boolean
+  webhook_processed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -961,15 +961,15 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   user_id?: boolean
   subscription_id?: boolean
-  razorpay_payment_id?: boolean
   razorpay_order_id?: boolean
+  razorpay_payment_id?: boolean
   razorpay_signature?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
   type?: boolean
-  description?: boolean
   failure_reason?: boolean
+  webhook_processed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -980,20 +980,20 @@ export type TransactionSelectScalar = {
   id?: boolean
   user_id?: boolean
   subscription_id?: boolean
-  razorpay_payment_id?: boolean
   razorpay_order_id?: boolean
+  razorpay_payment_id?: boolean
   razorpay_signature?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
   type?: boolean
-  description?: boolean
   failure_reason?: boolean
+  webhook_processed?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "subscription_id" | "razorpay_payment_id" | "razorpay_order_id" | "razorpay_signature" | "amount" | "currency" | "status" | "type" | "description" | "failure_reason" | "createdAt" | "updatedAt", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "subscription_id" | "razorpay_order_id" | "razorpay_payment_id" | "razorpay_signature" | "amount" | "currency" | "status" | "type" | "failure_reason" | "webhook_processed" | "createdAt" | "updatedAt", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   subscription?: boolean | Prisma.SubscriptionDefaultArgs<ExtArgs>
@@ -1017,15 +1017,15 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     user_id: string
     subscription_id: string
-    razorpay_payment_id: string
     razorpay_order_id: string
+    razorpay_payment_id: string | null
     razorpay_signature: string | null
     amount: number
     currency: string
     status: $Enums.TransactionStatus
     type: $Enums.TransactionType
-    description: string | null
     failure_reason: string | null
+    webhook_processed: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["transaction"]>
@@ -1456,15 +1456,15 @@ export interface TransactionFieldRefs {
   readonly id: Prisma.FieldRef<"Transaction", 'String'>
   readonly user_id: Prisma.FieldRef<"Transaction", 'String'>
   readonly subscription_id: Prisma.FieldRef<"Transaction", 'String'>
-  readonly razorpay_payment_id: Prisma.FieldRef<"Transaction", 'String'>
   readonly razorpay_order_id: Prisma.FieldRef<"Transaction", 'String'>
+  readonly razorpay_payment_id: Prisma.FieldRef<"Transaction", 'String'>
   readonly razorpay_signature: Prisma.FieldRef<"Transaction", 'String'>
-  readonly amount: Prisma.FieldRef<"Transaction", 'Float'>
+  readonly amount: Prisma.FieldRef<"Transaction", 'Int'>
   readonly currency: Prisma.FieldRef<"Transaction", 'String'>
   readonly status: Prisma.FieldRef<"Transaction", 'TransactionStatus'>
   readonly type: Prisma.FieldRef<"Transaction", 'TransactionType'>
-  readonly description: Prisma.FieldRef<"Transaction", 'String'>
   readonly failure_reason: Prisma.FieldRef<"Transaction", 'String'>
+  readonly webhook_processed: Prisma.FieldRef<"Transaction", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Transaction", 'DateTime'>
 }

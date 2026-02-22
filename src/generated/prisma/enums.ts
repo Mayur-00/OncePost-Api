@@ -82,6 +82,17 @@ export const PlanTier = {
 export type PlanTier = (typeof PlanTier)[keyof typeof PlanTier]
 
 
+export const SubscriptionStatus = {
+  ACTIVE: 'ACTIVE',
+  CANCELLED: 'CANCELLED',
+  PENDING: 'PENDING',
+  EXPIRED: 'EXPIRED',
+  FAILED: 'FAILED'
+} as const
+
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]
+
+
 export const TransactionStatus = {
   PENDING: 'PENDING',
   COMPLETED: 'COMPLETED',
@@ -98,12 +109,3 @@ export const TransactionType = {
 } as const
 
 export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType]
-
-
-export const SubscriptionStatus = {
-  ACTIVE: 'ACTIVE',
-  CANCELLED: 'CANCELLED',
-  EXPIRED: 'EXPIRED'
-} as const
-
-export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]

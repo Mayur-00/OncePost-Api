@@ -62,6 +62,17 @@ export class UserServices {
               isActive:true,
               isExpired:true
             },
+            
+          },
+
+          subscriptions:{
+            where:{
+              status:'ACTIVE',
+
+            },
+            select:{
+              plan:true
+            }
           },
           _count:{
             select:{

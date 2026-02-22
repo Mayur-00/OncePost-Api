@@ -20,19 +20,34 @@ export type SubscriptionModel = runtime.Types.Result.DefaultSelection<Prisma.$Su
 
 export type AggregateSubscription = {
   _count: SubscriptionCountAggregateOutputType | null
+  _avg: SubscriptionAvgAggregateOutputType | null
+  _sum: SubscriptionSumAggregateOutputType | null
   _min: SubscriptionMinAggregateOutputType | null
   _max: SubscriptionMaxAggregateOutputType | null
+}
+
+export type SubscriptionAvgAggregateOutputType = {
+  platform_connections_remaining: number | null
+  post_creation_remaining: number | null
+}
+
+export type SubscriptionSumAggregateOutputType = {
+  platform_connections_remaining: number | null
+  post_creation_remaining: number | null
 }
 
 export type SubscriptionMinAggregateOutputType = {
   id: string | null
   user_id: string | null
-  plan_tier_id: string | null
+  plan_id: string | null
   status: $Enums.SubscriptionStatus | null
-  razorpay_subscription_id: string | null
-  current_period_start: Date | null
-  current_period_end: Date | null
+  start_date: Date | null
+  end_date: Date | null
   cancelled_at: Date | null
+  cancellation_reason: string | null
+  platform_connections_remaining: number | null
+  post_creation_remaining: number | null
+  failure_reason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -40,12 +55,15 @@ export type SubscriptionMinAggregateOutputType = {
 export type SubscriptionMaxAggregateOutputType = {
   id: string | null
   user_id: string | null
-  plan_tier_id: string | null
+  plan_id: string | null
   status: $Enums.SubscriptionStatus | null
-  razorpay_subscription_id: string | null
-  current_period_start: Date | null
-  current_period_end: Date | null
+  start_date: Date | null
+  end_date: Date | null
   cancelled_at: Date | null
+  cancellation_reason: string | null
+  platform_connections_remaining: number | null
+  post_creation_remaining: number | null
+  failure_reason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,27 +71,43 @@ export type SubscriptionMaxAggregateOutputType = {
 export type SubscriptionCountAggregateOutputType = {
   id: number
   user_id: number
-  plan_tier_id: number
+  plan_id: number
   status: number
-  razorpay_subscription_id: number
-  current_period_start: number
-  current_period_end: number
+  start_date: number
+  end_date: number
   cancelled_at: number
+  cancellation_reason: number
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type SubscriptionAvgAggregateInputType = {
+  platform_connections_remaining?: true
+  post_creation_remaining?: true
+}
+
+export type SubscriptionSumAggregateInputType = {
+  platform_connections_remaining?: true
+  post_creation_remaining?: true
+}
+
 export type SubscriptionMinAggregateInputType = {
   id?: true
   user_id?: true
-  plan_tier_id?: true
+  plan_id?: true
   status?: true
-  razorpay_subscription_id?: true
-  current_period_start?: true
-  current_period_end?: true
+  start_date?: true
+  end_date?: true
   cancelled_at?: true
+  cancellation_reason?: true
+  platform_connections_remaining?: true
+  post_creation_remaining?: true
+  failure_reason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -81,12 +115,15 @@ export type SubscriptionMinAggregateInputType = {
 export type SubscriptionMaxAggregateInputType = {
   id?: true
   user_id?: true
-  plan_tier_id?: true
+  plan_id?: true
   status?: true
-  razorpay_subscription_id?: true
-  current_period_start?: true
-  current_period_end?: true
+  start_date?: true
+  end_date?: true
   cancelled_at?: true
+  cancellation_reason?: true
+  platform_connections_remaining?: true
+  post_creation_remaining?: true
+  failure_reason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,12 +131,15 @@ export type SubscriptionMaxAggregateInputType = {
 export type SubscriptionCountAggregateInputType = {
   id?: true
   user_id?: true
-  plan_tier_id?: true
+  plan_id?: true
   status?: true
-  razorpay_subscription_id?: true
-  current_period_start?: true
-  current_period_end?: true
+  start_date?: true
+  end_date?: true
   cancelled_at?: true
+  cancellation_reason?: true
+  platform_connections_remaining?: true
+  post_creation_remaining?: true
+  failure_reason?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -143,6 +183,18 @@ export type SubscriptionAggregateArgs<ExtArgs extends runtime.Types.Extensions.I
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: SubscriptionAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: SubscriptionSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: SubscriptionMinAggregateInputType
@@ -173,6 +225,8 @@ export type SubscriptionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   _count?: SubscriptionCountAggregateInputType | true
+  _avg?: SubscriptionAvgAggregateInputType
+  _sum?: SubscriptionSumAggregateInputType
   _min?: SubscriptionMinAggregateInputType
   _max?: SubscriptionMaxAggregateInputType
 }
@@ -180,15 +234,20 @@ export type SubscriptionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type SubscriptionGroupByOutputType = {
   id: string
   user_id: string
-  plan_tier_id: string
+  plan_id: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id: string | null
-  current_period_start: Date
-  current_period_end: Date
+  start_date: Date
+  end_date: Date
   cancelled_at: Date | null
+  cancellation_reason: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason: string | null
   createdAt: Date
   updatedAt: Date
   _count: SubscriptionCountAggregateOutputType | null
+  _avg: SubscriptionAvgAggregateOutputType | null
+  _sum: SubscriptionSumAggregateOutputType | null
   _min: SubscriptionMinAggregateOutputType | null
   _max: SubscriptionMaxAggregateOutputType | null
 }
@@ -214,12 +273,15 @@ export type SubscriptionWhereInput = {
   NOT?: Prisma.SubscriptionWhereInput | Prisma.SubscriptionWhereInput[]
   id?: Prisma.StringFilter<"Subscription"> | string
   user_id?: Prisma.StringFilter<"Subscription"> | string
-  plan_tier_id?: Prisma.StringFilter<"Subscription"> | string
+  plan_id?: Prisma.StringFilter<"Subscription"> | string
   status?: Prisma.EnumSubscriptionStatusFilter<"Subscription"> | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.StringNullableFilter<"Subscription"> | string | null
-  current_period_start?: Prisma.DateTimeFilter<"Subscription"> | Date | string
-  current_period_end?: Prisma.DateTimeFilter<"Subscription"> | Date | string
+  start_date?: Prisma.DateTimeFilter<"Subscription"> | Date | string
+  end_date?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   cancelled_at?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
+  cancellation_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
+  platform_connections_remaining?: Prisma.IntFilter<"Subscription"> | number
+  post_creation_remaining?: Prisma.IntFilter<"Subscription"> | number
+  failure_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -230,12 +292,15 @@ export type SubscriptionWhereInput = {
 export type SubscriptionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
-  plan_tier_id?: Prisma.SortOrder
+  plan_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  razorpay_subscription_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  current_period_start?: Prisma.SortOrder
-  current_period_end?: Prisma.SortOrder
+  start_date?: Prisma.SortOrder
+  end_date?: Prisma.SortOrder
   cancelled_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancellation_reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  platform_connections_remaining?: Prisma.SortOrder
+  post_creation_remaining?: Prisma.SortOrder
+  failure_reason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -249,12 +314,15 @@ export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SubscriptionWhereInput[]
   NOT?: Prisma.SubscriptionWhereInput | Prisma.SubscriptionWhereInput[]
   user_id?: Prisma.StringFilter<"Subscription"> | string
-  plan_tier_id?: Prisma.StringFilter<"Subscription"> | string
+  plan_id?: Prisma.StringFilter<"Subscription"> | string
   status?: Prisma.EnumSubscriptionStatusFilter<"Subscription"> | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.StringNullableFilter<"Subscription"> | string | null
-  current_period_start?: Prisma.DateTimeFilter<"Subscription"> | Date | string
-  current_period_end?: Prisma.DateTimeFilter<"Subscription"> | Date | string
+  start_date?: Prisma.DateTimeFilter<"Subscription"> | Date | string
+  end_date?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   cancelled_at?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
+  cancellation_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
+  platform_connections_remaining?: Prisma.IntFilter<"Subscription"> | number
+  post_creation_remaining?: Prisma.IntFilter<"Subscription"> | number
+  failure_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -265,17 +333,22 @@ export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
 export type SubscriptionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
-  plan_tier_id?: Prisma.SortOrder
+  plan_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  razorpay_subscription_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  current_period_start?: Prisma.SortOrder
-  current_period_end?: Prisma.SortOrder
+  start_date?: Prisma.SortOrder
+  end_date?: Prisma.SortOrder
   cancelled_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancellation_reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  platform_connections_remaining?: Prisma.SortOrder
+  post_creation_remaining?: Prisma.SortOrder
+  failure_reason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SubscriptionCountOrderByAggregateInput
+  _avg?: Prisma.SubscriptionAvgOrderByAggregateInput
   _max?: Prisma.SubscriptionMaxOrderByAggregateInput
   _min?: Prisma.SubscriptionMinOrderByAggregateInput
+  _sum?: Prisma.SubscriptionSumOrderByAggregateInput
 }
 
 export type SubscriptionScalarWhereWithAggregatesInput = {
@@ -284,12 +357,15 @@ export type SubscriptionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SubscriptionScalarWhereWithAggregatesInput | Prisma.SubscriptionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
   user_id?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
-  plan_tier_id?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
+  plan_id?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
   status?: Prisma.EnumSubscriptionStatusWithAggregatesFilter<"Subscription"> | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.StringNullableWithAggregatesFilter<"Subscription"> | string | null
-  current_period_start?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
-  current_period_end?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
+  start_date?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
+  end_date?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
   cancelled_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Subscription"> | Date | string | null
+  cancellation_reason?: Prisma.StringNullableWithAggregatesFilter<"Subscription"> | string | null
+  platform_connections_remaining?: Prisma.IntWithAggregatesFilter<"Subscription"> | number
+  post_creation_remaining?: Prisma.IntWithAggregatesFilter<"Subscription"> | number
+  failure_reason?: Prisma.StringNullableWithAggregatesFilter<"Subscription"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
 }
@@ -297,10 +373,13 @@ export type SubscriptionScalarWhereWithAggregatesInput = {
 export type SubscriptionCreateInput = {
   id?: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSubscriptionsInput
@@ -311,12 +390,15 @@ export type SubscriptionCreateInput = {
 export type SubscriptionUncheckedCreateInput = {
   id?: string
   user_id: string
-  plan_tier_id: string
+  plan_id: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutSubscriptionInput
@@ -325,10 +407,13 @@ export type SubscriptionUncheckedCreateInput = {
 export type SubscriptionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSubscriptionsNestedInput
@@ -339,12 +424,15 @@ export type SubscriptionUpdateInput = {
 export type SubscriptionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  plan_tier_id?: Prisma.StringFieldUpdateOperationsInput | string
+  plan_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutSubscriptionNestedInput
@@ -353,12 +441,15 @@ export type SubscriptionUncheckedUpdateInput = {
 export type SubscriptionCreateManyInput = {
   id?: string
   user_id: string
-  plan_tier_id: string
+  plan_id: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -366,10 +457,13 @@ export type SubscriptionCreateManyInput = {
 export type SubscriptionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -377,12 +471,15 @@ export type SubscriptionUpdateManyMutationInput = {
 export type SubscriptionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  plan_tier_id?: Prisma.StringFieldUpdateOperationsInput | string
+  plan_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -400,25 +497,36 @@ export type SubscriptionOrderByRelationAggregateInput = {
 export type SubscriptionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
-  plan_tier_id?: Prisma.SortOrder
+  plan_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  razorpay_subscription_id?: Prisma.SortOrder
-  current_period_start?: Prisma.SortOrder
-  current_period_end?: Prisma.SortOrder
+  start_date?: Prisma.SortOrder
+  end_date?: Prisma.SortOrder
   cancelled_at?: Prisma.SortOrder
+  cancellation_reason?: Prisma.SortOrder
+  platform_connections_remaining?: Prisma.SortOrder
+  post_creation_remaining?: Prisma.SortOrder
+  failure_reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SubscriptionAvgOrderByAggregateInput = {
+  platform_connections_remaining?: Prisma.SortOrder
+  post_creation_remaining?: Prisma.SortOrder
 }
 
 export type SubscriptionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
-  plan_tier_id?: Prisma.SortOrder
+  plan_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  razorpay_subscription_id?: Prisma.SortOrder
-  current_period_start?: Prisma.SortOrder
-  current_period_end?: Prisma.SortOrder
+  start_date?: Prisma.SortOrder
+  end_date?: Prisma.SortOrder
   cancelled_at?: Prisma.SortOrder
+  cancellation_reason?: Prisma.SortOrder
+  platform_connections_remaining?: Prisma.SortOrder
+  post_creation_remaining?: Prisma.SortOrder
+  failure_reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -426,14 +534,22 @@ export type SubscriptionMaxOrderByAggregateInput = {
 export type SubscriptionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
-  plan_tier_id?: Prisma.SortOrder
+  plan_id?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  razorpay_subscription_id?: Prisma.SortOrder
-  current_period_start?: Prisma.SortOrder
-  current_period_end?: Prisma.SortOrder
+  start_date?: Prisma.SortOrder
+  end_date?: Prisma.SortOrder
   cancelled_at?: Prisma.SortOrder
+  cancellation_reason?: Prisma.SortOrder
+  platform_connections_remaining?: Prisma.SortOrder
+  post_creation_remaining?: Prisma.SortOrder
+  failure_reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SubscriptionSumOrderByAggregateInput = {
+  platform_connections_remaining?: Prisma.SortOrder
+  post_creation_remaining?: Prisma.SortOrder
 }
 
 export type SubscriptionScalarRelationFilter = {
@@ -546,10 +662,13 @@ export type SubscriptionUpdateOneRequiredWithoutTransactionsNestedInput = {
 export type SubscriptionCreateWithoutUserInput = {
   id?: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   plan: Prisma.SubscriptionPlanCreateNestedOneWithoutSubscriptionsInput
@@ -558,12 +677,15 @@ export type SubscriptionCreateWithoutUserInput = {
 
 export type SubscriptionUncheckedCreateWithoutUserInput = {
   id?: string
-  plan_tier_id: string
+  plan_id: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutSubscriptionInput
@@ -601,12 +723,15 @@ export type SubscriptionScalarWhereInput = {
   NOT?: Prisma.SubscriptionScalarWhereInput | Prisma.SubscriptionScalarWhereInput[]
   id?: Prisma.StringFilter<"Subscription"> | string
   user_id?: Prisma.StringFilter<"Subscription"> | string
-  plan_tier_id?: Prisma.StringFilter<"Subscription"> | string
+  plan_id?: Prisma.StringFilter<"Subscription"> | string
   status?: Prisma.EnumSubscriptionStatusFilter<"Subscription"> | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.StringNullableFilter<"Subscription"> | string | null
-  current_period_start?: Prisma.DateTimeFilter<"Subscription"> | Date | string
-  current_period_end?: Prisma.DateTimeFilter<"Subscription"> | Date | string
+  start_date?: Prisma.DateTimeFilter<"Subscription"> | Date | string
+  end_date?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   cancelled_at?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
+  cancellation_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
+  platform_connections_remaining?: Prisma.IntFilter<"Subscription"> | number
+  post_creation_remaining?: Prisma.IntFilter<"Subscription"> | number
+  failure_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
 }
@@ -614,10 +739,13 @@ export type SubscriptionScalarWhereInput = {
 export type SubscriptionCreateWithoutPlanInput = {
   id?: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSubscriptionsInput
@@ -628,10 +756,13 @@ export type SubscriptionUncheckedCreateWithoutPlanInput = {
   id?: string
   user_id: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutSubscriptionInput
@@ -666,10 +797,13 @@ export type SubscriptionUpdateManyWithWhereWithoutPlanInput = {
 export type SubscriptionCreateWithoutTransactionsInput = {
   id?: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSubscriptionsInput
@@ -679,12 +813,15 @@ export type SubscriptionCreateWithoutTransactionsInput = {
 export type SubscriptionUncheckedCreateWithoutTransactionsInput = {
   id?: string
   user_id: string
-  plan_tier_id: string
+  plan_id: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -708,10 +845,13 @@ export type SubscriptionUpdateToOneWithWhereWithoutTransactionsInput = {
 export type SubscriptionUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSubscriptionsNestedInput
@@ -721,24 +861,30 @@ export type SubscriptionUpdateWithoutTransactionsInput = {
 export type SubscriptionUncheckedUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  plan_tier_id?: Prisma.StringFieldUpdateOperationsInput | string
+  plan_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SubscriptionCreateManyUserInput = {
   id?: string
-  plan_tier_id: string
+  plan_id: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -746,10 +892,13 @@ export type SubscriptionCreateManyUserInput = {
 export type SubscriptionUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plan?: Prisma.SubscriptionPlanUpdateOneRequiredWithoutSubscriptionsNestedInput
@@ -758,12 +907,15 @@ export type SubscriptionUpdateWithoutUserInput = {
 
 export type SubscriptionUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  plan_tier_id?: Prisma.StringFieldUpdateOperationsInput | string
+  plan_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutSubscriptionNestedInput
@@ -771,12 +923,15 @@ export type SubscriptionUncheckedUpdateWithoutUserInput = {
 
 export type SubscriptionUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  plan_tier_id?: Prisma.StringFieldUpdateOperationsInput | string
+  plan_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -785,10 +940,13 @@ export type SubscriptionCreateManyPlanInput = {
   id?: string
   user_id: string
   status: $Enums.SubscriptionStatus
-  razorpay_subscription_id?: string | null
-  current_period_start: Date | string
-  current_period_end: Date | string
+  start_date: Date | string
+  end_date: Date | string
   cancelled_at?: Date | string | null
+  cancellation_reason?: string | null
+  platform_connections_remaining: number
+  post_creation_remaining: number
+  failure_reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -796,10 +954,13 @@ export type SubscriptionCreateManyPlanInput = {
 export type SubscriptionUpdateWithoutPlanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSubscriptionsNestedInput
@@ -810,10 +971,13 @@ export type SubscriptionUncheckedUpdateWithoutPlanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutSubscriptionNestedInput
@@ -823,10 +987,13 @@ export type SubscriptionUncheckedUpdateManyWithoutPlanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
-  razorpay_subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  current_period_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  current_period_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
+  failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -865,12 +1032,15 @@ export type SubscriptionCountOutputTypeCountTransactionsArgs<ExtArgs extends run
 export type SubscriptionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   user_id?: boolean
-  plan_tier_id?: boolean
+  plan_id?: boolean
   status?: boolean
-  razorpay_subscription_id?: boolean
-  current_period_start?: boolean
-  current_period_end?: boolean
+  start_date?: boolean
+  end_date?: boolean
   cancelled_at?: boolean
+  cancellation_reason?: boolean
+  platform_connections_remaining?: boolean
+  post_creation_remaining?: boolean
+  failure_reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -882,12 +1052,15 @@ export type SubscriptionSelect<ExtArgs extends runtime.Types.Extensions.Internal
 export type SubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   user_id?: boolean
-  plan_tier_id?: boolean
+  plan_id?: boolean
   status?: boolean
-  razorpay_subscription_id?: boolean
-  current_period_start?: boolean
-  current_period_end?: boolean
+  start_date?: boolean
+  end_date?: boolean
   cancelled_at?: boolean
+  cancellation_reason?: boolean
+  platform_connections_remaining?: boolean
+  post_creation_remaining?: boolean
+  failure_reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -897,12 +1070,15 @@ export type SubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
 export type SubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   user_id?: boolean
-  plan_tier_id?: boolean
+  plan_id?: boolean
   status?: boolean
-  razorpay_subscription_id?: boolean
-  current_period_start?: boolean
-  current_period_end?: boolean
+  start_date?: boolean
+  end_date?: boolean
   cancelled_at?: boolean
+  cancellation_reason?: boolean
+  platform_connections_remaining?: boolean
+  post_creation_remaining?: boolean
+  failure_reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -912,17 +1088,20 @@ export type SubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type SubscriptionSelectScalar = {
   id?: boolean
   user_id?: boolean
-  plan_tier_id?: boolean
+  plan_id?: boolean
   status?: boolean
-  razorpay_subscription_id?: boolean
-  current_period_start?: boolean
-  current_period_end?: boolean
+  start_date?: boolean
+  end_date?: boolean
   cancelled_at?: boolean
+  cancellation_reason?: boolean
+  platform_connections_remaining?: boolean
+  post_creation_remaining?: boolean
+  failure_reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "plan_tier_id" | "status" | "razorpay_subscription_id" | "current_period_start" | "current_period_end" | "cancelled_at" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
+export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "plan_id" | "status" | "start_date" | "end_date" | "cancelled_at" | "cancellation_reason" | "platform_connections_remaining" | "post_creation_remaining" | "failure_reason" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
 export type SubscriptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.SubscriptionPlanDefaultArgs<ExtArgs>
@@ -948,12 +1127,15 @@ export type $SubscriptionPayload<ExtArgs extends runtime.Types.Extensions.Intern
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     user_id: string
-    plan_tier_id: string
+    plan_id: string
     status: $Enums.SubscriptionStatus
-    razorpay_subscription_id: string | null
-    current_period_start: Date
-    current_period_end: Date
+    start_date: Date
+    end_date: Date
     cancelled_at: Date | null
+    cancellation_reason: string | null
+    platform_connections_remaining: number
+    post_creation_remaining: number
+    failure_reason: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["subscription"]>
@@ -1384,12 +1566,15 @@ export interface Prisma__SubscriptionClient<T, Null = never, ExtArgs extends run
 export interface SubscriptionFieldRefs {
   readonly id: Prisma.FieldRef<"Subscription", 'String'>
   readonly user_id: Prisma.FieldRef<"Subscription", 'String'>
-  readonly plan_tier_id: Prisma.FieldRef<"Subscription", 'String'>
+  readonly plan_id: Prisma.FieldRef<"Subscription", 'String'>
   readonly status: Prisma.FieldRef<"Subscription", 'SubscriptionStatus'>
-  readonly razorpay_subscription_id: Prisma.FieldRef<"Subscription", 'String'>
-  readonly current_period_start: Prisma.FieldRef<"Subscription", 'DateTime'>
-  readonly current_period_end: Prisma.FieldRef<"Subscription", 'DateTime'>
+  readonly start_date: Prisma.FieldRef<"Subscription", 'DateTime'>
+  readonly end_date: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly cancelled_at: Prisma.FieldRef<"Subscription", 'DateTime'>
+  readonly cancellation_reason: Prisma.FieldRef<"Subscription", 'String'>
+  readonly platform_connections_remaining: Prisma.FieldRef<"Subscription", 'Int'>
+  readonly post_creation_remaining: Prisma.FieldRef<"Subscription", 'Int'>
+  readonly failure_reason: Prisma.FieldRef<"Subscription", 'String'>
   readonly createdAt: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Subscription", 'DateTime'>
 }
