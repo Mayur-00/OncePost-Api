@@ -7,7 +7,6 @@ import { googleLoginSchema, loginSchema, registerUserSchema, updateProfilePictur
 import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
 import { ApiError } from '../../utils/apiError.js';
-import { uploadImageToCloudinary } from '../../utils/imageUploader.js';
 
 export class AuthController {
   constructor(
@@ -77,6 +76,8 @@ export class AuthController {
 
     const updatedUser = await this.userServices.updateUsersRefreshToken(newUser.id, refreshToken);
 
+    await this.userServices.activateFreePlan(updatedUser.id);
+
     return res
       .status(200)
       .cookie('accessToken', accessToken, options) // set the access token in the cookie
@@ -110,6 +111,8 @@ export class AuthController {
     );
 
     const updatedUser = await this.userServices.updateUsersRefreshToken(newUser.id, refreshToken);
+
+    await this.userServices.activateFreePlan(updatedUser.id);
 
     const options = {
       httpOnly: true,

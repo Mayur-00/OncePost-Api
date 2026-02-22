@@ -245,4 +245,37 @@ export class UserServices {
       }
     })
   }
+  async activateFreePlan(user_id:string){
+    try {
+      const plan = await this.prisma.subscriptionPlan.findFirst({
+        where:{
+          plan_tier:'FREE'
+        }
+      });
+
+      if(!plan ) {
+        this.logger.error(`Free plan not found`)
+        throw new ApiError(404, 'Plan not found')
+      };
+
+      const subscriptions = await this.prisma.subscription.create({
+        data:{
+          user_id:user_id,
+          plan_id:plan.id,
+          post_creation_remaining:plan.maxPostsPerMonth,
+          platform_connections_remaining:plan.maxSocialAccounts,
+          start_date:new Date(),
+          end_date: new Date(Date.now() * 30 * 24 * 60 * 60 * 60 * 1000),
+          status:'ACTIVE',
+
+        }
+      });
+
+      return subscriptions
+    } catch (error) {
+      this.logger.error(`couldn't activate free plan`);
+
+      throw new ApiError(500, 'Internal Service Error');
+    }
+  }
 }
