@@ -59,7 +59,6 @@ export const postWorker = new Worker<jobBody>('post', (
 
                         logger.info('tweet published on x successfully')
                         break;
-
                         default :
                         throw new Error('Unsupported platform')
                 }
@@ -78,20 +77,20 @@ export const postWorker = new Worker<jobBody>('post', (
 
 // Worker event listeners
 postWorker.on('completed', (job) => {
-    logger.info(`✅ LinkedIn post job ${job.id} completed successfully`);
+    logger.info(`✅ publish post job ${job.id} completed successfully`);
 });
 
 postWorker.on('failed', (job, err) => {
-    logger.error(`❌ LinkedIn post job ${job?.id} failed:`, err);
+    logger.error(`❌ publish post job ${job?.id} failed:`, err);
 });
 
 postWorker.on('error', (err) => {
-    logger.error('LinkedIn Worker process error:', err);
+    logger.error('publish Worker process error:', err);
 });
 
 // Keep worker alive when run as standalone process
 if (import.meta.url === `file://${process.argv[1]}`) {
-    logger.info('🚀 LinkedIn Post Worker started on separate process');
+    logger.info('🚀 publish Post Worker started on separate process');
     process.on('SIGTERM', async () => {
         logger.info('SIGTERM received, closing LinkedIn worker...');
         await postWorker.close();

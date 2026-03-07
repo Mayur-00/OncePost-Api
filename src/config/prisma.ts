@@ -19,9 +19,15 @@ if (!connectionString) {
 }
 
 
-const pool = new Pool({ 
+const pool = new Pool({
   connectionString,
-  ssl: { rejectUnauthorized: false } // Required for Supabase
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
+  max: 10, // max connections
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
 });
 
 pool.on('error', (err) => {
@@ -34,7 +40,9 @@ export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
     adapter,
-    log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+    log: process.env.NODE_ENV === "development"
+    ? ["query", "info", "warn", "error"]
+    : ["warn", "error"],
   });
 
 if (process.env.NODE_ENV !== 'production') {

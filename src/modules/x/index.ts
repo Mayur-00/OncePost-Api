@@ -8,7 +8,7 @@ import { createXRoutes } from "./x.router.js";
 
  export const xServices = new XServices(axios, logger, Prisma);
  export const jwtService = new jwtToken()
- export const xController = new XController(logger, xServices, Prisma, jwtService);
+ export const xController = new XController(logger, xServices, Prisma,);
 
  export const XRoutes = createXRoutes(xController);
 
