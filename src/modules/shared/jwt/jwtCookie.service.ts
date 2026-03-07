@@ -17,14 +17,34 @@ export class jwtToken {
       },
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: '1h',
+        expiresIn: '7d',
       },
     );
     const refreshToken = jwt.sign({ id: id }, process.env.REFRESH_TOKEN_SECRET, {
-      expiresIn: '7d',
+      expiresIn: '30d',
     });
     return { accessToken, refreshToken };
   };
+
+  generateOnboardingToken = (id:string, isOnboarded:boolean) => {
+    if (!process.env.OB_TOKEN_SECRET) {
+      throw new ApiError(500, 'token secret not found');
+    };
+
+      const obToken = jwt.sign(
+      {
+        id: id,
+        isOnboarded:isOnboarded
+      },
+      process.env.OB_TOKEN_SECRET,
+      {
+        expiresIn: '30d',
+      },
+    );
+
+    return obToken;
+
+  }
 
    verifyAccessToken = (token: string) => {
     try {

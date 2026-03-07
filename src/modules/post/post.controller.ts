@@ -16,13 +16,13 @@ import { ApiResponse } from '../../utils/apiResponse.js';
 import { ApiError } from '../../utils/apiError.js';
 import { postQueue } from '../../queues/queues.js';
 import { jobBody } from '../../workers/worker.types.js';
-import {PrismaClient } from '../../generated/prisma/client.js';
+import { PrismaClient } from '../../generated/prisma/client.js';
 
 export class PostController {
   constructor(
     private logger: Logger,
     private postServices: PostService,
-    private prismaClient : PrismaClient
+    private prismaClient: PrismaClient,
   ) {}
 
   createPost: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -40,7 +40,7 @@ export class PostController {
       media_url,
       req.user.id!,
       media_file.mimetype,
-      'CREATED'
+      'CREATED',
     );
 
     this.logger.info('post created successfully', { postId: post.id });
@@ -68,11 +68,10 @@ export class PostController {
   getAllPosts: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     if (!req.user) {
       throw new ApiError(401, 'Unauthorized');
-    };
-    const {limit,skip} = getPostsSchema.parse(req.query);
+    }
+    const { limit, skip } = getPostsSchema.parse(req.query);
 
     const posts = await this.postServices.getAllPosts(req.user.id, limit, skip);
-
 
     this.logger.info(`all posts fetched successfully, total post ${posts.length}`);
 
@@ -81,12 +80,11 @@ export class PostController {
   getSearchedPosts: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     if (!req.user) {
       throw new ApiError(401, 'Unauthorized');
-    };
-    const {limit,skip, query, type} = getSearchPostsSchema.parse(req.query);
-    this.logger.info(`limit= ${limit} skip=${skip} query=${query} type=${type}`)
+    }
+    const { limit, skip, query, type } = getSearchPostsSchema.parse(req.query);
+    this.logger.info(`limit= ${limit} skip=${skip} query=${query} type=${type}`);
 
-    const posts = await this.postServices.getPostsByQuery(req.user.id,query, limit, skip, type);
-
+    const posts = await this.postServices.getPostsByQuery(req.user.id, query, limit, skip, type);
 
     this.logger.info(` posts fetched successfully, total post ${posts.length}`);
 
@@ -100,18 +98,16 @@ export class PostController {
       if (!req.user) {
         this.logger.error('UnAuthorized Request');
         throw new ApiError(401, 'You Are Not Authorized');
-      };
+      }
 
-      const userid = req.user.id
+      const userid = req.user.id;
 
       const isServiceAvailable = await this.postServices.isServiceAvailable(req.user.id);
 
-      if(!isServiceAvailable){
+      if (!isServiceAvailable) {
         this.logger.error(`service no longer availble `);
-        throw new ApiError(403, 'Posing Limit Exceeded')   
+        throw new ApiError(403, 'Posing Limit Exceeded', [], 'USAGE_EXCEEDED');
       }
-
-
 
       if (scheduledDateAndTime) {
         const post = await this.postServices.createPost(
@@ -121,7 +117,7 @@ export class PostController {
           imageMimeType || '',
           'SCHEDULED',
           platforms,
-          scheduledDateAndTime
+          scheduledDateAndTime,
         );
 
         const now = new Date();
@@ -137,19 +133,18 @@ export class PostController {
           userid: req.user.id,
         };
 
-      await this.prismaClient.$transaction(async () => {
+        await this.prismaClient.$transaction(async () => {
           postQueue.add('post', data, {
-          delay: delay,
-          jobId: post.id,
+            delay: delay,
+            jobId: post.id,
+          });
+
+          await this.postServices.LogUsage(userid);
         });
 
-        await this.postServices.LogUsage(userid)
-      })
-
-          this.logger.info('Post Scheduled Successfuly');
-          res.status(200).json(new ApiResponse(203, 'Scheduled successFully'));
-
-      } else{
+        this.logger.info('Post Scheduled Successfuly');
+        res.status(200).json(new ApiResponse(203, 'Scheduled successFully'));
+      } else {
         const post = await this.postServices.createPost(
           content,
           imageLink || '',
@@ -158,15 +153,19 @@ export class PostController {
           'CREATED',
         );
 
-         const data: jobBody = {
-        platfroms: platforms,
-        postId: post.id,
-        userid: req.user.id,
-      };
+        const data: jobBody = {
+          platfroms: platforms,
+          postId: post.id,
+          userid: req.user.id,
+        };
 
-      postQueue.add('post', data, {jobId:post.id});
-          this.logger.info('Post Queued to platforms');
-          res.status(200).json(new ApiResponse(203, 'post queued successFully'));
+        await this.prismaClient.$transaction(async () => {
+          postQueue.add('post', data, { jobId: post.id });
+          await this.postServices.LogUsage(userid);
+        });
+
+        this.logger.info('Post Queued to platforms');
+        res.status(200).json(new ApiResponse(203, 'post queued successFully'));
       }
     },
   );

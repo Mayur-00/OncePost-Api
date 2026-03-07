@@ -26,6 +26,7 @@ export class XServices {
       .replace(/\//g, '_')
       .replace(/=+$/, '');
 
+    this.logger.info('PKCE challenge generated', { verifierLength: code_verifier.length, challengeLength: hash.length });
     return {
       code_verifier,
       code_challenge: hash,
@@ -55,10 +56,16 @@ export class XServices {
   };
 
   async markSessionAsUsed(sessionId: string) {
-    await this.prismaClient.oAuthSession.update({
-      where: { id: sessionId },
-      data: { used: true },
-    });
+    try {
+      await this.prismaClient.oAuthSession.update({
+        where: { id: sessionId },
+        data: { used: true },
+      });
+      this.logger.info('OAuth session marked as used', { sessionId: sessionId });
+    } catch (error) {
+      this.logger.error('Error marking session as used', { sessionId: sessionId, error: error });
+      throw error;
+    }
   };
 
   async createOAuthSession(userid: string, code_verifier: string, state: string) {
@@ -286,6 +293,7 @@ export class XServices {
           owner_id: userid,
         },
       });
+      this.logger.info('Post retrieved from database', { postId: post_id, userId: userid, found: !!post });
       return post;
     } catch (error) {
       this.logger.info('an error occured while geting post ', { error: error });
@@ -296,6 +304,7 @@ export class XServices {
   async getImageBufferFromCloudinary(image_url: string) {
     try {
       const response = await this.httpClient.get(image_url, { responseType: 'arraybuffer' });
+      this.logger.info('Image buffer retrieved from Cloudinary', { urlLength: image_url.length, bufferSize: response.data.length });
       return Buffer.from(response.data);
     } catch (error) {
       this.logger.info('an error occured while getting image from cloudinary', { error: error });
@@ -317,7 +326,7 @@ export class XServices {
           postedAt: new Date(Date.now()),
         },
       });
-
+      this.logger.info('Tweet database record created', { tweetId: data.tweetId, ownerId: data.ownerId, postId: data.postId });
       return record;
     } catch (error) {
       this.logger.error('an error occrred while creating db record', { error: error });
@@ -327,7 +336,7 @@ export class XServices {
 
   async flagTweetSuccess(postid: string, x_tweet_id: string) {
     try {
-      return this.prismaClient.platformPost.update({
+      const updated = await this.prismaClient.platformPost.update({
         where: {
           id: postid,
         },
@@ -337,6 +346,8 @@ export class XServices {
           platform_post_url: `https://x.com/i/web/status/${x_tweet_id}`,
         },
       });
+      this.logger.info('Tweet flagged as successfully posted', { postId: postid, tweetId: x_tweet_id });
+      return updated;
     } catch (error) {
       this.logger.error(`failed to flag tweet ${error}`);
       throw new ApiError(500, 'internal server error');
@@ -345,13 +356,15 @@ export class XServices {
 
   async isAlreadyPosted(postid: string) {
     try {
-      return await this.prismaClient.platformPost.findFirst({
+      const posted = await this.prismaClient.platformPost.findFirst({
         where: {
           id: postid,
           platform: 'X',
           status: 'POSTED',
         },
       });
+      this.logger.info('Post status checked', { postId: postid, isPosted: !!posted });
+      return posted;
     } catch (error) {
       this.logger.error(`failed to check ${error}`);
       throw new ApiError(500, 'internal server error');
@@ -360,7 +373,7 @@ export class XServices {
 
   async createEmptyTweetDbRecord(user_id: string, post_id: string, X_db_account_id: string) {
     try {
-      return await this.prismaClient.platformPost.create({
+      const record = await this.prismaClient.platformPost.create({
         data: {
           owner_id: user_id,
           post_id: post_id,
@@ -369,6 +382,8 @@ export class XServices {
           status: 'PENDING',
         },
       });
+      this.logger.info('Empty tweet database record created', { userId: user_id, postId: post_id, accountId: X_db_account_id });
+      return record;
     } catch (error) {
       this.logger.error(`failed to create db record ${error}`);
       throw new ApiError(500, 'internal server error');
@@ -377,7 +392,7 @@ export class XServices {
 
   async updateLinkedinPostSuccess(x_tweet_db_id: string, x_tweet_publish_id: string) {
     try {
-      return await this.prismaClient.platformPost.update({
+      const updated = await this.prismaClient.platformPost.update({
         where: {
           id: x_tweet_db_id,
         },
@@ -388,6 +403,8 @@ export class XServices {
           postedAt: new Date(Date.now()),
         },
       });
+      this.logger.info('LinkedIn post success record updated (X)', { dbId: x_tweet_db_id, tweetId: x_tweet_publish_id });
+      return updated;
     } catch (error) {
       this.logger.error(`failed to update db record ${error}`);
       throw new ApiError(500, 'internal server error');
@@ -396,7 +413,7 @@ export class XServices {
 
   async flagTweetPublishFailed(platform_Post_id: string, error: string) {
     try {
-      return await this.prismaClient.platformPost.update({
+      const updated = await this.prismaClient.platformPost.update({
         where: {
           id: platform_Post_id,
         },
@@ -406,6 +423,8 @@ export class XServices {
           failedAt: new Date(Date.now()),
         },
       });
+      this.logger.info('Tweet publish failure flagged in database', { postId: platform_Post_id, error: error });
+      return updated;
     } catch (error) {
       this.logger.error(`failed to flag failed Post : ${error}`);
       throw new ApiError(500, 'internal server error');

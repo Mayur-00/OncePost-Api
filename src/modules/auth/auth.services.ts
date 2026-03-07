@@ -20,10 +20,9 @@ export class UserServices {
         idToken: token,
         audience: this.googleClientId,
       });
-      
 
       const payload = ticket.getPayload();
-
+      this.logger.info('Google ID Token verified successfully', { email: payload?.email });
       return payload;
     } catch (error) {
       this.logger.error('id token verification failed', { error: error });
@@ -33,11 +32,13 @@ export class UserServices {
 
   async getUserById(id: string) {
     try {
-      return await this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: {
           id: id,
         },
       });
+      this.logger.info('User fetched by ID', { userId: id, found: !!user });
+      return user;
     } catch (error) {
       this.logger.error('an error occored while fetching user', {
         error: error,
@@ -47,42 +48,52 @@ export class UserServices {
   }
   async getUserByIdWithConnectedAccounts(id: string) {
     try {
-      return await this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: {
           id: id,
         },
         include: {
           connected_accounts: {
             select: {
-              id:true,
+              id: true,
               platform: true,
               display_name: true,
               profile_picture: true,
               username: true,
-              isActive:true,
-              isExpired:true
+              isActive: true,
+              isExpired: true,
             },
-            
           },
 
-          subscriptions:{
-            where:{
-              status:'ACTIVE',
-
+          subscriptions: {
+            where: {
+              status: 'ACTIVE',
             },
-            select:{
-              plan:true
-            }
+            select: {
+              end_date: true,
+              start_date: true,
+              post_creation_remaining: true,
+              status: true,
+              plan: {
+                select: {
+                  plan_tier: true,
+                  maxPostsPerMonth: true,
+                  price:true,
+                },
+              },
+            },
           },
-          _count:{
-            select:{
-              posts:true,
-              platform_post:true,
-              connected_accounts:true
-            }
-          }
+          _count: {
+            select: {
+              posts: true,
+              platform_post: true,
+              connected_accounts: true,
+            },
+          },
         },
       });
+      this.logger.info('User fetched with connected accounts', { userId: id, connectedAccounts: user?._count.connected_accounts });
+      return user;
     } catch (error) {
       this.logger.error('an error occored while fetching user', {
         error: error,
@@ -92,11 +103,13 @@ export class UserServices {
   }
   async getUserByEmail(email: string) {
     try {
-      return await this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: {
           email: email,
         },
       });
+      this.logger.info('User fetched by email', { email: email, found: !!user });
+      return user;
     } catch (error) {
       this.logger.error('an error occored while fetching user', {
         error: error,
@@ -130,7 +143,7 @@ export class UserServices {
           refresh_token: refreshToken,
         },
       });
-
+      this.logger.info('User created successfully', { userId: user.id, email: user.email, provider: provider });
       return user;
     } catch (error) {
       this.logger.error('an error occured during user creation', {
@@ -157,7 +170,7 @@ export class UserServices {
           refresh_token: refreshToken,
         },
       });
-
+      this.logger.info('User updated successfully', { userId: user.id, email: user.email, provider: provider });
       return user;
     } catch (error) {
       this.logger.error('an error occured during user creation', {
@@ -168,7 +181,7 @@ export class UserServices {
   }
   async updateUsersRefreshToken(userid: string, refreshToken: string): Promise<User> {
     try {
-      return await this.prisma.user.update({
+      const user = await this.prisma.user.update({
         where: {
           id: userid,
         },
@@ -176,6 +189,8 @@ export class UserServices {
           refresh_token: refreshToken,
         },
       });
+      this.logger.info('User refresh token updated', { userId: userid });
+      return user;
     } catch (error) {
       this.logger.error('an error occured while updating user', {
         error: error,
@@ -193,7 +208,7 @@ export class UserServices {
           refresh_token: '',
         },
       });
-
+      this.logger.info('User refresh token cleared', { userId: userid });
       return updated;
     } catch (error) {
       this.logger.error('an error occured while clearing token', {
@@ -204,7 +219,9 @@ export class UserServices {
   }
   async verifyRefreshToken(refreshToken: string) {
     try {
-      return (await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!)) as myJwtPayload;
+      const payload = (await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!)) as myJwtPayload;
+      this.logger.info('Refresh token verified successfully', { userId: payload.sub });
+      return payload;
     } catch (error) {
       this.logger.error("token didn't verify", { error: error });
       throw new ApiError(401, 'token expired or invalid');
@@ -212,70 +229,111 @@ export class UserServices {
   }
   async verifyPassword(new_password: string, user_password: string): Promise<boolean> {
     try {
-      return await bcrypt.compare(new_password, user_password);
+      const isMatched = await bcrypt.compare(new_password, user_password);
+      this.logger.info('Password verification completed', { isMatched: isMatched });
+      return isMatched;
     } catch (error) {
       this.logger.error("token didn't verify", { error: error });
       throw new ApiError(401, 'token expired or invalid');
     }
-  };
-  async DeleteAccount(userId:string){
-    return await this.prisma.user.delete({
-      where:{
-        id:userId
-      }
-    })
   }
-  async updateUserWithImage (userid:string, imageUrl:string){
-    return await this.prisma.user.update({
-      where:{
-        id:userid
-      },
-      data:{
-        profile_picture:imageUrl,
-      }
-    })
+  async DeleteAccount(userId: string) {
+    try {
+      const deleted = await this.prisma.user.delete({
+        where: {
+          id: userId,
+        },
+      });
+      this.logger.info('User account deleted', { userId: userId, email: deleted.email });
+      return deleted;
+    } catch (error) {
+      this.logger.error('Failed to delete user account', { userId: userId, error: error });
+      throw error;
+    }
   }
-  async updateUsersName (userid:string, name:string){
-    return await this.prisma.user.update({
-      where:{
-        id:userid
-      },
-      data:{
-        name:name
-      }
-    })
+  async updateUserWithImage(userid: string, imageUrl: string) {
+    try {
+      const updated = await this.prisma.user.update({
+        where: {
+          id: userid,
+        },
+        data: {
+          profile_picture: imageUrl,
+        },
+      });
+      this.logger.info('User profile picture updated', { userId: userid });
+      return updated;
+    } catch (error) {
+      this.logger.error('Failed to update user profile picture', { userId: userid, error: error });
+      throw error;
+    }
   }
-  async activateFreePlan(user_id:string){
+  async updateUsersName(userid: string, name: string) {
+    try {
+      const updated = await this.prisma.user.update({
+        where: {
+          id: userid,
+        },
+        data: {
+          name: name,
+        },
+      });
+      this.logger.info('User name updated', { userId: userid, newName: name });
+      return updated;
+    } catch (error) {
+      this.logger.error('Failed to update user name', { userId: userid, error: error });
+      throw error;
+    }
+  }
+  async activateFreePlan(user_id: string) {
     try {
       const plan = await this.prisma.subscriptionPlan.findFirst({
-        where:{
-          plan_tier:'FREE'
-        }
+        where: {
+          plan_tier: 'FREE',
+          
+        },
       });
 
-      if(!plan ) {
-        this.logger.error(`Free plan not found`)
-        throw new ApiError(404, 'Plan not found')
-      };
+      if (!plan) {
+        this.logger.error(`Free plan not found`);
+        throw new ApiError(404, 'Plan not found');
+      }
 
       const subscriptions = await this.prisma.subscription.create({
-        data:{
-          user_id:user_id,
-          plan_id:plan.id,
-          post_creation_remaining:plan.maxPostsPerMonth,
-          platform_connections_remaining:plan.maxSocialAccounts,
-          start_date:new Date(),
-          end_date: new Date(Date.now() * 30 * 24 * 60 * 60 * 60 * 1000),
-          status:'ACTIVE',
-
-        }
+        data: {
+          user_id: user_id,
+          plan_id: plan.id,
+          post_creation_remaining: plan.maxPostsPerMonth,
+          platform_connections_remaining: plan.maxSocialAccounts,
+          start_date: new Date(),
+          end_date: new Date(Date.now() + 12 * 30 * 24 * 60 * 60 * 1000),
+          status: 'ACTIVE',
+        },
       });
-
-      return subscriptions
+      this.logger.info('Free plan activated for user', { userId: user_id, subscriptionId: subscriptions.id });
+      return subscriptions;
     } catch (error) {
-      this.logger.error(`couldn't activate free plan`);
+      this.logger.error(`couldn't activate free plan, ${error}`);
 
       throw new ApiError(500, 'Internal Service Error');
+    }
+  }
+
+  async setOnboardedTrue(user_id:string) {
+    try {
+      const updated = await this.prisma.user.update({
+        where:{
+          id:user_id
+        },
+        data:{
+          isOnboarded:true
+        }
+      });
+      this.logger.info('User onboarding completed', { userId: user_id });
+      return updated;
+    } catch (error) {
+      this.logger.error(`unable to set Onboarded True, error : ${error}`);
+      throw new ApiError(500, 'Internl Server Error');
     }
   }
 }

@@ -8,7 +8,6 @@ export const verifyPaymentSchema = z.object({
     order_id:z.string().min(5),
     payment_id:z.string().min(5),
     payment_signature:z.string().min(5),
-    subscription_id:z.string().min(5),
     transaction_id:z.string().min(5)
 
 });

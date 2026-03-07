@@ -21,7 +21,7 @@ export class RazorpayService {
   ): Promise<{ order: Orders.RazorpayOrder; transaction_id: string }> {
     try {
       const options = {
-        amount: amount * 100, // convert it into paise
+        amount: amount, // convert it into paise
         currency,
         reciept,
       };
@@ -48,7 +48,7 @@ export class RazorpayService {
 
   generatePaymentSignature(order_id: string, payment_id: string): String {
     try {
-      const razorpay_secret = process.env.TEST_API_SECRET!;
+      const razorpay_secret = process.env.RAZORPAY_KEY_SECRET!;
       if (!razorpay_secret) {
         this.logger.error('env var is failed to load');
         throw new ApiError(500, 'internal server error');
@@ -57,7 +57,7 @@ export class RazorpayService {
       const hmac = crypto.createHmac('sha256', razorpay_secret);
       hmac.update(order_id + '|' + payment_id);
       const generatedSignature = hmac.digest('hex');
-
+      this.logger.info('Payment signature generated successfully', { orderId: order_id });
       return generatedSignature;
     } catch (error) {
       this.logger.error(`failed to generate Payment signature : ${error}`);
@@ -87,10 +87,10 @@ export class RazorpayService {
             status: 'COMPLETED',
           },
         });
-
+        this.logger.info('Payment signature verified and transaction completed', { transactionId: transaction_id, orderId: order_id });
         return true;
       }
-
+      this.logger.warn('Payment signature verification failed', { orderId: order_id });
       return false;
     } catch (error) {
       this.logger.error(`failed to verify razorpay payment signature`);
@@ -100,11 +100,13 @@ export class RazorpayService {
 
   async getTransactionById(transaction_id: string) {
     try {
-      return await this.prismaClient.transaction.findUnique({
+      const transaction = await this.prismaClient.transaction.findUnique({
         where: {
           id: transaction_id,
         },
       });
+      this.logger.info('Transaction retrieved by ID', { transactionId: transaction_id, found: !!transaction });
+      return transaction;
     } catch (error) {
       this.logger.error(`failed to get transaction details`);
       throw new ApiError(500, 'internal server error');
@@ -112,11 +114,13 @@ export class RazorpayService {
   }
   async getTransactionByOrderId(order_id: string) {
     try {
-      return await this.prismaClient.transaction.findUnique({
+      const transaction = await this.prismaClient.transaction.findUnique({
         where: {
           razorpay_order_id: order_id,
         },
       });
+      this.logger.info('Transaction retrieved by order ID', { orderId: order_id, found: !!transaction });
+      return transaction;
     } catch (error) {
       this.logger.error(`failed to get transaction details`);
       throw new ApiError(500, 'internal server error');
@@ -128,18 +132,26 @@ export class RazorpayService {
       .createHmac('sha256', process.env.RAZORPAY_WEBHOOK_SECRET!)
       .update(rawBody)
       .digest('hex');
+    const isValid = expectedSignature === razorpaySignature;
+    if (isValid) {
+      this.logger.info('Webhook signature verified successfully');
+    } else {
+      this.logger.warn('Webhook signature verification failed');
+    }
+    return isValid;
 
-    return expectedSignature === razorpaySignature;
-  };
+  }
 
-  async isWebookAlreadyProcessed(order_id:string) {
+   async isWebookAlreadyProcessed(order_id:string) {
     try {
-      return await this.prismaClient.transaction.findUnique({
+      const transaction = await this.prismaClient.transaction.findUnique({
         where:{
           razorpay_order_id:order_id,
           status:'COMPLETED',
         }
-      })
+      });
+      this.logger.info('Webhook processed status checked', { orderId: order_id, isProcessed: !!transaction });
+      return transaction;
     } catch (error) {
       this.logger.error(`failed to get transaction `);
       throw new ApiError(500, 'internal server error');

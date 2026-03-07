@@ -23,7 +23,6 @@
   enum SocialPlatforms {
     LINKEDIN
     X
-    FACEBOOK
     NONE
   }
 
@@ -40,13 +39,11 @@
     X
     LINKEDIN
   }
-
   enum PlatfromPostStatus {
     PENDING
     POSTED
     FAILED
   }
-  
   enum JobType {
     PUBLISH_POST
     SCHEDULE_POST
@@ -216,10 +213,8 @@
     price Int // Price in INR
     currency String @default("INR")
     description String
-    features String[] // Array of feature descriptions
+    features String[] 
     maxPostsPerMonth Int
-    maxSocialAccounts Int
-    analyticsEnabled Boolean @default(false)
     schedulingEnabled Boolean @default(false)
     prioritySupport Boolean @default(false)
     createdAt DateTime @default(now())
@@ -235,6 +230,7 @@
     EXPIRED
     FAILED
   }
+
 
   model Subscription {
     id String @id @default(cuid())

@@ -25,13 +25,15 @@ export class linkedinServices {
 
   async createOAuthSession(userid: string, state: string) {
     try {
-      return await this.prisma.oAuthSession.create({
+      const session = await this.prisma.oAuthSession.create({
         data: {
           ownerid: userid,
           provider: 'LINKEDIN',
           state: state,
         },
       });
+      this.logger.info('LinkedIn OAuth session created', { userId: userid, sessionId: session.id });
+      return session;
     } catch (error) {
       this.logger.error('an error occured while creation oauth session', { error: error });
       throw new ApiError(500, 'internal server error');
@@ -61,14 +63,20 @@ export class linkedinServices {
   };
 
   async markSessionAsUsed(sessionId: string) {
-    await this.prisma.oAuthSession.update({
-      where: { id: sessionId },
-      data: { used: true },
-    });
+    try {
+      await this.prisma.oAuthSession.update({
+        where: { id: sessionId },
+        data: { used: true },
+      });
+      this.logger.info('OAuth session marked as used', { sessionId: sessionId });
+    } catch (error) {
+      this.logger.error('Error marking session as used', { sessionId: sessionId, error: error });
+      throw error;
+    }
   };
 
   generateAuthUrl(state: string):String {
-    this.logger.info(`clientID: ${this.Config.clientID} , redirectUri: ${this.Config.redirectUri}`)
+    this.logger.info('LinkedIn authorization URL generated', { clientID: this.Config.clientID?.substring(0, 5), redirectUri: this.Config.redirectUri })
     const params = new URLSearchParams({
       response_type: 'code',
       client_id:this.Config.clientID,
@@ -385,7 +393,7 @@ export class linkedinServices {
         },
       });
 
-      this.logger.info('Db Record Creation Success');
+      this.logger.info('LinkedIn platform post record created', { postId: post_id, userId: user_id, platformPostId: linkedin_post_id });
       return post;
     } catch (error) {
       this.logger.error('Db Record Creation Failed : ', { error });
@@ -404,11 +412,11 @@ export class linkedinServices {
         },
       });
       if (!user) {
-        this.logger.error('account not found');
+        this.logger.error('LinkedIn account not found', { userId: userid });
         throw new ApiError(404, 'account not found , please reconnect to linkedin ');
       }
 
-      this.logger.info('Account Found ');
+      this.logger.info('LinkedIn account found', { userId: userid, accountId: user.id });
       return user;
     } catch (error) {
       this.logger.error('account fetch Failed : ', { error });
@@ -419,6 +427,7 @@ export class linkedinServices {
   async getImageBufferFromCloudinary(image_url: string) {
     try {
       const response = await this.httpClient.get(image_url, { responseType: 'arraybuffer' });
+      this.logger.info('Image buffer retrieved from Cloudinary (LinkedIn)', { urlLength: image_url.length, bufferSize: response.data.length });
       return Buffer.from(response.data);
     } catch (error) {
       this.logger.info('an error occured while getting image from cloudinary', { error: error });
@@ -434,7 +443,7 @@ export class linkedinServices {
           owner_id: userId,
         },
       });
-
+      this.logger.info('Post retrieved from database (LinkedIn)', { postId: postId, userId: userId, found: !!post });
       return post;
     } catch (error) {
       this.logger.error('an error occured while getting the post', { error: error });
@@ -458,8 +467,10 @@ export class linkedinServices {
             isExpired:true
           }
         })
+        this.logger.warn('LinkedIn access token expired', { accountId: account.id });
         return {success:false, message:'Account Expired Please Reconnect', accessToken:''}
       };
+      this.logger.info('LinkedIn access token validated successfully', { accountId: account.id });
       return {success:true, message:'accessToken is valid', accessToken :account.access_token};
     } catch (error) {
       this.logger.error(`an error occured while validating accessToken : ${error}`);
@@ -469,7 +480,7 @@ export class linkedinServices {
 
   async flagPostSuccess( postid:string, linkedin_post_id:string,){
     try {
-      return await this.prisma.platformPost.update({
+      const updated = await this.prisma.platformPost.update({
         where:{
           id:postid
         },
@@ -478,7 +489,9 @@ export class linkedinServices {
           platform_post_id:linkedin_post_id,
           platform_post_url: `https://www.linkedin.com/feed/update/${linkedin_post_id}/ ` 
         }
-      })
+      });
+      this.logger.info('LinkedIn post flagged as successfully posted', { postId: postid, linkedinPostId: linkedin_post_id });
+      return updated;
     } catch (error) {
       this.logger.error(`failed to update flag ${error}`);
       throw new ApiError(500, 'internal server error')
@@ -487,7 +500,7 @@ export class linkedinServices {
 
   async isAlreadyPosted( postid:string, ){
     try {
-       return  await this.prisma.platformPost.findFirst({
+       const posted = await this.prisma.platformPost.findFirst({
         where:{
           id:postid,
           platform:'LINKEDIN',
@@ -495,6 +508,8 @@ export class linkedinServices {
           
         }
       });
+      this.logger.info('LinkedIn post status checked', { postId: postid, isPosted: !!posted });
+      return posted;
     } catch (error) {
       this.logger.error(`failed to check ${error}`);
       throw new ApiError(500, 'internal server error')
@@ -503,7 +518,7 @@ export class linkedinServices {
 
   async flagPostFailed( platform_Post_id:string, error:string) {
     try {
-      return await this.prisma.platformPost.update({
+      const updated = await this.prisma.platformPost.update({
         where:{
           id:platform_Post_id
         },
@@ -513,7 +528,9 @@ export class linkedinServices {
           failedAt:new Date(Date.now())
         }
       
-      })
+      });
+      this.logger.info('LinkedIn post failure flagged in database', { postId: platform_Post_id, error: error });
+      return updated;
     } catch (error) {
       this.logger.error(`failed to flag failed Post : ${error}`);
       throw new ApiError(500, 'internal server error');
@@ -522,7 +539,7 @@ export class linkedinServices {
 
   async createEmptyLinkedinPostDbRecord(user_id:string, post_id:string, linkedin_account_id:string,) {  
     try {
-      return await this.prisma.platformPost.create({
+      const record = await this.prisma.platformPost.create({
         data:{
          owner_id:user_id,
          post_id:post_id,
@@ -532,7 +549,9 @@ export class linkedinServices {
 
         }
       
-      })
+      });
+      this.logger.info('Empty LinkedIn post database record created', { userId: user_id, postId: post_id, accountId: linkedin_account_id });
+      return record;
     } catch (error) {
       this.logger.error(`failed to create sample linkedin post : ${error}`)
       throw new ApiError(500, 'internal server error');
@@ -540,7 +559,7 @@ export class linkedinServices {
   };
   async updateLinkedinPostSuccess(linkedin_post_db_id:string, linkedin_post_publish_id:string) {  
     try {
-      return await this.prisma.platformPost.update({
+      const updated = await this.prisma.platformPost.update({
         where:{
           id:linkedin_post_db_id
         },
@@ -552,7 +571,9 @@ export class linkedinServices {
 
         }
       
-      })
+      });
+      this.logger.info('LinkedIn post success record updated', { dbId: linkedin_post_db_id, publishId: linkedin_post_publish_id });
+      return updated;
     } catch (error) {
       this.logger.error(`failed to create sample linkedin post : ${error}`)
       throw new ApiError(500, 'internal server error');

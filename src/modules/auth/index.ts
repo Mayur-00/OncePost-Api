@@ -19,3 +19,6 @@ export const jwtService = new jwtToken()
 export const authController = new AuthController(logger, userServices, jwtService);
 
 export const authRoutes = createAuthRoutes(authController);
+
+export * from './auth.types.js'
+export * from './auth.dto.js'

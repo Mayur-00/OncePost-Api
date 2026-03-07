@@ -23,7 +23,7 @@ export class PostService {
       const post = await this.prisma.post.create({
         data: {
           content: content || '',
-          mediaUrl: media_url || ' ',
+          mediaUrl: media_url || '',
           owner_id: user_id,
           status: status,
           mediaType: mimeType,
@@ -100,7 +100,7 @@ export class PostService {
   }
   async getAllPosts(user_id: string, limit: number, skip: number) {
     try {
-      return await this.prisma.post.findMany({
+      const posts = await this.prisma.post.findMany({
         where: {
           owner_id: user_id,
         },
@@ -121,6 +121,8 @@ export class PostService {
           id: 'desc',
         },
       });
+      this.logger.info('All posts retrieved successfully', { userId: user_id, count: posts.length, limit: limit, skip: skip });
+      return posts;
     } catch (error) {
       this.logger.error("Couldn't get The Posts ", { error: error });
       throw new ApiError(500, 'Internal Server Error');
@@ -135,7 +137,7 @@ export class PostService {
   ) {
     try {
       if (type === 'ALL') {
-        return await this.prisma.post.findMany({
+        const posts = await this.prisma.post.findMany({
           where: {
             owner_id: user_id,
             content:{contains:query}
@@ -157,8 +159,10 @@ export class PostService {
             id: 'desc',
           },
         });
+        this.logger.info('Posts retrieved by search query', { userId: user_id, query: query, count: posts.length, type: type });
+        return posts;
       } else {
-        return await this.prisma.post.findMany({
+        const posts = await this.prisma.post.findMany({
           where: {
             owner_id: user_id,
             content:query,
@@ -181,6 +185,8 @@ export class PostService {
             id: 'desc',
           },
         });
+        this.logger.info('Posts retrieved by status filter', { userId: user_id, status: type, count: posts.length });
+        return posts;
       }
     } catch (error) {
       this.logger.error("Couldn't get The Posts ", { error: error });
@@ -189,7 +195,7 @@ export class PostService {
   }
   async updatePostPublished(postid: string) {
     try {
-      return await this.prisma.post.update({
+      const updated = await this.prisma.post.update({
         where: {
           id: postid,
         },
@@ -197,6 +203,8 @@ export class PostService {
           status: 'UPLOADED',
         },
       });
+      this.logger.info('Post marked as published', { postId: postid });
+      return updated;
     } catch (error) {
       this.logger.error(`post updation failed with error ${error}`);
       throw new ApiError(500, 'internal server error');
@@ -213,7 +221,7 @@ export class PostService {
 
       if(!userSubscription){
         this.logger.error('no user subscription found')
-        throw new ApiError(404, 'No Active User Subscription')
+        throw new ApiError(404, 'No Active User Subscription', [], 'NO_SUBSCRIPTION')
       };
 
       if(userSubscription.end_date <= new Date()){
@@ -231,8 +239,10 @@ export class PostService {
       };
 
       if(userSubscription.post_creation_remaining <= 0 ){
+        this.logger.warn('User has no remaining posts in subscription', { userId: user_id, subscriptionId: userSubscription.id });
         return false
       }
+      this.logger.info('Service available for user', { userId: user_id, remainingPosts: userSubscription.post_creation_remaining });
       return true
 
     } catch (error) {
@@ -240,7 +250,7 @@ export class PostService {
       throw new ApiError(500, 'Internal Server Error')
     }
   };
-  async LogUsage(user_id:string,){
+  async LogUsage(user_id:string){
     try {
       const subscription = await this.prisma.subscription.findFirst({
         where:{
@@ -254,16 +264,23 @@ export class PostService {
         throw new ApiError(404, 'subscription not found')
       }
 
-      await this.prisma.subscription.update({
+      const updatedSubscription = await this.prisma.subscription.update({
         where:{
           id:subscription.id
         },
         data:{
-          post_creation_remaining: subscription?.post_creation_remaining -1 ,
-
+          post_creation_remaining: subscription.post_creation_remaining - 1
         }
-      })
+      });
+
+      this.logger.info('Usage logged successfully', { userId: user_id, remainingPosts: updatedSubscription.post_creation_remaining });
+      return updatedSubscription;
     } catch (error) {
+      // Re-throw ApiError without wrapping
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      
       this.logger.error(`couldn't log usage, error: ${error}`);
       throw new ApiError(500, 'Internal Server Error')
     }

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "OAuthSession" ALTER COLUMN "expiresAt" SET DEFAULT NOW() + INTERVAL '10 MINUTES';

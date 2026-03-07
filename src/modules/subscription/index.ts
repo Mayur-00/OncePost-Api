@@ -9,6 +9,6 @@ export const SubscriptionServices = new SubscriptionService(prisma, logger);
 
 export const SubscriptionController = new SubscriptionControllerClass(SubscriptionServices, RazorpayServices, logger);
 
-export const subscriptionRouter = createSubscriptionRoutes(SubscriptionController)
+export const subscriptionRoutes = createSubscriptionRoutes(SubscriptionController)
 
 export * from './subscription.dto.js';

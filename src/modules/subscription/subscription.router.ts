@@ -21,8 +21,9 @@ export function createSubscriptionRoutes(controller: SubscriptionControllerClass
   );
 
   //get all posts with pagination and limit
-  router.get("/verify-payment", authorize, controller.verifyPaymentAndActivateSubscription);
+  router.post("/verify-payment", authorize, controller.verifyPaymentAndActivateSubscription);
   router.post("/webhook/razorpay", express.raw({type:"application/json"}), controller.webhookHandler);
+  router.get("/plans", controller.getPlans);
   // get posts by query endpoing  
 
   return router;

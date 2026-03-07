@@ -17,13 +17,14 @@ export const handleError = (err: any, req: Request, res: Response, next:NextFunc
           ? (error as ZodError).issues[0].message
           : 'Validation error';
       const errors = (error as ZodError).issues || [];
-      error = new ApiError(statusCode, message, errors, error.stack);
+      error = new ApiError(statusCode, message, errors, 'INPUT_VALIDATION_ERROR',  error.stack);
       logger.error(`Input Validation Error : ${error}`)
     } else {
       const statusCode = error && error.statusCode ? error.statusCode : 500;
       const message = error && error.message ? error.message : 'Something Went Wrong';
+      const error_code = 'SERVER_ERROR'
 
-      error = new ApiError(statusCode, message, error.errors || [], error.stack);
+      error = new ApiError(statusCode, message, error.errors || [], error_code, error.stack);
       logger.error(`Implementation error : ${error}`)
     }
   }
@@ -33,6 +34,7 @@ export const handleError = (err: any, req: Request, res: Response, next:NextFunc
     success: false,
     message: error.message,
     errors: error.errors || [],
+    error_code: error.code,
     stack: undefined,
   };
 
@@ -46,5 +48,6 @@ export type ResponseType = {
   message: string;
   data?: object;
   errors: unknown[];
+  error_code:string;
   stack?: string;
 };

@@ -3,7 +3,13 @@ import { UserServices } from './auth.services.js';
 
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { RequestHandler, Request, Response } from 'express';
-import { googleLoginSchema, loginSchema, registerUserSchema, updateProfilePictureSchema, updateUserSchema } from './auth.dto.js';
+import {
+  googleLoginSchema,
+  loginSchema,
+  registerUserSchema,
+  updateProfilePictureSchema,
+  updateUserSchema,
+} from './auth.dto.js';
 import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
 import { ApiError } from '../../utils/apiError.js';
@@ -11,9 +17,8 @@ import { ApiError } from '../../utils/apiError.js';
 export class AuthController {
   constructor(
     private logger: Logger,
-    
     private userServices: UserServices,
-    private jwtToken :jwtToken
+    private jwtToken: jwtToken,
   ) {}
 
   handleGoogleLogin: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -93,7 +98,7 @@ export class AuthController {
 
   handleRegister: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     const { name, email, password } = registerUserSchema.parse(req.body);
-      this.logger.info( ` name: ${name} | email: ${email} | password:${password}`);
+    this.logger.info(` name: ${name} | email: ${email} | password:${password}`);
 
     const user = await this.userServices.getUserByEmail(email);
 
@@ -171,7 +176,7 @@ export class AuthController {
       .json(
         new ApiResponse(
           200,
-          { user: updatedUser}, // send access and refresh token in response if client decides to save them by themselves
+          { user: updatedUser }, // send access and refresh token in response if client decides to save them by themselves
           'User signin in successfully',
         ),
       );
@@ -243,11 +248,11 @@ export class AuthController {
       user.name,
     );
 
-  const updatedUser =  await this.userServices.updateUsersRefreshToken(user.id, refreshToken);
+    const updatedUser = await this.userServices.updateUsersRefreshToken(user.id, refreshToken);
 
-  if(!updatedUser){
-    throw new ApiError(500, 'failed to update user token')
-  }
+    if (!updatedUser) {
+      throw new ApiError(500, 'failed to update user token');
+    }
 
     return res
       .status(200)
@@ -264,21 +269,20 @@ export class AuthController {
       );
   });
 
-  handleDeleteAccountRequest: RequestHandler = asyncHandler(async (req:Request, res:Response) => {
-    
-    if(!req.user){
+  handleDeleteAccountRequest: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
       this.logger.error(`unAuthorized Request, IP: ${req.ip}`);
       throw new ApiError(400, 'UnAuthorized');
-    };
+    }
 
     const response = await this.userServices.DeleteAccount(req.user.id);
 
-    if(!response){
+    if (!response) {
       this.logger.error(`can't delete account due to db failure `);
-      throw new ApiError(500, 'Internal Server Error')
-    };
+      throw new ApiError(500, 'Internal Server Error');
+    }
 
-        const options = {
+    const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     };
@@ -289,35 +293,66 @@ export class AuthController {
       .clearCookie('refreshToken', options)
       .json(new ApiResponse(200, {}, 'Account Deleted Successfully'));
   });
-  
-  handleProfilePictureUpdate:RequestHandler = asyncHandler(async(req:Request, res:Response) => {
 
-    const {imageLink}= updateProfilePictureSchema.parse(req.body)
+  handleProfilePictureUpdate: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
+    const { imageLink } = updateProfilePictureSchema.parse(req.body);
 
-      const updatedUser = await this.userServices.updateUserWithImage(req.user?.id!, imageLink,);
+    const updatedUser = await this.userServices.updateUserWithImage(req.user?.id!, imageLink);
 
-      if(!updatedUser){
-        this.logger.error(`failed to update the profile picture`)
-      };
-
-      res.status(200).json(new ApiResponse(200, {profile_picture:updatedUser.profile_picture}, 'profile picture updated'))
-
-  })
-  handleProfileNameUpdate:RequestHandler = asyncHandler(async(req:Request, res:Response) => {
-
-    const {name}= updateUserSchema.parse(req.body);
-
-    if(!req.user){
-      throw new ApiError(401, 'UnAuthorized')
+    if (!updatedUser) {
+      this.logger.error(`failed to update the profile picture`);
     }
 
-      const updatedUser = await this.userServices.updateUsersName(req.user.id, name );
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { profile_picture: updatedUser.profile_picture },
+          'profile picture updated',
+        ),
+      );
+  });
+  handleProfileNameUpdate: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
+    const { name } = updateUserSchema.parse(req.body);
 
-      if(!updatedUser){
-        this.logger.error(`failed to update the profile picture`)
-      };
+    if (!req.user) {
+      throw new ApiError(401, 'UnAuthorized');
+    }
 
-      res.status(200).json(new ApiResponse(200, {name:updatedUser.name}, 'profile name updated'))
+    const updatedUser = await this.userServices.updateUsersName(req.user.id, name);
 
-  })
+    if (!updatedUser) {
+      this.logger.error(`failed to update the profile picture`);
+    }
+
+    res.status(200).json(new ApiResponse(200, { name: updatedUser.name }, 'profile name updated'));
+  });
+
+  handleOnboarding: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
+    const userid = req.user?.id;
+
+    if (!userid) {
+      throw new ApiError(401, 'UnAuthorized');
+    }
+
+    const updatedUser = await this.userServices.setOnboardedTrue(userid);
+
+    if (!updatedUser) {
+      this.logger.error('failed to update user');
+      throw new ApiError(500, 'failed to toggle onboarding true');
+    };
+
+    const options = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+    };
+
+    const obtoken = this.jwtToken.generateOnboardingToken(updatedUser.id, updatedUser.isOnboarded)
+
+    return res.
+    status(200)
+    .cookie('op-iob', obtoken, options)
+    .json(new ApiResponse(200, updatedUser, 'Success'));
+  });
 }

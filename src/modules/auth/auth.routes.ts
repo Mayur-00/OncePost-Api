@@ -15,6 +15,7 @@ export function createAuthRoutes(controller: AuthController): Router {
   router.put('/user', authorize, controller.handleProfilePictureUpdate);
   router.delete('/user', authorize, controller.handleDeleteAccountRequest);
   router.get('/logout', authorize, controller.handleLogout);
+  router.get('/onboarding', authorize, controller.handleOnboarding);
   router.get('/delete', authorize, controller.handleDeleteAccountRequest);
 
   return router;

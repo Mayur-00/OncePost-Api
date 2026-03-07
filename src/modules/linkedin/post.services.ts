@@ -19,7 +19,7 @@ export class PostServices {
         },
       });
 
-      this.logger.info('post created successfully');
+      this.logger.info('Post created successfully (LinkedIn)', { userId: userid, postId: post.id, hasMedia: !!mediaUrl });
       return post;
     } catch (error) {
       this.logger.error('an occured while creating post ', { error: error });

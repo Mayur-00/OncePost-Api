@@ -25,7 +25,6 @@ async function main() {
       analyticsEnabled: false,
       schedulingEnabled: true,
       prioritySupport: false,
-      customBranding: false,
     },
   });
 
@@ -51,7 +50,7 @@ async function main() {
       analyticsEnabled: true,
       schedulingEnabled: true,
       prioritySupport: false,
-      customBranding: false,
+
     },
   });
 
@@ -82,7 +81,6 @@ async function main() {
       analyticsEnabled: true,
       schedulingEnabled: true,
       prioritySupport: true,
-      customBranding: true,
     },
   });
 
