@@ -117,6 +117,8 @@ The API will be available at `http://localhost:5000`
 - `npm start` - Start production server
 - `npm run worker:dev-post` - Start dev posting background worker
 - `npm run worker:post` - Start posting background worker
+- `npm run migration:dev` - Run dev prisma migration
+- `npm run migrate` - Run prisma migration
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Fix ESLint issues
 
@@ -136,12 +138,12 @@ The API will be available at `http://localhost:5000`
 
 - `POST /publish-post` - Queue post for publishing to multiple platforms (requires auth, file upload)
 - `GET /all` - Get all posts including all platfrom posts (requires auth)
+- `GET /Query` - Get all posts with user's searched query
 
 ### LinkedIn (`/api/v1/linkedin`)
 
 - `GET /auth` - Initiate LinkedIn OAuth flow (requires auth)
 - `GET /callback` - LinkedIn OAuth callback
-- `POST /posts` - Create a LinkedIn-specific post (requires auth, file upload)
 
 ### X/Twitter (`/api/v1/x`)
 
@@ -171,6 +173,16 @@ The API will be available at `http://localhost:5000`
 ### OAuthSession
 - Manages OAuth state for authentication flows
 - Implements PKCE for enhanced security
+
+### SubscriptionPlan
+- Represents Subscription plans
+
+### Subscription 
+- Represents User subscription
+
+## Transaction
+- Represents all transactions made by user
+- Mostly Represnts Subscripiton transactions
 
 ## Data Models
 
@@ -224,21 +236,16 @@ The API uses BullMQ for asynchronous post processing:
 
 The API includes separate worker processes for handling background tasks:
 
-### X Worker
-Processes posts queued for X/Twitter:
+### Dev-Post Worker
+Processes Queued Posts in development 
 ```bash
-npm run worker:x
+npm run worker:dev-post
 ```
 
-### LinkedIn Worker
-Processes posts queued for LinkedIn:
+### Post Worker
+Processes posts queued in Production
 ```bash
-npm run worker:linkedin
-```
-
-### Run All Workers
-```bash
-npm run workers
+npm run worker:post
 ```
 
 ## Error Handling
