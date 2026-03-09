@@ -15,7 +15,6 @@ export function createPostRoutes(controller: PostController): Router {
   router.post(
     '/publish-post',
     authorize,
-    upload.single('image'),
     controller.publishPostMultiplePlatformsQueued,
   );
 

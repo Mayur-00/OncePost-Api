@@ -11,16 +11,5 @@ export function createXRoutes(controller: XController): Router {
   router.get('/callback', controller.handleCallback);
   router.post('/auth', authorize, controller.getAuth);
 
-  // Account management (requires authentication)
-  //   router.get('/accounts', authorize, controller.);
-
-  // Post creation (requires authentication and file upload)
-//   router.post(
-//     '/posts',
-//     authorize,
-//     upload.single('image'), // Multer middleware
-//     controller.createLinkedinPost,
-//   );
-
   return router;
 }

@@ -74,49 +74,4 @@ export class XController {
 
     res.redirect(`${process.env.FRONTEND_URI}/dashboard`);
   });
-
-  handlePostPublish: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
-    const { post_id } = XPublishPostSchema.parse(req.body);
-
-    if (!req.user) {
-      throw new ApiError(401, 'unAuthorized');
-    }
-
-    const post = await this.XServices.getPost(post_id, req.user.id);
-
-    if (!post) {
-      this.logger.error('post not found');
-      throw new ApiError(500, 'post not found');
-    }
-
-    const account = await this.XServices.getActiveXAccount(req.user.id);
-
-    if (!account) {
-      this.logger.error('x account not found');
-      throw new ApiError(404, 'account not found');
-    }
-
-    const accessToken = await this.XServices.validateAccessToken(account);
-
-    let mediaIds;
-    if (post.mediaUrl) {
-      const mediaBuffer = await this.XServices.getImageBufferFromCloudinary(post.mediaUrl);
-      mediaIds = await this.XServices.uploadMedia(accessToken, mediaBuffer, post.mediaType!);
-    }
-
-    const response = await this.XServices.publishTweet(post.content || '', mediaIds, accessToken);
-
-    const data:TweetDbRecord ={
-      ownerId:req.user.id,
-      postId:post_id,
-      accountId:account.id,
-      status:'POSTED',
-      tweetId: response.data.id,
-    }
- await this.XServices.createTweetDbRecord(data);
-
-
-    this.logger.info('post created successfully');
-    res.status(201).json(new ApiResponse(200, post, 'tweet post on x successfully'));
-  });
 }

@@ -10,14 +10,5 @@ export function createLinkedInRoutes(controller: LinkedinController): Router {
   router.get('/auth', authorize, controller.startAuth);
   router.get('/callback', controller.handleLinkedinAuthCallback);
 
-
-  // Post creation (requires authentication and file upload)
-  router.post(
-    '/posts',
-    authorize,
-    upload.single('image'), // Multer middleware
-    controller.createLinkedinPost,
-  );
-
   return router;
 }
