@@ -241,7 +241,6 @@
     end_date DateTime
     cancelled_at DateTime?
     cancellation_reason String?
-    platform_connections_remaining Int
     post_creation_remaining Int
     failure_reason String?
 

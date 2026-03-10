@@ -20,7 +20,6 @@ export type AuthProviderType = (typeof AuthProviderType)[keyof typeof AuthProvid
 export const SocialPlatforms = {
   LINKEDIN: 'LINKEDIN',
   X: 'X',
-  FACEBOOK: 'FACEBOOK',
   NONE: 'NONE'
 } as const
 

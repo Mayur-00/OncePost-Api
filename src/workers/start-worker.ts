@@ -1,33 +1,32 @@
-/**
- * Standalone LinkedIn Post Worker
- * Run with: npm run worker:linkedin
- * Or prod: npm run worker:linkedin:prod
- */
-
 import dotenv from 'dotenv';
 import logger from '../config/logger.config.js';
 import { postWorker } from './worker.js';
+import connectDb from '../lib/db.js';
 
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
-dotenv.config();
+async function startWorker() {
+  await connectDb();
+  logger.info('🚀 Starting LinkedIn Post Worker...');
+}
 
-// Start the worker
-logger.info('🚀 Starting LinkedIn Post Worker on separate process...');
+startWorker();
 
-// Handle shutdown gracefully
 process.on('SIGINT', async () => {
-    logger.info('SIGINT received, shutting down LinkedIn worker gracefully...');
-    await postWorker.close();
-    process.exit(0);
+  logger.info('SIGINT received, shutting down worker...');
+  await postWorker.close();
+  process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-    logger.info('SIGTERM received, shutting down LinkedIn worker gracefully...');
-    await postWorker.close();
-    process.exit(0);
+  logger.info('SIGTERM received, shutting down worker...');
+  await postWorker.close();
+  process.exit(0);
 });
 
 process.on('uncaughtException', (error) => {
-    logger.error('Uncaught Exception:', error);
-    process.exit(1);
+  logger.error('Uncaught Exception:', error);
+  process.exit(1);
 });

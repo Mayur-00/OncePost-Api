@@ -20,7 +20,6 @@ export class SubscriptionService {
           status: 'PENDING',
           start_date: start,
           end_date: end,
-          platform_connections_remaining: plan.maxSocialAccounts,
           post_creation_remaining: plan.maxPostsPerMonth,
         },
       });

@@ -29,13 +29,11 @@ export type AggregateSubscriptionPlan = {
 export type SubscriptionPlanAvgAggregateOutputType = {
   price: number | null
   maxPostsPerMonth: number | null
-  maxSocialAccounts: number | null
 }
 
 export type SubscriptionPlanSumAggregateOutputType = {
   price: number | null
   maxPostsPerMonth: number | null
-  maxSocialAccounts: number | null
 }
 
 export type SubscriptionPlanMinAggregateOutputType = {
@@ -45,8 +43,6 @@ export type SubscriptionPlanMinAggregateOutputType = {
   currency: string | null
   description: string | null
   maxPostsPerMonth: number | null
-  maxSocialAccounts: number | null
-  analyticsEnabled: boolean | null
   schedulingEnabled: boolean | null
   prioritySupport: boolean | null
   createdAt: Date | null
@@ -60,8 +56,6 @@ export type SubscriptionPlanMaxAggregateOutputType = {
   currency: string | null
   description: string | null
   maxPostsPerMonth: number | null
-  maxSocialAccounts: number | null
-  analyticsEnabled: boolean | null
   schedulingEnabled: boolean | null
   prioritySupport: boolean | null
   createdAt: Date | null
@@ -76,8 +70,6 @@ export type SubscriptionPlanCountAggregateOutputType = {
   description: number
   features: number
   maxPostsPerMonth: number
-  maxSocialAccounts: number
-  analyticsEnabled: number
   schedulingEnabled: number
   prioritySupport: number
   createdAt: number
@@ -89,13 +81,11 @@ export type SubscriptionPlanCountAggregateOutputType = {
 export type SubscriptionPlanAvgAggregateInputType = {
   price?: true
   maxPostsPerMonth?: true
-  maxSocialAccounts?: true
 }
 
 export type SubscriptionPlanSumAggregateInputType = {
   price?: true
   maxPostsPerMonth?: true
-  maxSocialAccounts?: true
 }
 
 export type SubscriptionPlanMinAggregateInputType = {
@@ -105,8 +95,6 @@ export type SubscriptionPlanMinAggregateInputType = {
   currency?: true
   description?: true
   maxPostsPerMonth?: true
-  maxSocialAccounts?: true
-  analyticsEnabled?: true
   schedulingEnabled?: true
   prioritySupport?: true
   createdAt?: true
@@ -120,8 +108,6 @@ export type SubscriptionPlanMaxAggregateInputType = {
   currency?: true
   description?: true
   maxPostsPerMonth?: true
-  maxSocialAccounts?: true
-  analyticsEnabled?: true
   schedulingEnabled?: true
   prioritySupport?: true
   createdAt?: true
@@ -136,8 +122,6 @@ export type SubscriptionPlanCountAggregateInputType = {
   description?: true
   features?: true
   maxPostsPerMonth?: true
-  maxSocialAccounts?: true
-  analyticsEnabled?: true
   schedulingEnabled?: true
   prioritySupport?: true
   createdAt?: true
@@ -239,8 +223,6 @@ export type SubscriptionPlanGroupByOutputType = {
   description: string
   features: string[]
   maxPostsPerMonth: number
-  maxSocialAccounts: number
-  analyticsEnabled: boolean
   schedulingEnabled: boolean
   prioritySupport: boolean
   createdAt: Date
@@ -278,8 +260,6 @@ export type SubscriptionPlanWhereInput = {
   description?: Prisma.StringFilter<"SubscriptionPlan"> | string
   features?: Prisma.StringNullableListFilter<"SubscriptionPlan">
   maxPostsPerMonth?: Prisma.IntFilter<"SubscriptionPlan"> | number
-  maxSocialAccounts?: Prisma.IntFilter<"SubscriptionPlan"> | number
-  analyticsEnabled?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   schedulingEnabled?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   prioritySupport?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
@@ -295,8 +275,6 @@ export type SubscriptionPlanOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   features?: Prisma.SortOrder
   maxPostsPerMonth?: Prisma.SortOrder
-  maxSocialAccounts?: Prisma.SortOrder
-  analyticsEnabled?: Prisma.SortOrder
   schedulingEnabled?: Prisma.SortOrder
   prioritySupport?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -315,8 +293,6 @@ export type SubscriptionPlanWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"SubscriptionPlan"> | string
   features?: Prisma.StringNullableListFilter<"SubscriptionPlan">
   maxPostsPerMonth?: Prisma.IntFilter<"SubscriptionPlan"> | number
-  maxSocialAccounts?: Prisma.IntFilter<"SubscriptionPlan"> | number
-  analyticsEnabled?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   schedulingEnabled?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   prioritySupport?: Prisma.BoolFilter<"SubscriptionPlan"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
@@ -332,8 +308,6 @@ export type SubscriptionPlanOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   features?: Prisma.SortOrder
   maxPostsPerMonth?: Prisma.SortOrder
-  maxSocialAccounts?: Prisma.SortOrder
-  analyticsEnabled?: Prisma.SortOrder
   schedulingEnabled?: Prisma.SortOrder
   prioritySupport?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -356,8 +330,6 @@ export type SubscriptionPlanScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"SubscriptionPlan"> | string
   features?: Prisma.StringNullableListFilter<"SubscriptionPlan">
   maxPostsPerMonth?: Prisma.IntWithAggregatesFilter<"SubscriptionPlan"> | number
-  maxSocialAccounts?: Prisma.IntWithAggregatesFilter<"SubscriptionPlan"> | number
-  analyticsEnabled?: Prisma.BoolWithAggregatesFilter<"SubscriptionPlan"> | boolean
   schedulingEnabled?: Prisma.BoolWithAggregatesFilter<"SubscriptionPlan"> | boolean
   prioritySupport?: Prisma.BoolWithAggregatesFilter<"SubscriptionPlan"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionPlan"> | Date | string
@@ -372,8 +344,6 @@ export type SubscriptionPlanCreateInput = {
   description: string
   features?: Prisma.SubscriptionPlanCreatefeaturesInput | string[]
   maxPostsPerMonth: number
-  maxSocialAccounts: number
-  analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
   createdAt?: Date | string
@@ -389,8 +359,6 @@ export type SubscriptionPlanUncheckedCreateInput = {
   description: string
   features?: Prisma.SubscriptionPlanCreatefeaturesInput | string[]
   maxPostsPerMonth: number
-  maxSocialAccounts: number
-  analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
   createdAt?: Date | string
@@ -406,8 +374,6 @@ export type SubscriptionPlanUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
   maxPostsPerMonth?: Prisma.IntFieldUpdateOperationsInput | number
-  maxSocialAccounts?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -423,8 +389,6 @@ export type SubscriptionPlanUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
   maxPostsPerMonth?: Prisma.IntFieldUpdateOperationsInput | number
-  maxSocialAccounts?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -440,8 +404,6 @@ export type SubscriptionPlanCreateManyInput = {
   description: string
   features?: Prisma.SubscriptionPlanCreatefeaturesInput | string[]
   maxPostsPerMonth: number
-  maxSocialAccounts: number
-  analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
   createdAt?: Date | string
@@ -456,8 +418,6 @@ export type SubscriptionPlanUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
   maxPostsPerMonth?: Prisma.IntFieldUpdateOperationsInput | number
-  maxSocialAccounts?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -472,8 +432,6 @@ export type SubscriptionPlanUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
   maxPostsPerMonth?: Prisma.IntFieldUpdateOperationsInput | number
-  maxSocialAccounts?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -496,8 +454,6 @@ export type SubscriptionPlanCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   features?: Prisma.SortOrder
   maxPostsPerMonth?: Prisma.SortOrder
-  maxSocialAccounts?: Prisma.SortOrder
-  analyticsEnabled?: Prisma.SortOrder
   schedulingEnabled?: Prisma.SortOrder
   prioritySupport?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -507,7 +463,6 @@ export type SubscriptionPlanCountOrderByAggregateInput = {
 export type SubscriptionPlanAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
   maxPostsPerMonth?: Prisma.SortOrder
-  maxSocialAccounts?: Prisma.SortOrder
 }
 
 export type SubscriptionPlanMaxOrderByAggregateInput = {
@@ -517,8 +472,6 @@ export type SubscriptionPlanMaxOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   description?: Prisma.SortOrder
   maxPostsPerMonth?: Prisma.SortOrder
-  maxSocialAccounts?: Prisma.SortOrder
-  analyticsEnabled?: Prisma.SortOrder
   schedulingEnabled?: Prisma.SortOrder
   prioritySupport?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -532,8 +485,6 @@ export type SubscriptionPlanMinOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   description?: Prisma.SortOrder
   maxPostsPerMonth?: Prisma.SortOrder
-  maxSocialAccounts?: Prisma.SortOrder
-  analyticsEnabled?: Prisma.SortOrder
   schedulingEnabled?: Prisma.SortOrder
   prioritySupport?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -543,7 +494,6 @@ export type SubscriptionPlanMinOrderByAggregateInput = {
 export type SubscriptionPlanSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
   maxPostsPerMonth?: Prisma.SortOrder
-  maxSocialAccounts?: Prisma.SortOrder
 }
 
 export type SubscriptionPlanScalarRelationFilter = {
@@ -586,8 +536,6 @@ export type SubscriptionPlanCreateWithoutSubscriptionsInput = {
   description: string
   features?: Prisma.SubscriptionPlanCreatefeaturesInput | string[]
   maxPostsPerMonth: number
-  maxSocialAccounts: number
-  analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
   createdAt?: Date | string
@@ -602,8 +550,6 @@ export type SubscriptionPlanUncheckedCreateWithoutSubscriptionsInput = {
   description: string
   features?: Prisma.SubscriptionPlanCreatefeaturesInput | string[]
   maxPostsPerMonth: number
-  maxSocialAccounts: number
-  analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
   createdAt?: Date | string
@@ -634,8 +580,6 @@ export type SubscriptionPlanUpdateWithoutSubscriptionsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
   maxPostsPerMonth?: Prisma.IntFieldUpdateOperationsInput | number
-  maxSocialAccounts?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -650,8 +594,6 @@ export type SubscriptionPlanUncheckedUpdateWithoutSubscriptionsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   features?: Prisma.SubscriptionPlanUpdatefeaturesInput | string[]
   maxPostsPerMonth?: Prisma.IntFieldUpdateOperationsInput | number
-  maxSocialAccounts?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   schedulingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   prioritySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -697,8 +639,6 @@ export type SubscriptionPlanSelect<ExtArgs extends runtime.Types.Extensions.Inte
   description?: boolean
   features?: boolean
   maxPostsPerMonth?: boolean
-  maxSocialAccounts?: boolean
-  analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
   createdAt?: boolean
@@ -715,8 +655,6 @@ export type SubscriptionPlanSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   description?: boolean
   features?: boolean
   maxPostsPerMonth?: boolean
-  maxSocialAccounts?: boolean
-  analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
   createdAt?: boolean
@@ -731,8 +669,6 @@ export type SubscriptionPlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   description?: boolean
   features?: boolean
   maxPostsPerMonth?: boolean
-  maxSocialAccounts?: boolean
-  analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
   createdAt?: boolean
@@ -747,15 +683,13 @@ export type SubscriptionPlanSelectScalar = {
   description?: boolean
   features?: boolean
   maxPostsPerMonth?: boolean
-  maxSocialAccounts?: boolean
-  analyticsEnabled?: boolean
   schedulingEnabled?: boolean
   prioritySupport?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SubscriptionPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "plan_tier" | "price" | "currency" | "description" | "features" | "maxPostsPerMonth" | "maxSocialAccounts" | "analyticsEnabled" | "schedulingEnabled" | "prioritySupport" | "createdAt" | "updatedAt", ExtArgs["result"]["subscriptionPlan"]>
+export type SubscriptionPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "plan_tier" | "price" | "currency" | "description" | "features" | "maxPostsPerMonth" | "schedulingEnabled" | "prioritySupport" | "createdAt" | "updatedAt", ExtArgs["result"]["subscriptionPlan"]>
 export type SubscriptionPlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subscriptions?: boolean | Prisma.SubscriptionPlan$subscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.SubscriptionPlanCountOutputTypeDefaultArgs<ExtArgs>
@@ -776,8 +710,6 @@ export type $SubscriptionPlanPayload<ExtArgs extends runtime.Types.Extensions.In
     description: string
     features: string[]
     maxPostsPerMonth: number
-    maxSocialAccounts: number
-    analyticsEnabled: boolean
     schedulingEnabled: boolean
     prioritySupport: boolean
     createdAt: Date
@@ -1213,8 +1145,6 @@ export interface SubscriptionPlanFieldRefs {
   readonly description: Prisma.FieldRef<"SubscriptionPlan", 'String'>
   readonly features: Prisma.FieldRef<"SubscriptionPlan", 'String[]'>
   readonly maxPostsPerMonth: Prisma.FieldRef<"SubscriptionPlan", 'Int'>
-  readonly maxSocialAccounts: Prisma.FieldRef<"SubscriptionPlan", 'Int'>
-  readonly analyticsEnabled: Prisma.FieldRef<"SubscriptionPlan", 'Boolean'>
   readonly schedulingEnabled: Prisma.FieldRef<"SubscriptionPlan", 'Boolean'>
   readonly prioritySupport: Prisma.FieldRef<"SubscriptionPlan", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"SubscriptionPlan", 'DateTime'>

@@ -304,7 +304,6 @@ export class UserServices {
           user_id: user_id,
           plan_id: plan.id,
           post_creation_remaining: plan.maxPostsPerMonth,
-          platform_connections_remaining: plan.maxSocialAccounts,
           start_date: new Date(),
           end_date: new Date(Date.now() + 12 * 30 * 24 * 60 * 60 * 1000),
           status: 'ACTIVE',

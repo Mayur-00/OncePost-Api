@@ -27,12 +27,10 @@ export type AggregateSubscription = {
 }
 
 export type SubscriptionAvgAggregateOutputType = {
-  platform_connections_remaining: number | null
   post_creation_remaining: number | null
 }
 
 export type SubscriptionSumAggregateOutputType = {
-  platform_connections_remaining: number | null
   post_creation_remaining: number | null
 }
 
@@ -45,7 +43,6 @@ export type SubscriptionMinAggregateOutputType = {
   end_date: Date | null
   cancelled_at: Date | null
   cancellation_reason: string | null
-  platform_connections_remaining: number | null
   post_creation_remaining: number | null
   failure_reason: string | null
   createdAt: Date | null
@@ -61,7 +58,6 @@ export type SubscriptionMaxAggregateOutputType = {
   end_date: Date | null
   cancelled_at: Date | null
   cancellation_reason: string | null
-  platform_connections_remaining: number | null
   post_creation_remaining: number | null
   failure_reason: string | null
   createdAt: Date | null
@@ -77,7 +73,6 @@ export type SubscriptionCountAggregateOutputType = {
   end_date: number
   cancelled_at: number
   cancellation_reason: number
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason: number
   createdAt: number
@@ -87,12 +82,10 @@ export type SubscriptionCountAggregateOutputType = {
 
 
 export type SubscriptionAvgAggregateInputType = {
-  platform_connections_remaining?: true
   post_creation_remaining?: true
 }
 
 export type SubscriptionSumAggregateInputType = {
-  platform_connections_remaining?: true
   post_creation_remaining?: true
 }
 
@@ -105,7 +98,6 @@ export type SubscriptionMinAggregateInputType = {
   end_date?: true
   cancelled_at?: true
   cancellation_reason?: true
-  platform_connections_remaining?: true
   post_creation_remaining?: true
   failure_reason?: true
   createdAt?: true
@@ -121,7 +113,6 @@ export type SubscriptionMaxAggregateInputType = {
   end_date?: true
   cancelled_at?: true
   cancellation_reason?: true
-  platform_connections_remaining?: true
   post_creation_remaining?: true
   failure_reason?: true
   createdAt?: true
@@ -137,7 +128,6 @@ export type SubscriptionCountAggregateInputType = {
   end_date?: true
   cancelled_at?: true
   cancellation_reason?: true
-  platform_connections_remaining?: true
   post_creation_remaining?: true
   failure_reason?: true
   createdAt?: true
@@ -240,7 +230,6 @@ export type SubscriptionGroupByOutputType = {
   end_date: Date
   cancelled_at: Date | null
   cancellation_reason: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason: string | null
   createdAt: Date
@@ -279,7 +268,6 @@ export type SubscriptionWhereInput = {
   end_date?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   cancelled_at?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
   cancellation_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
-  platform_connections_remaining?: Prisma.IntFilter<"Subscription"> | number
   post_creation_remaining?: Prisma.IntFilter<"Subscription"> | number
   failure_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
@@ -298,7 +286,6 @@ export type SubscriptionOrderByWithRelationInput = {
   end_date?: Prisma.SortOrder
   cancelled_at?: Prisma.SortOrderInput | Prisma.SortOrder
   cancellation_reason?: Prisma.SortOrderInput | Prisma.SortOrder
-  platform_connections_remaining?: Prisma.SortOrder
   post_creation_remaining?: Prisma.SortOrder
   failure_reason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -320,7 +307,6 @@ export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
   end_date?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   cancelled_at?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
   cancellation_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
-  platform_connections_remaining?: Prisma.IntFilter<"Subscription"> | number
   post_creation_remaining?: Prisma.IntFilter<"Subscription"> | number
   failure_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
@@ -339,7 +325,6 @@ export type SubscriptionOrderByWithAggregationInput = {
   end_date?: Prisma.SortOrder
   cancelled_at?: Prisma.SortOrderInput | Prisma.SortOrder
   cancellation_reason?: Prisma.SortOrderInput | Prisma.SortOrder
-  platform_connections_remaining?: Prisma.SortOrder
   post_creation_remaining?: Prisma.SortOrder
   failure_reason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -363,7 +348,6 @@ export type SubscriptionScalarWhereWithAggregatesInput = {
   end_date?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
   cancelled_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Subscription"> | Date | string | null
   cancellation_reason?: Prisma.StringNullableWithAggregatesFilter<"Subscription"> | string | null
-  platform_connections_remaining?: Prisma.IntWithAggregatesFilter<"Subscription"> | number
   post_creation_remaining?: Prisma.IntWithAggregatesFilter<"Subscription"> | number
   failure_reason?: Prisma.StringNullableWithAggregatesFilter<"Subscription"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
@@ -377,7 +361,6 @@ export type SubscriptionCreateInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -396,7 +379,6 @@ export type SubscriptionUncheckedCreateInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -411,7 +393,6 @@ export type SubscriptionUpdateInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -430,7 +411,6 @@ export type SubscriptionUncheckedUpdateInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -447,7 +427,6 @@ export type SubscriptionCreateManyInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -461,7 +440,6 @@ export type SubscriptionUpdateManyMutationInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -477,7 +455,6 @@ export type SubscriptionUncheckedUpdateManyInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -503,7 +480,6 @@ export type SubscriptionCountOrderByAggregateInput = {
   end_date?: Prisma.SortOrder
   cancelled_at?: Prisma.SortOrder
   cancellation_reason?: Prisma.SortOrder
-  platform_connections_remaining?: Prisma.SortOrder
   post_creation_remaining?: Prisma.SortOrder
   failure_reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -511,7 +487,6 @@ export type SubscriptionCountOrderByAggregateInput = {
 }
 
 export type SubscriptionAvgOrderByAggregateInput = {
-  platform_connections_remaining?: Prisma.SortOrder
   post_creation_remaining?: Prisma.SortOrder
 }
 
@@ -524,7 +499,6 @@ export type SubscriptionMaxOrderByAggregateInput = {
   end_date?: Prisma.SortOrder
   cancelled_at?: Prisma.SortOrder
   cancellation_reason?: Prisma.SortOrder
-  platform_connections_remaining?: Prisma.SortOrder
   post_creation_remaining?: Prisma.SortOrder
   failure_reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -540,7 +514,6 @@ export type SubscriptionMinOrderByAggregateInput = {
   end_date?: Prisma.SortOrder
   cancelled_at?: Prisma.SortOrder
   cancellation_reason?: Prisma.SortOrder
-  platform_connections_remaining?: Prisma.SortOrder
   post_creation_remaining?: Prisma.SortOrder
   failure_reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -548,7 +521,6 @@ export type SubscriptionMinOrderByAggregateInput = {
 }
 
 export type SubscriptionSumOrderByAggregateInput = {
-  platform_connections_remaining?: Prisma.SortOrder
   post_creation_remaining?: Prisma.SortOrder
 }
 
@@ -666,7 +638,6 @@ export type SubscriptionCreateWithoutUserInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -683,7 +654,6 @@ export type SubscriptionUncheckedCreateWithoutUserInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -729,7 +699,6 @@ export type SubscriptionScalarWhereInput = {
   end_date?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   cancelled_at?: Prisma.DateTimeNullableFilter<"Subscription"> | Date | string | null
   cancellation_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
-  platform_connections_remaining?: Prisma.IntFilter<"Subscription"> | number
   post_creation_remaining?: Prisma.IntFilter<"Subscription"> | number
   failure_reason?: Prisma.StringNullableFilter<"Subscription"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Subscription"> | Date | string
@@ -743,7 +712,6 @@ export type SubscriptionCreateWithoutPlanInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -760,7 +728,6 @@ export type SubscriptionUncheckedCreateWithoutPlanInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -801,7 +768,6 @@ export type SubscriptionCreateWithoutTransactionsInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -819,7 +785,6 @@ export type SubscriptionUncheckedCreateWithoutTransactionsInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -849,7 +814,6 @@ export type SubscriptionUpdateWithoutTransactionsInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -867,7 +831,6 @@ export type SubscriptionUncheckedUpdateWithoutTransactionsInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -882,7 +845,6 @@ export type SubscriptionCreateManyUserInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -896,7 +858,6 @@ export type SubscriptionUpdateWithoutUserInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -913,7 +874,6 @@ export type SubscriptionUncheckedUpdateWithoutUserInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -929,7 +889,6 @@ export type SubscriptionUncheckedUpdateManyWithoutUserInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -944,7 +903,6 @@ export type SubscriptionCreateManyPlanInput = {
   end_date: Date | string
   cancelled_at?: Date | string | null
   cancellation_reason?: string | null
-  platform_connections_remaining: number
   post_creation_remaining: number
   failure_reason?: string | null
   createdAt?: Date | string
@@ -958,7 +916,6 @@ export type SubscriptionUpdateWithoutPlanInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -975,7 +932,6 @@ export type SubscriptionUncheckedUpdateWithoutPlanInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -991,7 +947,6 @@ export type SubscriptionUncheckedUpdateManyWithoutPlanInput = {
   end_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellation_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  platform_connections_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   post_creation_remaining?: Prisma.IntFieldUpdateOperationsInput | number
   failure_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1038,7 +993,6 @@ export type SubscriptionSelect<ExtArgs extends runtime.Types.Extensions.Internal
   end_date?: boolean
   cancelled_at?: boolean
   cancellation_reason?: boolean
-  platform_connections_remaining?: boolean
   post_creation_remaining?: boolean
   failure_reason?: boolean
   createdAt?: boolean
@@ -1058,7 +1012,6 @@ export type SubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   end_date?: boolean
   cancelled_at?: boolean
   cancellation_reason?: boolean
-  platform_connections_remaining?: boolean
   post_creation_remaining?: boolean
   failure_reason?: boolean
   createdAt?: boolean
@@ -1076,7 +1029,6 @@ export type SubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   end_date?: boolean
   cancelled_at?: boolean
   cancellation_reason?: boolean
-  platform_connections_remaining?: boolean
   post_creation_remaining?: boolean
   failure_reason?: boolean
   createdAt?: boolean
@@ -1094,14 +1046,13 @@ export type SubscriptionSelectScalar = {
   end_date?: boolean
   cancelled_at?: boolean
   cancellation_reason?: boolean
-  platform_connections_remaining?: boolean
   post_creation_remaining?: boolean
   failure_reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "plan_id" | "status" | "start_date" | "end_date" | "cancelled_at" | "cancellation_reason" | "platform_connections_remaining" | "post_creation_remaining" | "failure_reason" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
+export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "plan_id" | "status" | "start_date" | "end_date" | "cancelled_at" | "cancellation_reason" | "post_creation_remaining" | "failure_reason" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
 export type SubscriptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.SubscriptionPlanDefaultArgs<ExtArgs>
@@ -1133,7 +1084,6 @@ export type $SubscriptionPayload<ExtArgs extends runtime.Types.Extensions.Intern
     end_date: Date
     cancelled_at: Date | null
     cancellation_reason: string | null
-    platform_connections_remaining: number
     post_creation_remaining: number
     failure_reason: string | null
     createdAt: Date
@@ -1572,7 +1522,6 @@ export interface SubscriptionFieldRefs {
   readonly end_date: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly cancelled_at: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly cancellation_reason: Prisma.FieldRef<"Subscription", 'String'>
-  readonly platform_connections_remaining: Prisma.FieldRef<"Subscription", 'Int'>
   readonly post_creation_remaining: Prisma.FieldRef<"Subscription", 'Int'>
   readonly failure_reason: Prisma.FieldRef<"Subscription", 'String'>
   readonly createdAt: Prisma.FieldRef<"Subscription", 'DateTime'>
