@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch ./src/server.ts",
     "build": "tsc",
-    "start": "npm run migrate && node ./dist/server.js",
+    "start": "prisma migrate deploy && node ./dist/server.js",
     "docker-start": "npm run start",
     "worker:dev-post": "tsx watch ./src/workers/start-worker.ts",
     "worker:post": "node ./dist/workers/start-worker.js",
