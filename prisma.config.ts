@@ -1,4 +1,4 @@
-  import { defineConfig, env } from "prisma/config"
+  import { defineConfig } from "prisma/config"
   import dotenv from 'dotenv'
   dotenv.config()
 
@@ -6,9 +6,5 @@
     schema: "prisma/schema.prisma",
     migrations: {
       path: "prisma/migrations",
-    },
-    datasource: {
-      url: process.env.DIRECT_DATABASE_URL,
-
     },
   });
