@@ -35,6 +35,7 @@ export class AuthController {
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      samesite:"none"
     };
 
     if (user) {
@@ -122,6 +123,7 @@ export class AuthController {
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      samesite:"none"
     };
 
     return res
@@ -164,9 +166,10 @@ export class AuthController {
 
     const updatedUser = await this.userServices.updateUsersRefreshToken(user.id, refreshToken);
 
-    const options = {
+  const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      samesite:"none"
     };
 
     return res
