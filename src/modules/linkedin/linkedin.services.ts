@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { Logger } from 'winston';
 import {
   AccessTokenResponseType,
@@ -9,7 +9,12 @@ import {
   LinkedinUserInfoType,
 } from './linkedin.types.js';
 import { ApiError } from '../../utils/apiError.js';
-import { PlatformPost, PlatfromPostStatus, Post, PrismaClient, SocialAccount } from '../../generated/prisma/client.js';
+import {
+  PlatformPost,
+  PlatfromPostStatus,
+  PrismaClient,
+  SocialAccount,
+} from '../../generated/prisma/client.js';
 
 export class linkedinServices {
   constructor(
@@ -38,7 +43,7 @@ export class linkedinServices {
       this.logger.error('an error occured while creation oauth session', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async getOAuthSession(state: string) {
     try {
@@ -60,7 +65,7 @@ export class linkedinServices {
       this.logger.error('an error occured while geting oauth session from db', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async markSessionAsUsed(sessionId: string) {
     try {
@@ -73,20 +78,23 @@ export class linkedinServices {
       this.logger.error('Error marking session as used', { sessionId: sessionId, error: error });
       throw error;
     }
-  };
+  }
 
-  generateAuthUrl(state: string):String {
-    this.logger.info('LinkedIn authorization URL generated', { clientID: this.Config.clientID?.substring(0, 5), redirectUri: this.Config.redirectUri })
+  generateAuthUrl(state: string): string {
+    this.logger.info('LinkedIn authorization URL generated', {
+      clientID: this.Config.clientID?.substring(0, 5),
+      redirectUri: this.Config.redirectUri,
+    });
     const params = new URLSearchParams({
       response_type: 'code',
-      client_id:this.Config.clientID,
+      client_id: this.Config.clientID,
       redirect_uri: this.Config.redirectUri,
       scope: 'openid profile email w_member_social',
       state: state,
     });
 
     return `https://www.linkedin.com/oauth/v2/authorization?${params}`;
-  };
+  }
 
   async getAccessToken(code: string): Promise<linkedinAccessTokenResponse> {
     try {
@@ -169,7 +177,7 @@ export class linkedinServices {
       // Generic error
       throw new ApiError(500, 'Failed to authenticate with LinkedIn');
     }
-  };
+  }
 
   async getUserInfo(accessToken: string): Promise<LinkedinUserInfoResponse> {
     try {
@@ -189,7 +197,7 @@ export class linkedinServices {
       this.logger.error('failed to get user info', { error });
       throw new ApiError(500, 'failed to get user info');
     }
-  };
+  }
 
   async publishTextPost(
     linkedinUserId: string,
@@ -229,7 +237,7 @@ export class linkedinServices {
       this.logger.info('Post Publising Failed', { error });
       throw new ApiError(500, 'Post Publish Failed');
     }
-  };
+  }
 
   async registerImageUpload(
     access_token: string,
@@ -272,7 +280,7 @@ export class linkedinServices {
       this.logger.error('Media Registeration Failed', { error });
       throw new ApiError(500, 'Media Registeration Failed');
     }
-  };
+  }
 
   async UploadImageBuffer(uploadUrl: string, imageBuffer: Buffer, access_token: string) {
     try {
@@ -293,7 +301,7 @@ export class linkedinServices {
       this.logger.error('image buffer upload failed', { error });
       throw new ApiError(500, 'media buffer upload Failed');
     }
-  };
+  }
 
   async publishPostWithImage(
     asset: string,
@@ -340,7 +348,7 @@ export class linkedinServices {
       this.logger.error('Post Publishing Failed', { error });
       throw new ApiError(500, 'Post Publishing Failed');
     }
-  };
+  }
 
   async createUsersLinkedinConnectionDatabaseRecord(
     user_info: LinkedinUserInfoType,
@@ -369,13 +377,13 @@ export class linkedinServices {
       this.logger.error('Social Account Database Record Creation Failed', { error: error });
       throw new ApiError(500, 'Account Creation Failed');
     }
-  };
+  }
 
   async createLinkedinPostDatabaseRecord(
     user_id: string,
     post_id: string,
-    account_id:string,
-    status:PlatfromPostStatus,
+    account_id: string,
+    status: PlatfromPostStatus,
     linkedin_post_id?: string,
     posted_at?: Date,
   ): Promise<PlatformPost> {
@@ -384,22 +392,28 @@ export class linkedinServices {
         data: {
           post_id: post_id,
           owner_id: user_id,
-          account_id:account_id,
+          account_id: account_id,
           platform: 'LINKEDIN',
-          platform_post_id: linkedin_post_id || '',
-          platform_post_url: `https://www.linkedin.com/feed/update/${linkedin_post_id}/ ` || '',
+          platform_post_id: linkedin_post_id ? linkedin_post_id : '',
+          platform_post_url: linkedin_post_id
+            ? `https://www.linkedin.com/feed/update/${linkedin_post_id}/ `
+            : '',
           status: status,
-          postedAt: posted_at || '',
+          postedAt: posted_at || new Date(Date.now()),
         },
       });
 
-      this.logger.info('LinkedIn platform post record created', { postId: post_id, userId: user_id, platformPostId: linkedin_post_id });
+      this.logger.info('LinkedIn platform post record created', {
+        postId: post_id,
+        userId: user_id,
+        platformPostId: linkedin_post_id,
+      });
       return post;
     } catch (error) {
       this.logger.error('Db Record Creation Failed : ', { error });
       throw new ApiError(500, 'database linkedin post creation failed');
     }
-  };
+  }
 
   async getUserAccount(userid: string): Promise<SocialAccount> {
     try {
@@ -407,8 +421,8 @@ export class linkedinServices {
         where: {
           owner_id: userid,
           platform: 'LINKEDIN',
-          isActive:true,
-          isExpired:false
+          isActive: true,
+          isExpired: false,
         },
       });
       if (!user) {
@@ -422,18 +436,21 @@ export class linkedinServices {
       this.logger.error('account fetch Failed : ', { error });
       throw new ApiError(500, 'database linkedin account fetch failed');
     }
-  };
+  }
 
   async getImageBufferFromCloudinary(image_url: string) {
     try {
       const response = await this.httpClient.get(image_url, { responseType: 'arraybuffer' });
-      this.logger.info('Image buffer retrieved from Cloudinary (LinkedIn)', { urlLength: image_url.length, bufferSize: response.data.length });
+      this.logger.info('Image buffer retrieved from Cloudinary (LinkedIn)', {
+        urlLength: image_url.length,
+        bufferSize: response.data.length,
+      });
       return Buffer.from(response.data);
     } catch (error) {
       this.logger.info('an error occured while getting image from cloudinary', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async getPostFromDb(postId: string, userId: string) {
     try {
@@ -443,141 +460,155 @@ export class linkedinServices {
           owner_id: userId,
         },
       });
-      this.logger.info('Post retrieved from database (LinkedIn)', { postId: postId, userId: userId, found: !!post });
+      this.logger.info('Post retrieved from database (LinkedIn)', {
+        postId: postId,
+        userId: userId,
+        found: !!post,
+      });
       return post;
     } catch (error) {
       this.logger.error('an error occured while getting the post', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
-  async validateAccessToken(account:SocialAccount){
+  async validateAccessToken(account: SocialAccount) {
     try {
       const now = Date.now();
 
       const isExpired = !account.token_expiry || account.token_expiry.getTime() <= now;
 
-      if(isExpired){
+      if (isExpired) {
         await this.prisma.socialAccount.update({
-          where:{
-            id:account.id
+          where: {
+            id: account.id,
           },
-          data:{
-            isActive:false,
-            isExpired:true
-          }
-        })
+          data: {
+            isActive: false,
+            isExpired: true,
+          },
+        });
         this.logger.warn('LinkedIn access token expired', { accountId: account.id });
-        return {success:false, message:'Account Expired Please Reconnect', accessToken:''}
-      };
+        return { success: false, message: 'Account Expired Please Reconnect', accessToken: '' };
+      }
       this.logger.info('LinkedIn access token validated successfully', { accountId: account.id });
-      return {success:true, message:'accessToken is valid', accessToken :account.access_token};
+      return { success: true, message: 'accessToken is valid', accessToken: account.access_token };
     } catch (error) {
       this.logger.error(`an error occured while validating accessToken : ${error}`);
-      throw new ApiError(500, "internal server error")
+      throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
-  async flagPostSuccess( postid:string, linkedin_post_id:string,){
+  async flagPostSuccess(postid: string, linkedin_post_id: string) {
     try {
       const updated = await this.prisma.platformPost.update({
-        where:{
-          id:postid
+        where: {
+          id: postid,
         },
-        data:{
-          status:'POSTED',
-          platform_post_id:linkedin_post_id,
-          platform_post_url: `https://www.linkedin.com/feed/update/${linkedin_post_id}/ ` 
-        }
+        data: {
+          status: 'POSTED',
+          platform_post_id: linkedin_post_id,
+          platform_post_url: `https://www.linkedin.com/feed/update/${linkedin_post_id}/ `,
+        },
       });
-      this.logger.info('LinkedIn post flagged as successfully posted', { postId: postid, linkedinPostId: linkedin_post_id });
+      this.logger.info('LinkedIn post flagged as successfully posted', {
+        postId: postid,
+        linkedinPostId: linkedin_post_id,
+      });
       return updated;
     } catch (error) {
       this.logger.error(`failed to update flag ${error}`);
-      throw new ApiError(500, 'internal server error')
+      throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
-  async isAlreadyPosted( postid:string, ){
+  async isAlreadyPosted(postid: string) {
     try {
-       const posted = await this.prisma.platformPost.findFirst({
-        where:{
-          id:postid,
-          platform:'LINKEDIN',
-          status:'POSTED'
-          
-        }
+      const posted = await this.prisma.platformPost.findFirst({
+        where: {
+          id: postid,
+          platform: 'LINKEDIN',
+          status: 'POSTED',
+        },
       });
       this.logger.info('LinkedIn post status checked', { postId: postid, isPosted: !!posted });
       return posted;
     } catch (error) {
       this.logger.error(`failed to check ${error}`);
-      throw new ApiError(500, 'internal server error')
+      throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
-  async flagPostFailed( platform_Post_id:string, error:string) {
+  async flagPostFailed(platform_Post_id: string, error: string) {
     try {
       const updated = await this.prisma.platformPost.update({
-        where:{
-          id:platform_Post_id
+        where: {
+          id: platform_Post_id,
         },
-        data:{
-          error:error,
-          status:'FAILED',
-          failedAt:new Date(Date.now())
-        }
-      
+        data: {
+          error: error,
+          status: 'FAILED',
+          failedAt: new Date(Date.now()),
+        },
       });
-      this.logger.info('LinkedIn post failure flagged in database', { postId: platform_Post_id, error: error });
+      this.logger.info('LinkedIn post failure flagged in database', {
+        postId: platform_Post_id,
+        error: error,
+      });
       return updated;
     } catch (error) {
       this.logger.error(`failed to flag failed Post : ${error}`);
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
-  async createEmptyLinkedinPostDbRecord(user_id:string, post_id:string, linkedin_account_id:string,) {  
+  async createEmptyLinkedinPostDbRecord(
+    user_id: string,
+    post_id: string,
+    linkedin_account_id: string,
+  ) {
     try {
       const record = await this.prisma.platformPost.create({
-        data:{
-         owner_id:user_id,
-         post_id:post_id,
-         account_id:linkedin_account_id,
-         platform:'LINKEDIN',
-         status:'PENDING',
-
-        }
-      
+        data: {
+          owner_id: user_id,
+          post_id: post_id,
+          account_id: linkedin_account_id,
+          platform: 'LINKEDIN',
+          status: 'PENDING',
+        },
       });
-      this.logger.info('Empty LinkedIn post database record created', { userId: user_id, postId: post_id, accountId: linkedin_account_id });
+      this.logger.info('Empty LinkedIn post database record created', {
+        userId: user_id,
+        postId: post_id,
+        accountId: linkedin_account_id,
+      });
       return record;
     } catch (error) {
-      this.logger.error(`failed to create sample linkedin post : ${error}`)
+      this.logger.error(`failed to create sample linkedin post : ${error}`);
       throw new ApiError(500, 'internal server error');
     }
-  };
-  async updateLinkedinPostSuccess(linkedin_post_db_id:string, linkedin_post_publish_id:string) {  
+  }
+  async updateLinkedinPostSuccess(linkedin_post_db_id: string, linkedin_post_publish_id: string) {
     try {
       const updated = await this.prisma.platformPost.update({
-        where:{
-          id:linkedin_post_db_id
+        where: {
+          id: linkedin_post_db_id,
         },
-        data:{
-          platform_post_id:linkedin_post_publish_id,
-          platform_post_url:`https://www.linkedin.com/feed/update/${linkedin_post_publish_id}/ `,
-         status:'POSTED',
-         postedAt:new Date(Date.now())
-
-        }
-      
+        data: {
+          platform_post_id: linkedin_post_publish_id,
+          platform_post_url: `https://www.linkedin.com/feed/update/${linkedin_post_publish_id}/ `,
+          status: 'POSTED',
+          postedAt: new Date(Date.now()),
+        },
       });
-      this.logger.info('LinkedIn post success record updated', { dbId: linkedin_post_db_id, publishId: linkedin_post_publish_id });
+      this.logger.info('LinkedIn post success record updated', {
+        dbId: linkedin_post_db_id,
+        publishId: linkedin_post_publish_id,
+      });
       return updated;
     } catch (error) {
-      this.logger.error(`failed to create sample linkedin post : ${error}`)
+      this.logger.error(`failed to create sample linkedin post : ${error}`);
       throw new ApiError(500, 'internal server error');
     }
-  };
-
+  }
 }

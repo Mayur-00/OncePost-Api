@@ -4,7 +4,6 @@ import crypto from 'crypto';
 import { PrismaClient, SocialAccount } from '../../generated/prisma/client.js';
 import { ApiError } from '../../utils/apiError.js';
 import { XTokenResponse, XUserInfo } from './x.types.js';
-import { ApiResponse } from '../../utils/apiResponse.js';
 import { TweetDbRecord, TweetResponse } from './x.dto.js';
 
 import FormData from 'form-data';
@@ -26,12 +25,15 @@ export class XServices {
       .replace(/\//g, '_')
       .replace(/=+$/, '');
 
-    this.logger.info('PKCE challenge generated', { verifierLength: code_verifier.length, challengeLength: hash.length });
+    this.logger.info('PKCE challenge generated', {
+      verifierLength: code_verifier.length,
+      challengeLength: hash.length,
+    });
     return {
       code_verifier,
       code_challenge: hash,
     };
-  };
+  }
 
   async getOAuthSession(state: string) {
     try {
@@ -53,7 +55,7 @@ export class XServices {
       this.logger.error('an error occured while geting oauth session from db', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async markSessionAsUsed(sessionId: string) {
     try {
@@ -66,7 +68,7 @@ export class XServices {
       this.logger.error('Error marking session as used', { sessionId: sessionId, error: error });
       throw error;
     }
-  };
+  }
 
   async createOAuthSession(userid: string, code_verifier: string, state: string) {
     try {
@@ -83,7 +85,7 @@ export class XServices {
       this.logger.error('an error occured while creation oauth session', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async getAccessToken(code_verifier: string, code: string) {
     const clientId = process.env.X_CLIENT_ID!;
@@ -111,7 +113,7 @@ export class XServices {
     );
 
     return tokenRes;
-  };
+  }
 
   async getXUserInfo(accessToken: string) {
     try {
@@ -129,7 +131,7 @@ export class XServices {
       this.logger.error('an error occured while asking for user info', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async createDbUsersXConnection(userId: string, userInfo: XUserInfo, tokenObj: XTokenResponse) {
     try {
@@ -151,7 +153,7 @@ export class XServices {
       this.logger.error('an error occured while saving user info into db', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async refreshAccessToken(refreshToken: string) {
     try {
@@ -178,7 +180,7 @@ export class XServices {
       this.logger.error(`an error occured while refreshing accessToken`, { error: error });
       throw new ApiError(500, 'account expired reconnect your account');
     }
-  };
+  }
 
   async getActiveXAccount(userid: string) {
     try {
@@ -192,7 +194,7 @@ export class XServices {
       this.logger.error('cannot get x active account', { error: error });
       throw new ApiError(500, 'account not found');
     }
-  };
+  }
 
   async validateAccessToken(account: SocialAccount) {
     try {
@@ -224,7 +226,7 @@ export class XServices {
       this.logger.error('an error occured while validating access token', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async publishTweet(
     text: string,
@@ -232,7 +234,7 @@ export class XServices {
     accessToken: string,
   ): Promise<TweetResponse> {
     try {
-      const payload: any = { text };
+      const payload: { text: string; media?: {} } = { text };
 
       // Only add media if mediaIds exist and array is not empty
       if (mediaIds && mediaIds.length > 0) {
@@ -257,7 +259,7 @@ export class XServices {
       this.logger.error(`an error occured while publishing the tweet ${error}`);
       throw new ApiError(500, 'publishing tweets failed');
     }
-  };
+  }
 
   async uploadMedia(accessToken: string, buffer: Buffer, mimetype: string) {
     try {
@@ -283,7 +285,7 @@ export class XServices {
       this.logger.error(`unable to upload media error:${error}`);
       throw new ApiError(500, 'image upload failed');
     }
-  };
+  }
 
   async getPost(post_id: string, userid: string) {
     try {
@@ -293,24 +295,31 @@ export class XServices {
           owner_id: userid,
         },
       });
-      this.logger.info('Post retrieved from database', { postId: post_id, userId: userid, found: !!post });
+      this.logger.info('Post retrieved from database', {
+        postId: post_id,
+        userId: userid,
+        found: !!post,
+      });
       return post;
     } catch (error) {
       this.logger.info('an error occured while geting post ', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async getImageBufferFromCloudinary(image_url: string) {
     try {
       const response = await this.httpClient.get(image_url, { responseType: 'arraybuffer' });
-      this.logger.info('Image buffer retrieved from Cloudinary', { urlLength: image_url.length, bufferSize: response.data.length });
+      this.logger.info('Image buffer retrieved from Cloudinary', {
+        urlLength: image_url.length,
+        bufferSize: response.data.length,
+      });
       return Buffer.from(response.data);
     } catch (error) {
       this.logger.info('an error occured while getting image from cloudinary', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async createTweetDbRecord(data: TweetDbRecord) {
     try {
@@ -321,18 +330,22 @@ export class XServices {
           account_id: data.accountId,
           platform: 'X',
           platform_post_id: data.tweetId || '',
-          platform_post_url: `https://x.com/i/web/status/${data.tweetId}` || '',
+          platform_post_url: data.tweetId ? `https://x.com/i/web/status/${data.tweetId}` : '',
           status: data.status,
           postedAt: new Date(Date.now()),
         },
       });
-      this.logger.info('Tweet database record created', { tweetId: data.tweetId, ownerId: data.ownerId, postId: data.postId });
+      this.logger.info('Tweet database record created', {
+        tweetId: data.tweetId,
+        ownerId: data.ownerId,
+        postId: data.postId,
+      });
       return record;
     } catch (error) {
       this.logger.error('an error occrred while creating db record', { error: error });
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async flagTweetSuccess(postid: string, x_tweet_id: string) {
     try {
@@ -346,13 +359,16 @@ export class XServices {
           platform_post_url: `https://x.com/i/web/status/${x_tweet_id}`,
         },
       });
-      this.logger.info('Tweet flagged as successfully posted', { postId: postid, tweetId: x_tweet_id });
+      this.logger.info('Tweet flagged as successfully posted', {
+        postId: postid,
+        tweetId: x_tweet_id,
+      });
       return updated;
     } catch (error) {
       this.logger.error(`failed to flag tweet ${error}`);
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async isAlreadyPosted(postid: string) {
     try {
@@ -369,7 +385,7 @@ export class XServices {
       this.logger.error(`failed to check ${error}`);
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async createEmptyTweetDbRecord(user_id: string, post_id: string, X_db_account_id: string) {
     try {
@@ -382,13 +398,17 @@ export class XServices {
           status: 'PENDING',
         },
       });
-      this.logger.info('Empty tweet database record created', { userId: user_id, postId: post_id, accountId: X_db_account_id });
+      this.logger.info('Empty tweet database record created', {
+        userId: user_id,
+        postId: post_id,
+        accountId: X_db_account_id,
+      });
       return record;
     } catch (error) {
       this.logger.error(`failed to create db record ${error}`);
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async updateLinkedinPostSuccess(x_tweet_db_id: string, x_tweet_publish_id: string) {
     try {
@@ -403,13 +423,16 @@ export class XServices {
           postedAt: new Date(Date.now()),
         },
       });
-      this.logger.info('LinkedIn post success record updated (X)', { dbId: x_tweet_db_id, tweetId: x_tweet_publish_id });
+      this.logger.info('LinkedIn post success record updated (X)', {
+        dbId: x_tweet_db_id,
+        tweetId: x_tweet_publish_id,
+      });
       return updated;
     } catch (error) {
       this.logger.error(`failed to update db record ${error}`);
       throw new ApiError(500, 'internal server error');
     }
-  };
+  }
 
   async flagTweetPublishFailed(platform_Post_id: string, error: string) {
     try {
@@ -423,12 +446,14 @@ export class XServices {
           failedAt: new Date(Date.now()),
         },
       });
-      this.logger.info('Tweet publish failure flagged in database', { postId: platform_Post_id, error: error });
+      this.logger.info('Tweet publish failure flagged in database', {
+        postId: platform_Post_id,
+        error: error,
+      });
       return updated;
     } catch (error) {
       this.logger.error(`failed to flag failed Post : ${error}`);
       throw new ApiError(500, 'internal server error');
     }
-  };
-
+  }
 }

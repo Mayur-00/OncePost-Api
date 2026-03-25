@@ -1,4 +1,4 @@
-import { Redis } from "ioredis";
+import { Redis } from 'ioredis';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -20,16 +20,16 @@ const redis = new Redis({
   },
 });
 
-redis.on("connect", () => {
-  console.log("✓ Connected to Redis Cloud");
+redis.on('connect', () => {
+  console.log('✓ Connected to Redis Cloud');
 });
 
-redis.on("error", (err) => {
-  console.error("Redis connection error:", err);
+redis.on('error', (err) => {
+  console.error('Redis connection error:', err);
 });
 
-redis.on("close", () => {
-  console.log("Redis connection closed"); 
+redis.on('close', () => {
+  console.log('Redis connection closed');
 });
 
 // For BullMQ - NO TLS for port 18173

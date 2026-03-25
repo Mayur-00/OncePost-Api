@@ -3,9 +3,9 @@ import { ApiError, IApiError } from '../utils/apiError.js';
 import { ZodError } from 'zod';
 import logger from '../config/logger.config.js';
 
-export const handleError = (err: any, req: Request, res: Response, next:NextFunction) => {
+export const handleError = (err: any, req: Request, res: Response, next: NextFunction) => {
   console.log(err);
-  let error: IApiError | ApiError | Error | ZodError | any = err;
+  let error: IApiError | Error | ZodError | any = err;
 
   const IsInDevelopment = process.env.NODE_ENV === 'development';
 
@@ -17,18 +17,17 @@ export const handleError = (err: any, req: Request, res: Response, next:NextFunc
           ? (error as ZodError).issues[0].message
           : 'Validation error';
       const errors = (error as ZodError).issues || [];
-      error = new ApiError(statusCode, message, errors, 'INPUT_VALIDATION_ERROR',  error.stack);
-      logger.error(`Input Validation Error : ${error}`)
+      error = new ApiError(statusCode, message, errors, 'INPUT_VALIDATION_ERROR', error.stack);
+      logger.error(`Input Validation Error : ${error}`);
     } else {
       const statusCode = error && error.statusCode ? error.statusCode : 500;
       const message = error && error.message ? error.message : 'Something Went Wrong';
-      const error_code = 'SERVER_ERROR'
+      const error_code = 'SERVER_ERROR';
 
       error = new ApiError(statusCode, message, error.errors || [], error_code, error.stack);
-      logger.error(`Implementation error : ${error}`)
+      logger.error(`Implementation error : ${error}`);
     }
   }
-
 
   const response: ResponseType = {
     success: false,
@@ -48,6 +47,6 @@ export type ResponseType = {
   message: string;
   data?: object;
   errors: unknown[];
-  error_code:string;
+  error_code: string;
   stack?: string;
 };

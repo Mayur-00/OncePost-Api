@@ -19,6 +19,6 @@ export const multerFileSchema = z.object({
 });
 
 export const CreateLinkedinPostSchema = z.object({
- post_id:z.string().min(5)
+  post_id: z.string().min(5),
 });
 export type CreateLinkedInPostDto = z.infer<typeof CreateLinkedinPostSchema>;

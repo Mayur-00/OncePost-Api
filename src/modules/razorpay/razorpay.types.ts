@@ -1,10 +1,7 @@
-import { TransactionStatus, TransactionType } from "../../generated/prisma/enums.js";
-
-
 export interface RazorpayWebhookEvent {
-  entity: "event";
+  entity: 'event';
   account_id: string;
-  event: "payment.captured" | "payment.failed" | "payment.refunded";
+  event: 'payment.captured' | 'payment.failed' | 'payment.refunded';
   contains: string[];
   payload: {
     payment: {
@@ -16,7 +13,7 @@ export interface RazorpayWebhookEvent {
 
 export interface RazorpayPaymentEntity {
   id: string;
-  entity: "payment";
+  entity: 'payment';
   amount: number;
   currency: string;
   status: string;
@@ -36,8 +33,4 @@ export interface RazorpayPaymentEntity {
   error_code?: string | null;
   error_description?: string | null;
   created_at: number;
-};
-
-
-
-
+}

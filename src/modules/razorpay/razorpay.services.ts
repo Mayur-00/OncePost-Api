@@ -46,7 +46,7 @@ export class RazorpayService {
     }
   }
 
-  generatePaymentSignature(order_id: string, payment_id: string): String {
+  generatePaymentSignature(order_id: string, payment_id: string): string {
     try {
       const razorpay_secret = process.env.RAZORPAY_KEY_SECRET!;
       if (!razorpay_secret) {
@@ -70,7 +70,7 @@ export class RazorpayService {
     payment_id: string,
     payment_signature: string,
     transaction_id: string,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     try {
       const generatedSignature = this.generatePaymentSignature(order_id, payment_id);
 
@@ -87,13 +87,16 @@ export class RazorpayService {
             status: 'COMPLETED',
           },
         });
-        this.logger.info('Payment signature verified and transaction completed', { transactionId: transaction_id, orderId: order_id });
+        this.logger.info('Payment signature verified and transaction completed', {
+          transactionId: transaction_id,
+          orderId: order_id,
+        });
         return true;
       }
       this.logger.warn('Payment signature verification failed', { orderId: order_id });
       return false;
     } catch (error) {
-      this.logger.error(`failed to verify razorpay payment signature`);
+      this.logger.error(`failed to verify razorpay payment signature : ${error}`);
       throw new ApiError(500, 'internal server error');
     }
   }
@@ -105,10 +108,13 @@ export class RazorpayService {
           id: transaction_id,
         },
       });
-      this.logger.info('Transaction retrieved by ID', { transactionId: transaction_id, found: !!transaction });
+      this.logger.info('Transaction retrieved by ID', {
+        transactionId: transaction_id,
+        found: !!transaction,
+      });
       return transaction;
     } catch (error) {
-      this.logger.error(`failed to get transaction details`);
+      this.logger.error(`failed to get transaction details : ${error}`);
       throw new ApiError(500, 'internal server error');
     }
   }
@@ -119,10 +125,13 @@ export class RazorpayService {
           razorpay_order_id: order_id,
         },
       });
-      this.logger.info('Transaction retrieved by order ID', { orderId: order_id, found: !!transaction });
+      this.logger.info('Transaction retrieved by order ID', {
+        orderId: order_id,
+        found: !!transaction,
+      });
       return transaction;
     } catch (error) {
-      this.logger.error(`failed to get transaction details`);
+      this.logger.error(`failed to get transaction details : ${error}`);
       throw new ApiError(500, 'internal server error');
     }
   }
@@ -139,21 +148,23 @@ export class RazorpayService {
       this.logger.warn('Webhook signature verification failed');
     }
     return isValid;
-
   }
 
-   async isWebookAlreadyProcessed(order_id:string) {
+  async isWebookAlreadyProcessed(order_id: string) {
     try {
       const transaction = await this.prismaClient.transaction.findUnique({
-        where:{
-          razorpay_order_id:order_id,
-          status:'COMPLETED',
-        }
+        where: {
+          razorpay_order_id: order_id,
+          status: 'COMPLETED',
+        },
       });
-      this.logger.info('Webhook processed status checked', { orderId: order_id, isProcessed: !!transaction });
+      this.logger.info('Webhook processed status checked', {
+        orderId: order_id,
+        isProcessed: !!transaction,
+      });
       return transaction;
     } catch (error) {
-      this.logger.error(`failed to get transaction `);
+      this.logger.error(`failed to get transaction : ${error} `);
       throw new ApiError(500, 'internal server error');
     }
   }

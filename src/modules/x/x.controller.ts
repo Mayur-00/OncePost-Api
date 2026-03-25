@@ -2,10 +2,9 @@ import { Logger } from 'winston';
 import { XServices } from './x.services.js';
 import { RequestHandler, Request, Response } from 'express';
 import { asyncHandler } from '../../utils/asyncHandler.js';
-import { PrismaClient } from '../../generated/prisma/client.js';
 import { ApiError } from '../../utils/apiError.js';
 
-import { TweetDbRecord, XCallbackSchema, XPublishPostSchema } from './x.dto.js';
+import { XCallbackSchema } from './x.dto.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
 import crypto from 'crypto';
 
@@ -13,8 +12,6 @@ export class XController {
   constructor(
     private logger: Logger,
     private XServices: XServices,
-    private prismaClient: PrismaClient,
-
   ) {}
 
   getAuth: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -23,8 +20,7 @@ export class XController {
     if (!req.user) {
       this.logger.error('req.user not found');
       throw new ApiError(400, 'UnAuthorized');
-    };
-
+    }
 
     const state = crypto.randomBytes(32).toString('hex');
     await this.XServices.createOAuthSession(req.user.id, code_verifier, state);
@@ -50,22 +46,24 @@ export class XController {
 
     if (error) {
       this.logger.error('error occored in callback ', { error: error_description });
-      res.redirect(`${process.env.FRONTEND_URI}/error?error=${error_description}`);
+      return res.redirect(`${process.env.FRONTEND_URI}/error?error=${error_description}`);
     }
 
     const sessionResponse = await this.XServices.getOAuthSession(state);
+    if (!sessionResponse.codeVerifier) {
+      return res.redirect(`${process.env.FRONTEND_URI}/error?error=auth-not-found}`);
+    }
 
-    const userid = sessionResponse.ownerid;
     await this.XServices.markSessionAsUsed(sessionResponse.id);
     const accessTokenResponse = await this.XServices.getAccessToken(
-      sessionResponse?.codeVerifier!,
+      sessionResponse.codeVerifier,
       code,
     );
 
     const xUserInfo = await this.XServices.getXUserInfo(accessTokenResponse.data.access_token);
 
-    const dbConnection = await this.XServices.createDbUsersXConnection(
-      sessionResponse?.ownerid!,
+    await this.XServices.createDbUsersXConnection(
+      sessionResponse.ownerid,
       xUserInfo.data,
       accessTokenResponse.data,
     );

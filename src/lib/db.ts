@@ -4,9 +4,9 @@ import prisma from '../config/prisma.js';
 const connectDb = async () => {
   try {
     await prisma.$connect();
-    logger.info('✅ Database connected successfully')
+    logger.info('✅ Database connected successfully');
   } catch (error) {
-    logger.error(`Failed to Connect Database, Error : ${error}`)
+    logger.error(`Failed to Connect Database, Error : ${error}`);
     process.exit(1);
   }
 };

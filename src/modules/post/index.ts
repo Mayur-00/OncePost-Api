@@ -1,15 +1,13 @@
-import { PostService } from "./post.services.js";
+import { PostService } from './post.services.js';
 import prisma from '../../config/prisma.js';
-import logger from "../../config/logger.config.js";
-import { PostController } from "./post.controller.js";
-import { createPostRoutes } from "./post.routes.js";
-import { LinkedinService } from "../linkedin/index.js";
-import { xServices } from "../x/index.js";
+import logger from '../../config/logger.config.js';
+import { PostController } from './post.controller.js';
+import { createPostRoutes } from './post.routes.js';
 
-export  const postServices = new PostService(prisma, logger);
+export const postServices = new PostService(prisma, logger);
 
-export const postController = new PostController(logger,postServices, prisma);
+export const postController = new PostController(logger, postServices, prisma);
 
 export const postRoutes = createPostRoutes(postController);
 
-export * from './post.dto.js'
+export * from './post.dto.js';

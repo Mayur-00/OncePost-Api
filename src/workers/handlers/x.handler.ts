@@ -28,7 +28,7 @@ export class Xhandler {
       const accessToken = await this.xServices.validateAccessToken(account);
 
       // Upload media if exists
-      let mediaIds: string[] = [];
+      const mediaIds: string[] = [];
       if (mediaUrl) {
         const buffer = await this.xServices.getImageBufferFromCloudinary(mediaUrl);
         const mediaId = await this.xServices.uploadMedia(

@@ -35,7 +35,7 @@ export class AuthController {
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      samesite:"none"
+      samesite: 'none',
     };
 
     if (user) {
@@ -123,7 +123,7 @@ export class AuthController {
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      samesite:"none"
+      samesite: 'none',
     };
 
     return res
@@ -148,7 +148,7 @@ export class AuthController {
 
     if (!user) {
       this.logger.error('account not found');
-      throw new ApiError(404, 'account not found please register');
+      throw new ApiError(404, 'account not found please register', [], "USER_NOT_FOUND");
     }
 
     const passwordCorrect = await this.userServices.verifyPassword(password, user.password!);
@@ -166,10 +166,10 @@ export class AuthController {
 
     const updatedUser = await this.userServices.updateUsersRefreshToken(user.id, refreshToken);
 
-  const options = {
+    const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      samesite:"none"
+      samesite: 'none',
     };
 
     return res
@@ -300,7 +300,12 @@ export class AuthController {
   handleProfilePictureUpdate: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     const { imageLink } = updateProfilePictureSchema.parse(req.body);
 
-    const updatedUser = await this.userServices.updateUserWithImage(req.user?.id!, imageLink);
+    if (!req.user) {
+      this.logger.error(`unAuthorized Request, IP: ${req.ip}`);
+      throw new ApiError(400, 'UnAuthorized');
+    }
+
+    const updatedUser = await this.userServices.updateUserWithImage(req.user.id, imageLink);
 
     if (!updatedUser) {
       this.logger.error(`failed to update the profile picture`);
@@ -344,18 +349,18 @@ export class AuthController {
     if (!updatedUser) {
       this.logger.error('failed to update user');
       throw new ApiError(500, 'failed to toggle onboarding true');
-    };
+    }
 
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     };
 
-    const obtoken = this.jwtToken.generateOnboardingToken(updatedUser.id, updatedUser.isOnboarded)
+    const obtoken = this.jwtToken.generateOnboardingToken(updatedUser.id, updatedUser.isOnboarded);
 
-    return res.
-    status(200)
-    .cookie('op-iob', obtoken, options)
-    .json(new ApiResponse(200, updatedUser, 'Success'));
+    return res
+      .status(200)
+      .cookie('op-iob', obtoken, options)
+      .json(new ApiResponse(200, updatedUser, 'Success'));
   });
 }

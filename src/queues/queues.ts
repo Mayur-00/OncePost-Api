@@ -1,14 +1,12 @@
-
-
-import { Queue } from "bullmq";
-import { redisConnection } from "../config/redis.config.js";
+import { Queue } from 'bullmq';
+import { redisConnection } from '../config/redis.config.js';
 
 export const postQueue = new Queue('post', {
-    connection: redisConnection,
-      defaultJobOptions: {
+  connection: redisConnection,
+  defaultJobOptions: {
     attempts: 1,
     backoff: {
-      type: "exponential",
+      type: 'exponential',
       delay: 5000,
     },
     removeOnComplete: true,

@@ -7,7 +7,7 @@ import { RequestHandler, Request, Response } from 'express';
 import { initateOrderSchema, verifyPaymentSchema } from './subscription.dto.js';
 import { ApiError } from '../../utils/apiError.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
-import { RazorpayPaymentEntitySchema, RazorpayWebhookSchema } from '../razorpay/razorpay.dto.js';
+import { RazorpayWebhookSchema } from '../razorpay/razorpay.dto.js';
 
 export class SubscriptionControllerClass {
   constructor(
@@ -40,25 +40,24 @@ export class SubscriptionControllerClass {
       userid,
     );
 
-    return res
-      .status(201)
-      .json(
-        new ApiResponse(
-          201,
-          {
-            order: createOrderResponse.order,
-            subscription_id: subscription.id,
-            transaction_id: createOrderResponse.transaction_id,
-          },
-          'subscripton order created',
-        ),
-      );
+    return res.status(201).json(
+      new ApiResponse(
+        201,
+        {
+          order: createOrderResponse.order,
+          subscription_id: subscription.id,
+          transaction_id: createOrderResponse.transaction_id,
+        },
+        'subscripton order created',
+      ),
+    );
   });
 
   verifyPaymentAndActivateSubscription: RequestHandler = asyncHandler(
     async (req: Request, res: Response) => {
-      const { order_id, payment_id, payment_signature, transaction_id } =
-        verifyPaymentSchema.parse(req.body);
+      const { order_id, payment_id, payment_signature, transaction_id } = verifyPaymentSchema.parse(
+        req.body,
+      );
 
       const userid = req.user?.id;
 

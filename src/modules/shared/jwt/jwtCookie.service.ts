@@ -4,7 +4,7 @@ import logger from '../../../config/logger.config.js';
 import { myJwtPayload } from '../../../middlewares/auth.middleware.js';
 
 export class jwtToken {
-   generateAccessTokenAndRefreshToken = (id: string, email: string, name: string) => {
+  generateAccessTokenAndRefreshToken = (id: string, email: string, name: string) => {
     if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
       throw new ApiError(500, 'token secret not found');
     }
@@ -26,15 +26,15 @@ export class jwtToken {
     return { accessToken, refreshToken };
   };
 
-  generateOnboardingToken = (id:string, isOnboarded:boolean) => {
+  generateOnboardingToken = (id: string, isOnboarded: boolean) => {
     if (!process.env.OB_TOKEN_SECRET) {
       throw new ApiError(500, 'token secret not found');
-    };
+    }
 
-      const obToken = jwt.sign(
+    const obToken = jwt.sign(
       {
         id: id,
-        isOnboarded:isOnboarded
+        isOnboarded: isOnboarded,
       },
       process.env.OB_TOKEN_SECRET,
       {
@@ -43,10 +43,9 @@ export class jwtToken {
     );
 
     return obToken;
+  };
 
-  }
-
-   verifyAccessToken = (token: string) => {
+  verifyAccessToken = (token: string) => {
     try {
       if (!token) {
         return {
@@ -73,6 +72,4 @@ export class jwtToken {
       throw new ApiError(500, 'server error');
     }
   };
-
-
 }

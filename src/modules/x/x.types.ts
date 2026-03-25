@@ -1,11 +1,11 @@
 export interface XTokenResponse {
-  token_type: "bearer";
+  token_type: 'bearer';
   expires_in: number;
   access_token: string;
   scope: string;
   refresh_token?: string;
   id_token?: string;
-};
+}
 
 export interface XUserInfo {
   data: {

@@ -1,5 +1,3 @@
-
-
 import { Router } from 'express';
 import { authorize } from '../../middlewares/auth.middleware.js';
 import { upload } from '../../config/multerr.config.js';
@@ -8,20 +6,14 @@ import { PostController } from './post.controller.js';
 export function createPostRoutes(controller: PostController): Router {
   const router = Router();
 
-
-
   // Post creation (requires authentication and file upload)
 
-  router.post(
-    '/publish-post',
-    authorize,
-    controller.publishPostMultiplePlatformsQueued,
-  );
+  router.post('/publish-post', authorize, controller.publishPostMultiplePlatformsQueued);
 
   //get all posts with pagination and limit
-  router.get("/all", authorize, controller.getAllPosts);
+  router.get('/all', authorize, controller.getAllPosts);
   // get posts by query endpoing  with pagination, limit, and type
-  router.get("/query", authorize, controller.getSearchedPosts);
+  router.get('/query', authorize, controller.getSearchedPosts);
 
   return router;
 }

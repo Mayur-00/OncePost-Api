@@ -1,10 +1,10 @@
 // razorpay-webhook.schema.ts
 
-import { z } from "zod";
+import { z } from 'zod';
 
 export const RazorpayPaymentEntitySchema = z.object({
   id: z.string(),
-  entity: z.literal("payment"),
+  entity: z.literal('payment'),
   amount: z.number(),
   currency: z.string(),
   status: z.string(),
@@ -27,13 +27,9 @@ export const RazorpayPaymentEntitySchema = z.object({
 });
 
 export const RazorpayWebhookSchema = z.object({
-  entity: z.literal("event"),
+  entity: z.literal('event'),
   account_id: z.string(),
-  event: z.enum([
-    "payment.captured",
-    "payment.failed",
-    "payment.refunded",
-  ]),
+  event: z.enum(['payment.captured', 'payment.failed', 'payment.refunded']),
   contains: z.array(z.string()),
   payload: z.object({
     payment: z.object({

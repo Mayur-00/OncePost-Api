@@ -48,7 +48,6 @@ const format = winston.format.combine(
 const transports = [
   // Allow the use the console to print the messages
   new winston.transports.Console(),
-
 ];
 
 // Create the logger instance that has to be exported

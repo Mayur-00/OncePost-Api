@@ -1,33 +1,37 @@
-import { Logger } from "winston";
-import { linkedinServices } from "../../modules/linkedin/linkedin.services.js";
-import { PostJobData } from "../worker.types.js";
+import { Logger } from 'winston';
+import { linkedinServices } from '../../modules/linkedin/linkedin.services.js';
+import { PostJobData } from '../worker.types.js';
 
 export class linkedinHandler {
+  constructor(
+    private linkedinServices: linkedinServices,
+    private logger: Logger,
+  ) {}
 
-    constructor(private linkedinServices:linkedinServices, private logger:Logger){}
-
-     async handle(jobData: PostJobData): Promise<any> {
+  async handle(jobData: PostJobData): Promise<any> {
     const { postId, userId, content, mediaUrl } = jobData;
 
     try {
       // Get account
       const isAlreadyPosted = await this.linkedinServices.isAlreadyPosted(postId);
-      if(isAlreadyPosted){
-        this.logger.info('post is already posted on linkedin')
+      if (isAlreadyPosted) {
+        this.logger.info('post is already posted on linkedin');
         return;
       }
 
       const account = await this.linkedinServices.getUserAccount(userId);
       if (!account) {
         throw new Error('No active LinkedIn account found');
-        
       }
 
-      const postDbRecord = await this.linkedinServices.createEmptyLinkedinPostDbRecord(userId, postId, account.id);
+      const postDbRecord = await this.linkedinServices.createEmptyLinkedinPostDbRecord(
+        userId,
+        postId,
+        account.id,
+      );
 
-       if (!postDbRecord) {
+      if (!postDbRecord) {
         throw new Error('Failed to create db record');
-        
       }
 
       // Validate token
@@ -43,7 +47,7 @@ export class linkedinHandler {
         // Post with image
         const registerImageResponse = await this.linkedinServices.registerImageUpload(
           account.access_token,
-          account.platform_userid
+          account.platform_userid,
         );
 
         const imageObj = await this.linkedinServices.getImageBufferFromCloudinary(mediaUrl);
@@ -51,11 +55,11 @@ export class linkedinHandler {
         const upload = await this.linkedinServices.UploadImageBuffer(
           registerImageResponse.uploadUrl,
           imageObj.buffer,
-          account.access_token
+          account.access_token,
         );
 
         if (!upload.success) {
-            await this.linkedinServices.flagPostFailed(postDbRecord.id, 'Image Upload Failed');
+          await this.linkedinServices.flagPostFailed(postDbRecord.id, 'Image Upload Failed');
           throw new Error('Failed to upload image');
         }
 
@@ -63,30 +67,28 @@ export class linkedinHandler {
           registerImageResponse.asset,
           account.access_token,
           account.platform_userid,
-          content
+          content,
         );
       } else {
         // Text-only post
         publishPost = await this.linkedinServices.publishTextPost(
           account.platform_userid,
           content,
-          account.access_token
+          account.access_token,
         );
       }
 
       // Save to DB
-      const platformPost =  await this.linkedinServices.updateLinkedinPostSuccess(
+      const platformPost = await this.linkedinServices.updateLinkedinPostSuccess(
         postDbRecord.id,
-        publishPost.id
+        publishPost.id,
       );
-
-      
 
       this.logger.info(`post successfully published to LinkedIn ${postId}`);
       return { success: true, platformPostId: platformPost.id };
     } catch (error) {
-      this.logger.error(`post publishing failed with error: ${ error}`);
+      this.logger.error(`post publishing failed with error: ${error}`);
       throw error;
     }
   }
-};
+}

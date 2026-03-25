@@ -40,7 +40,7 @@
     "redis": "^5.10.0",
     "socket.io": "^4.8.1",
     "socketio": "^1.0.0",
-    "winston": "^3.18.3",
+    "winston": "^3.19.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {
@@ -68,6 +68,7 @@
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
+    "tsc": "^2.0.4",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.0",

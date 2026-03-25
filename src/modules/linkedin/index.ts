@@ -7,7 +7,7 @@ import { LinkedinController } from './linkedin.controller.js';
 import { createLinkedInRoutes } from './linkedin.router.js';
 import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
 import dotenv from 'dotenv';
-dotenv.config()
+dotenv.config();
 
 export const LinkedinService = new linkedinServices(prisma, logger, axios, {
   clientID: process.env.LINKEDIN_CLIENT_ID!,
@@ -17,7 +17,7 @@ export const LinkedinService = new linkedinServices(prisma, logger, axios, {
 
 export const postServices = new PostServices(prisma, logger);
 
-export const jwtService = new jwtToken()
+export const jwtService = new jwtToken();
 
 export const linkedinController = new LinkedinController(LinkedinService, logger);
 

@@ -1,47 +1,40 @@
 import { RequestHandler, Request, Response } from 'express';
 import { asyncHandler } from '../../utils/asyncHandler.js';
-import { CreateLinkedinPostSchema, LinkedInCallbackSchema } from './linkedin.dto.js';
+import { LinkedInCallbackSchema } from './linkedin.dto.js';
 import { Logger } from 'winston';
-import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
 import { linkedinServices } from './linkedin.services.js';
 import { ApiError } from '../../utils/apiError.js';
-import { PostServices } from './post.services.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
-import crypto from 'crypto'
-import { PrismaClient } from '../../generated/prisma/client.js';
+import crypto from 'crypto';
 
 export class LinkedinController {
   constructor(
     private linkedinService: linkedinServices,
     private logger: Logger,
-  
   ) {}
 
-  startAuth : RequestHandler = asyncHandler(async (req:Request, res:Response) => {
+  startAuth: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+      this.logger.error('unAuthorized Request');
+      throw new ApiError(401, 'UnAuthorized');
+    }
 
-    if(!req.user){
-      this.logger.error("unAuthorized Request");
-      throw new ApiError(401, "UnAuthorized");
-    };
-
-    const userid = req.user.id
     const state = crypto.randomBytes(32).toString('hex');
 
-    const session = await this.linkedinService.createOAuthSession(req.user.id, state );
+    await this.linkedinService.createOAuthSession(req.user.id, state);
     const url = this.linkedinService.generateAuthUrl(state);
 
-    res.status(200).json(new ApiResponse(200, url, 'Session Started'))
+    res.status(200).json(new ApiResponse(200, url, 'Session Started'));
   });
 
   handleLinkedinAuthCallback: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     const { code, state, error, error_description } = LinkedInCallbackSchema.parse(req.query);
 
-    this.logger.info("code", {code:code})
+    this.logger.info('code', { code: code });
     if (error) {
-     return  res.redirect(
+      return res.redirect(
         `${process.env.FRONTEND_URI}/error?error=${error_description || 'Authentication_Failed'}`,
       );
-     
     }
 
     const session = await this.linkedinService.getOAuthSession(state);
@@ -58,12 +51,11 @@ export class LinkedinController {
       accessTokenServiceResponse,
       userid,
     );
-       await this.linkedinService.markSessionAsUsed(session.id);
+    await this.linkedinService.markSessionAsUsed(session.id);
 
     this.logger.info('user linkedin connection success', {
       email: userInfoResponse.email,
     });
     res.status(200).redirect(`${process.env.FRONTEND_URI}/dashboard`);
   });
-
 }

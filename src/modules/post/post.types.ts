@@ -1,4 +1,1 @@
-
-
-export type QUERY_TYPE='ALL'| 'FAILED' | 'SCHEDULED'|'UPLOADED'|'CREATED'| 'DRAFT'
-
+export type QUERY_TYPE = 'ALL' | 'FAILED' | 'SCHEDULED' | 'UPLOADED' | 'CREATED' | 'DRAFT';

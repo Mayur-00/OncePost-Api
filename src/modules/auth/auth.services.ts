@@ -78,7 +78,7 @@ export class UserServices {
                 select: {
                   plan_tier: true,
                   maxPostsPerMonth: true,
-                  price:true,
+                  price: true,
                 },
               },
             },
@@ -92,7 +92,10 @@ export class UserServices {
           },
         },
       });
-      this.logger.info('User fetched with connected accounts', { userId: id, connectedAccounts: user?._count.connected_accounts });
+      this.logger.info('User fetched with connected accounts', {
+        userId: id,
+        connectedAccounts: user?._count.connected_accounts,
+      });
       return user;
     } catch (error) {
       this.logger.error('an error occored while fetching user', {
@@ -143,7 +146,11 @@ export class UserServices {
           refresh_token: refreshToken,
         },
       });
-      this.logger.info('User created successfully', { userId: user.id, email: user.email, provider: provider });
+      this.logger.info('User created successfully', {
+        userId: user.id,
+        email: user.email,
+        provider: provider,
+      });
       return user;
     } catch (error) {
       this.logger.error('an error occured during user creation', {
@@ -170,7 +177,11 @@ export class UserServices {
           refresh_token: refreshToken,
         },
       });
-      this.logger.info('User updated successfully', { userId: user.id, email: user.email, provider: provider });
+      this.logger.info('User updated successfully', {
+        userId: user.id,
+        email: user.email,
+        provider: provider,
+      });
       return user;
     } catch (error) {
       this.logger.error('an error occured during user creation', {
@@ -219,12 +230,15 @@ export class UserServices {
   }
   async verifyRefreshToken(refreshToken: string) {
     try {
-      const payload = (await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!)) as myJwtPayload;
+      const payload = (await jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET!,
+      )) as myJwtPayload;
       this.logger.info('Refresh token verified successfully', { userId: payload.sub });
       return payload;
     } catch (error) {
       this.logger.error("token didn't verify", { error: error });
-      throw new ApiError(401, 'token expired or invalid');
+      throw new ApiError(401, 'token expired or invalid', [], "INCORRECT_PASSWORD");
     }
   }
   async verifyPassword(new_password: string, user_password: string): Promise<boolean> {
@@ -233,8 +247,8 @@ export class UserServices {
       this.logger.info('Password verification completed', { isMatched: isMatched });
       return isMatched;
     } catch (error) {
-      this.logger.error("token didn't verify", { error: error });
-      throw new ApiError(401, 'token expired or invalid');
+      this.logger.error("failed to verify password", { error: error });
+      throw new ApiError(400, 'Incorrect Password');
     }
   }
   async DeleteAccount(userId: string) {
@@ -290,7 +304,6 @@ export class UserServices {
       const plan = await this.prisma.subscriptionPlan.findFirst({
         where: {
           plan_tier: 'FREE',
-          
         },
       });
 
@@ -309,7 +322,10 @@ export class UserServices {
           status: 'ACTIVE',
         },
       });
-      this.logger.info('Free plan activated for user', { userId: user_id, subscriptionId: subscriptions.id });
+      this.logger.info('Free plan activated for user', {
+        userId: user_id,
+        subscriptionId: subscriptions.id,
+      });
       return subscriptions;
     } catch (error) {
       this.logger.error(`couldn't activate free plan, ${error}`);
@@ -318,15 +334,15 @@ export class UserServices {
     }
   }
 
-  async setOnboardedTrue(user_id:string) {
+  async setOnboardedTrue(user_id: string) {
     try {
       const updated = await this.prisma.user.update({
-        where:{
-          id:user_id
+        where: {
+          id: user_id,
         },
-        data:{
-          isOnboarded:true
-        }
+        data: {
+          isOnboarded: true,
+        },
       });
       this.logger.info('User onboarding completed', { userId: user_id });
       return updated;

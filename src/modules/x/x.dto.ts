@@ -1,7 +1,5 @@
-import { platform } from "os";
-import z from "zod";
-import { PlatfromPostStatus } from "../../generated/prisma/enums.js";
-
+import z from 'zod';
+import { PlatfromPostStatus } from '../../generated/prisma/enums.js';
 
 export const XCallbackSchema = z.object({
   code: z.string().min(1, 'Authorization code required'),
@@ -13,7 +11,7 @@ export const XCallbackSchema = z.object({
 export type XCallbackSchemaDto = z.infer<typeof XCallbackSchema>;
 
 export const XPublishPostSchema = z.object({
-  post_id:z.string().min(1).max(280),
+  post_id: z.string().min(1).max(280),
 });
 
 export type XPublishPostDto = z.infer<typeof XPublishPostSchema>;
@@ -25,13 +23,12 @@ export interface TweetResponse {
     author_id: string;
     created_at: string;
   };
-};
+}
 
 export interface TweetDbRecord {
-  ownerId:string;
-  postId:string;
-  accountId:string
-  status:PlatfromPostStatus
-  tweetId?:string
-  
+  ownerId: string;
+  postId: string;
+  accountId: string;
+  status: PlatfromPostStatus;
+  tweetId?: string;
 }
