@@ -8,6 +8,7 @@ import { authRoutes } from './modules/auth/index.js';
 import { XRoutes } from './modules/x/index.js';
 import { postRoutes } from './modules/post/index.js';
 import { subscriptionRoutes } from './modules/subscription/index.js';
+import { limiter } from './config/limiter.config.js';
 dotenv.config();
 export const app = express();
 
@@ -22,6 +23,9 @@ app.use(express.json({ limit: '5mb' }));
 
 app.use(express.urlencoded({ limit: '16kb', extended: true }));
 
+app.use('/api/', limiter);
+
+
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
@@ -35,4 +39,5 @@ app.use('/api/v1/linkedin', linkedinRoutes);
 app.use('/api/v1/x', XRoutes);
 app.use('/api/v1/post', postRoutes);
 app.use('/api/v1/subscription', subscriptionRoutes);
+
 app.use(handleError);
