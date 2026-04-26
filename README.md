@@ -21,7 +21,6 @@ A powerful Node.js/TypeScript API that enables users to manage and cross-post co
 - **Authentication**: JWT, Google OAuth, OAuth 1.0a
 - **Cache & Queue**: Redis, BullMQ
 - **Media**: Cloudinary
-- **Real-Time**: Socket.IO
 - **Validation**: Zod
 - **Logging**: Winston
 
@@ -67,8 +66,8 @@ src/
 
 1. **Clone the repository**
 ```bash
-git clone <repository-url>
-cd crosspost-api
+git clone https://github.com/Mayur-00/OncePost-Api.git
+cd OncePost-Api
 ```
 
 2. **Install dependencies**
