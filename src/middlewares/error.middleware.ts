@@ -10,16 +10,24 @@ export const handleError = (err: any, req: Request, res: Response, next: NextFun
   const IsInDevelopment = process.env.NODE_ENV === 'development';
 
   if (!(error instanceof ApiError)) {
+
     if (error instanceof ZodError) {
+
       const statusCode = 400;
+
       const message =
         error && (error as ZodError).message
           ? (error as ZodError).issues[0].message
           : 'Validation error';
+
       const errors = (error as ZodError).issues || [];
+
       error = new ApiError(statusCode, message, errors, 'INPUT_VALIDATION_ERROR', error.stack);
+
       logger.error(`Input Validation Error : ${error}`);
+
     } else {
+      
       const statusCode = error && error.statusCode ? error.statusCode : 500;
       const message = error && error.message ? error.message : 'Something Went Wrong';
       const error_code = 'SERVER_ERROR';

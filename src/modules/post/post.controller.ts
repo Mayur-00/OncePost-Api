@@ -8,6 +8,7 @@ import {
   getSearchPostsSchema,
   multerFileSchema,
   publishPostToMultiplePlatfromsSchemaQueued,
+  schedulePostSchema,
 } from './post.dto.js';
 import { PostService } from './post.services.js';
 import { uploadImageToCloudinary } from '../../utils/imageUploader.js';
@@ -49,7 +50,7 @@ export class PostController {
   });
 
   getPost: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
-    const { post_id } = getPostSchema.parse(req.body);
+    const { post_id } = getPostSchema.parse(req.query);
     if (!req.user) {
       throw new ApiError(400, 'Unauthorized');
     }
@@ -65,6 +66,7 @@ export class PostController {
 
     res.status(200).json(new ApiResponse(201, post, 'success'));
   });
+
   getAllPosts: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     if (!req.user) {
       throw new ApiError(401, 'Unauthorized');
@@ -77,6 +79,7 @@ export class PostController {
 
     res.status(200).json(new ApiResponse(200, posts, 'success'));
   });
+
   getSearchedPosts: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     if (!req.user) {
       throw new ApiError(401, 'Unauthorized');
@@ -90,6 +93,7 @@ export class PostController {
 
     res.status(200).json(new ApiResponse(200, posts, 'success'));
   });
+
   publishPostMultiplePlatformsQueued: RequestHandler = asyncHandler(
     async (req: Request, res: Response) => {
       const { content, platforms, imageLink, imageMimeType, scheduledDateAndTime } =
@@ -159,14 +163,72 @@ export class PostController {
           userid: req.user.id,
         };
 
-        await this.prismaClient.$transaction(async () => {
+
           postQueue.add('post', data, { jobId: post.id });
           await this.postServices.LogUsage(userid);
-        });
 
         this.logger.info('Post Queued to platforms');
         res.status(200).json(new ApiResponse(203, 'post queued successFully'));
       }
     },
   );
+
+  getScheduledPosts: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(401, 'Unauthorized');
+    }
+
+    const posts = await this.postServices.getAllScheduledPosts(req.user.id);
+
+    res.status(200).json(new ApiResponse(200, posts, 'success'));
+  });
+
+  schedule: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
+    const { content, platforms, imageLink, imageMimeType, scheduledDateAndTime } =
+      schedulePostSchema.parse(req.body);
+
+    const user = req.user;
+
+    if (!user) {
+      throw new ApiError(401, 'Unauthorized');
+    }
+
+    const isServiceAvailable = await this.postServices.isServiceAvailable(user.id);
+
+    if (!isServiceAvailable) {
+      this.logger.error(`service no longer availble `);
+      throw new ApiError(403, 'Posing Limit Exceeded', [], 'USAGE_EXCEEDED');
+    }
+
+    const post = await this.postServices.createPost(
+      content,
+      imageLink || '',
+      user.id,
+      imageMimeType || '',
+      'SCHEDULED',
+      platforms,
+      scheduledDateAndTime,
+    );
+
+    const now = new Date();
+    const delay = scheduledDateAndTime.getTime() - now.getTime();
+
+    if (delay < 0) {
+      throw new ApiError(401, 'Scheduled time must be in the future');
+    }
+
+    const data: jobBody = {
+      platfroms: platforms,
+      postId: post.id,
+      userid: user.id,
+    };
+
+    postQueue.add('post', data, { jobId: post.id });
+    await this.postServices.LogUsage(user.id);
+
+    this.logger.info('Post Queued to platforms');
+    res.status(200).json(new ApiResponse(203, 'post queued successFully'));
+  });
+
+  
 }

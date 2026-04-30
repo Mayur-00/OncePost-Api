@@ -14,6 +14,8 @@ export function createPostRoutes(controller: PostController): Router {
   router.get('/all', authorize, controller.getAllPosts);
   // get posts by query endpoing  with pagination, limit, and type
   router.get('/query', authorize, controller.getSearchedPosts);
+  router.get('/schedule', authorize, controller.getScheduledPosts);
+  router.post('/schedule', authorize, controller.schedule);
 
   return router;
 }

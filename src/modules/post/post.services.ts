@@ -1,5 +1,5 @@
 import { Logger } from 'winston';
-import { PostStatus, PrismaClient, SocialPlatforms } from '../../generated/prisma/client.js';
+import { Post, PostStatus, PrismaClient, SocialPlatforms } from '../../generated/prisma/client.js';
 import { ApiError } from '../../utils/apiError.js';
 import { QUERY_TYPE } from './post.types.js';
 
@@ -127,6 +127,34 @@ export class PostService {
         skip: skip,
       });
       return posts;
+    } catch (error) {
+      this.logger.error("Couldn't get The Posts ", { error: error });
+      throw new ApiError(500, 'Internal Server Error');
+    }
+  };
+
+
+ /**
+  * 
+  * @param user_id 
+  * @returns Scheduled Posts Array
+  */
+
+  async getAllScheduledPosts(user_id: string) {
+    try {
+      return await this.prisma.post.findMany({
+        where: {
+          owner_id: user_id,
+          status: 'SCHEDULED',
+        },
+        select:{
+          id:true,
+          content:true,
+          mediaUrl:true,
+          scheduledAt:true,
+
+        }
+      });
     } catch (error) {
       this.logger.error("Couldn't get The Posts ", { error: error });
       throw new ApiError(500, 'Internal Server Error');

@@ -26,7 +26,9 @@ export const postWorker = new Worker<jobBody>(
       }
 
       for (const platform of platfroms) {
+
         switch (platform) {
+          
           case 'LINKEDIN': {
             const lnkHandler = new linkedinHandler(LinkedinService, logger);
             const linkedinJobData: PostJobData = {
