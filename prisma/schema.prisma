@@ -1,302 +1,291 @@
-  // This is your Prisma schema file,
-  // learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-  // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-  // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-  generator client {
-    provider = "prisma-client"
-    output   = "../src/generated/prisma"
-  }
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
 
-  datasource db {
-    provider = "postgresql"
-    url = env("DIRECT_DATABASE_URL")
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // Use pooled URI (Port 6543)
+  directUrl = env("DIRECT_DATABASE_URL")
+}
 
-  }
+enum AuthProviderType {
+  GOOGLE
+  CREDENTIAL
+}
 
+enum SocialPlatforms {
+  LINKEDIN
+  X
+  NONE
+}
 
-  enum AuthProviderType {
-    GOOGLE
-    CREDENTIAL
-  }
+enum PostStatus {
+  CREATED
+  SCHEDULED
+  UPLOADED
+  PUBLISHED
+  PENDING
+  DARFT
+  FAILED
+}
 
-  enum SocialPlatforms {
-    LINKEDIN
-    X
-    NONE
-  }
+enum Provieder {
+  X
+  LINKEDIN
+}
 
-  enum PostStatus {
-    CREATED
-    SCHEDULED
-    UPLOADED
-    PUBLISHED
-    PENDING
-    DARFT 
-    FAILED
-  }
-  enum Provieder {
-    X
-    LINKEDIN
-  }
-  enum PlatfromPostStatus {
-    PENDING
-    POSTED
-    FAILED
-  }
-  enum JobType {
-    PUBLISH_POST
-    SCHEDULE_POST
-  }
+enum PlatfromPostStatus {
+  PENDING
+  POSTED
+  FAILED
+}
 
-  enum JobStatus {
-    COMPLETED
-    FAILED
-  }
+enum JobType {
+  PUBLISH_POST
+  SCHEDULE_POST
+}
 
-  enum PlanTier {
-    FREE
-    BASIC 
-    PRO
-  }
+enum JobStatus {
+  COMPLETED
+  FAILED
+}
 
-  model User {
-    id  String @id @default(cuid()) @unique
-    name String
-    email String @unique
-    password String?
-    provider_id String?
-    provider AuthProviderType
-    profile_picture String?
-    refresh_token String?
-    isOnboarded Boolean @default(false)
-    createdAt DateTime @default(now())
-    updatedAt DateTime  @updatedAt()
+enum PlanTier {
+  FREE
+  BASIC
+  PRO
+}
 
-    // Relations
+model User {
+  id              String           @id @unique @default(cuid())
+  name            String
+  email           String           @unique
+  password        String?
+  provider_id     String?
+  provider        AuthProviderType
+  profile_picture String?
+  refresh_token   String?
+  isOnboarded     Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt()
 
-    connected_accounts SocialAccount[]
-    posts Post[]
-    platform_post PlatformPost[]
-    Auth_sessions OAuthSession[]
-    user_job job[]
-    subscriptions Subscription[]
-    transactions Transaction[]
-  }
+  // Relations
 
-  model SocialAccount {
-    id String @id @default(cuid())
-    owner_id String 
-    platform  SocialPlatforms
-    platform_userid String
-    username String?
-    display_name String?
-    profile_picture String?
-    access_token String
-    refresh_token String?
-    token_expiry DateTime
-    platformData Json? @default("{}")
-    isActive Boolean @default(true)
-    lastSync DateTime
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-    isExpired Boolean @default(false)
+  connected_accounts SocialAccount[]
+  posts              Post[]
+  platform_post      PlatformPost[]
+  Auth_sessions      OAuthSession[]
+  user_job           job[]
+  subscriptions      Subscription[]
+  transactions       Transaction[]
+}
 
-    // relation
-    owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
-    platform_post PlatformPost[]
-    post_analytics PostAnalytic[]
+model SocialAccount {
+  id              String          @id @default(cuid())
+  owner_id        String
+  platform        SocialPlatforms
+  platform_userid String
+  username        String?
+  display_name    String?
+  profile_picture String?
+  access_token    String
+  refresh_token   String?
+  token_expiry    DateTime
+  platformData    Json?           @default("{}")
+  isActive        Boolean         @default(true)
+  lastSync        DateTime
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt()
+  isExpired       Boolean         @default(false)
 
+  // relation
+  owner          User           @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  platform_post  PlatformPost[]
+  post_analytics PostAnalytic[]
 
-    @@index([owner_id])
-    @@index([platform])
-  }
+  @@index([owner_id])
+  @@index([platform])
+}
 
-  
+model Post {
+  id            String            @id @default(cuid())
+  owner_id      String
+  content       String?
+  mediaUrl      String?
+  mediaType     String?
+  status        PostStatus
+  scheduled_for SocialPlatforms[]
+  scheduledAt   DateTime?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt()
 
-  model Post {
-    id String @id @default(cuid())
-    owner_id String
-    content String?
-    mediaUrl String?
-    mediaType String?
-    status PostStatus
-    scheduled_for SocialPlatforms[]
-    scheduledAt DateTime?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  owner         User           @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  platform_post PlatformPost[]
+  related_job   job[]
 
-    owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
-    platform_post PlatformPost[]
-    related_job job[]
-      @@index([owner_id, status])
-  }
+  @@index([owner_id, status])
+}
 
-  model PlatformPost {
-    id String @id @default(cuid())
-    post_id String 
-    owner_id String 
-    account_id String
-    platform SocialPlatforms
-    platform_post_id String?
-    platform_post_url String?
-    error String?
-    status PlatfromPostStatus
-    postedAt DateTime?
-    failedAt DateTime?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+model PlatformPost {
+  id                String             @id @default(cuid())
+  post_id           String
+  owner_id          String
+  account_id        String
+  platform          SocialPlatforms
+  platform_post_id  String?
+  platform_post_url String?
+  error             String?
+  status            PlatfromPostStatus
+  postedAt          DateTime?
+  failedAt          DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt()
 
-    post Post @relation(fields:[post_id], references:[id], onDelete:Cascade)
-    owner User @relation(fields:[owner_id], references:[id], onDelete:Cascade)
-    socialAccount SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
-    analytics PostAnalytic[]
+  post          Post           @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  owner         User           @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  socialAccount SocialAccount  @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  analytics     PostAnalytic[]
 
-    @@index([post_id, platform])
-  }
+  @@index([post_id, platform])
+}
 
-  model OAuthSession {
+model OAuthSession {
+  id           String          @id @default(cuid())
+  ownerid      String
+  provider     SocialPlatforms
+  state        String          @unique
+  codeVerifier String? // PKCE code_verifier
+  used         Boolean         @default(false)
+  createdAt    DateTime        @default(now())
+  expiresAt    DateTime        @default(dbgenerated("NOW() + INTERVAL '10 MINUTES'"))
 
-    id            String   @id @default(cuid())
-    ownerid       String 
-    provider      SocialPlatforms
-    state         String   @unique
-    codeVerifier  String?   // PKCE code_verifier
-    used          Boolean  @default(false)
-    createdAt     DateTime @default(now())
-    expiresAt     DateTime @default(dbgenerated("NOW() + INTERVAL '10 MINUTES'"))
+  owner User @relation(fields: [ownerid], references: [id], onDelete: Cascade)
 
-    owner         User     @relation(fields: [ownerid], references: [id], onDelete: Cascade)
+  @@index([ownerid])
+  @@index([state])
+}
 
-    @@index([ownerid])
-    @@index([state])
-  }
+model PostAnalytic {
+  id               String          @id @default(cuid())
+  account_id       String
+  platform_post_id String
+  platform         SocialPlatforms
+  likes            Int
+  comments         Int
+  reach            Float
+  views            Int
+  members_added    Int
+  reshares         Int
+  timestamp        DateTime        @default(now())
 
-  model PostAnalytic {
-    id String @id @default(cuid())
-    account_id String
-    platform_post_id String
-    platform SocialPlatforms
-    likes Int
-    comments Int
-    reach Float
-    views Int
-    members_added Int
-    reshares Int
-    timestamp DateTime @default(now())
+  platform_post PlatformPost  @relation(fields: [platform_post_id], references: [id], onDelete: Cascade)
+  socialAccount SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
+}
 
-    platform_post PlatformPost @relation(fields: [platform_post_id], references: [id], onDelete: Cascade)
-    socialAccount SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
-  }
+model job {
+  id              String            @id @default(cuid())
+  owner_id        String
+  job_type        JobType
+  related_post_id String
+  platforms       SocialPlatforms[]
+  status          JobStatus
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt()
 
-  model job {
-    id String @id @default(cuid())
-    owner_id String 
-    job_type JobType
-    related_post_id String
-    platforms SocialPlatforms[]
-    status JobStatus
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  // relations 
 
-    // relations 
+  owner        User @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  related_post Post @relation(fields: [related_post_id], references: [id], onDelete: Cascade)
 
-    owner User @relation(fields: [owner_id], references: [id], onDelete: Cascade)
-    related_post Post @relation(fields: [related_post_id], references: [id], onDelete: Cascade)
+  @@index([owner_id, job_type, status])
+}
 
-    @@index([owner_id, job_type, status])
-  }
+model SubscriptionPlan {
+  id                String   @id @default(cuid())
+  plan_tier         PlanTier
+  price             Int // Price in INR
+  currency          String   @default("INR")
+  description       String
+  features          String[]
+  maxPostsPerMonth  Int
+  schedulingEnabled Boolean  @default(false)
+  prioritySupport   Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt()
 
-  model SubscriptionPlan {
-    id String @id @default(cuid())
-    plan_tier PlanTier 
-    price Int // Price in INR
-    currency String @default("INR")
-    description String
-    features String[] 
-    maxPostsPerMonth Int
-    schedulingEnabled Boolean @default(false)
-    prioritySupport Boolean @default(false)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  subscriptions Subscription[]
+}
 
-    subscriptions Subscription[]
-  }
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PENDING
+  EXPIRED
+  FAILED
+}
 
-   enum SubscriptionStatus {
-    ACTIVE
-    CANCELLED
-    PENDING
-    EXPIRED
-    FAILED
-  }
+model Subscription {
+  id                      String             @id @default(cuid())
+  user_id                 String
+  plan_id                 String
+  status                  SubscriptionStatus // active, cancelled, expired
+  start_date              DateTime
+  end_date                DateTime
+  cancelled_at            DateTime?
+  cancellation_reason     String?
+  post_creation_remaining Int
+  failure_reason          String?
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
 
-  model Subscription {
-    id String @id @default(cuid())
-    user_id String
-    plan_id String
-    status SubscriptionStatus // active, cancelled, expired
-    start_date DateTime
-    end_date DateTime
-    cancelled_at DateTime?
-    cancellation_reason String?
-    post_creation_remaining Int
-    failure_reason String?
+  user         User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  plan         SubscriptionPlan @relation(fields: [plan_id], references: [id])
+  transactions Transaction[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
+  @@index([user_id])
+  @@index([status])
+}
 
-    user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    plan SubscriptionPlan @relation(fields: [plan_id], references: [id])
-    transactions Transaction[]
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
 
-    @@index([user_id])
-    @@index([status])
-  }
+enum TransactionType {
+  SUBSCRIPTION_UPGRADE
+  SUBSCRIPTION_RENEWAL
+}
 
+model Transaction {
+  id                  String            @id @default(cuid())
+  user_id             String
+  subscription_id     String
+  razorpay_order_id   String            @unique
+  razorpay_payment_id String?
+  razorpay_signature  String?
+  amount              Int // Amount in INR
+  currency            String            @default("INR")
+  status              TransactionStatus @default(PENDING)
+  type                TransactionType
+  failure_reason      String?
+  webhook_processed   Boolean           @default(false)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt()
 
-    enum TransactionStatus {
-    PENDING
-    COMPLETED
-    FAILED
-    REFUNDED
-  }
+  user         User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  subscription Subscription @relation(fields: [subscription_id], references: [id], onDelete: Cascade)
 
-  enum TransactionType {
-    SUBSCRIPTION_UPGRADE
-    SUBSCRIPTION_RENEWAL
-  }
-
-  model Transaction {
-    id String @id @default(cuid())
-    user_id String
-    subscription_id String
-    razorpay_order_id String @unique
-    razorpay_payment_id String?
-    razorpay_signature String?
-    amount Int // Amount in INR
-    currency String @default("INR")
-    status TransactionStatus @default(PENDING)
-    type TransactionType
-    failure_reason String?
-    webhook_processed Boolean @default(false)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt()
-
-    user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    subscription Subscription @relation(fields: [subscription_id], references: [id], onDelete: Cascade)
-
-    @@index([user_id])
-    @@index([status])
-    @@index([razorpay_payment_id])
-  }
-
-
-
-  
-
-
-
-  
+  @@index([user_id])
+  @@index([status])
+  @@index([razorpay_payment_id])
+}
