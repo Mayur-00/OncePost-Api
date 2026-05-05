@@ -29,6 +29,14 @@ export class PostService {
           scheduled_for: scheduled_for || [],
           scheduledAt: scheduledAt,
         },
+
+        select:{
+          id:true,
+          mediaUrl:true,
+          content:true,
+          scheduled_for:true,
+          scheduledAt:true,
+        }
       });
       this.logger.info('Post Created', { postid: post.id });
 
@@ -152,6 +160,7 @@ export class PostService {
           content:true,
           mediaUrl:true,
           scheduledAt:true,
+          scheduled_for:true
 
         }
       });

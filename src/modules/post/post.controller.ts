@@ -200,6 +200,14 @@ export class PostController {
       throw new ApiError(403, 'Posing Limit Exceeded', [], 'USAGE_EXCEEDED');
     }
 
+    const now = new Date();
+    const delay = scheduledDateAndTime.getTime() - now.getTime();
+
+    if (delay < 0) {
+      throw new ApiError(401, 'Scheduled time must be in the future');
+    }
+
+
     const post = await this.postServices.createPost(
       content,
       imageLink || '',
@@ -210,13 +218,7 @@ export class PostController {
       scheduledDateAndTime,
     );
 
-    const now = new Date();
-    const delay = scheduledDateAndTime.getTime() - now.getTime();
-
-    if (delay < 0) {
-      throw new ApiError(401, 'Scheduled time must be in the future');
-    }
-
+  
     const data: jobBody = {
       platfroms: platforms,
       postId: post.id,
@@ -227,7 +229,7 @@ export class PostController {
     await this.postServices.LogUsage(user.id);
 
     this.logger.info('Post Queued to platforms');
-    res.status(200).json(new ApiResponse(203, 'post queued successFully'));
+    res.status(200).json(new ApiResponse(203, post  ,'post queued successFully'));
   });
 
   

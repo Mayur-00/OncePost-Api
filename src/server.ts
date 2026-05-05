@@ -3,7 +3,7 @@ import connectDb from './lib/db.js';
 
 connectDb()
   .then(() => {
-    app.listen(process.env.PORT, () => {
+    app.listen(Number(process.env.PORT),"0.0.0.0", () => {
       console.log(`✅ Server running on port ${process.env.PORT}`);
       console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     });

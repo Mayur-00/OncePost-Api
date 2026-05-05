@@ -28,6 +28,8 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package*.json .
 
+COPY start.sh .
+
 RUN npm ci --omit=dev
 
 
@@ -43,11 +45,15 @@ WORKDIR /app
 
 RUN addgroup --system --gid 1001 expressjs
 RUN adduser --system --uid 1001 expressjs 
+
+RUN chmod +x start.sh && chown expressjs:expressjs start.sh
+
 USER expressjs
 
 COPY --from=installer /app .
 
-CMD ["npm", "run", "docker-start"]
+
+CMD ["./start.sh"]
 
 
 
