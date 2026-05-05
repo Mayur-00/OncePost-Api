@@ -7,7 +7,7 @@ npx prisma migrate deploy
 
 echo "Starting OncePost Monolith..."
 
-node --max-old-space-size=256 dist/index.js &
+node --max-old-space-size=256 dist/server.js &
 
 # Start Worker (Foreground)
 echo "Starting Background Worker..."
