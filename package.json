@@ -14,9 +14,9 @@
     "lint:fix": "eslint \"{src,test}/**/*.ts\" --fix",
     "prisma:generate": " prisma generate",
     "migration:dev": " prisma migrate dev ",
-    "migrate": " prisma migrate deploy ",
+    "migrate": " prisma migrate deploy --ipv4",
     "seed": "tsx prisma/seed.ts"
-  },
+  },  
   "keywords": [],
   "author": "",
   "license": "ISC",
