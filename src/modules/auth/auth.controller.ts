@@ -14,6 +14,13 @@ import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
 import { ApiError } from '../../utils/apiError.js';
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: true, // Always true for Render/Vercel HTTPS
+  sameSite: 'none' as const,
+  path: '/',
+};
+
 export class AuthController {
   constructor(
     private logger: Logger,
@@ -32,12 +39,6 @@ export class AuthController {
 
     const user = await this.userServices.getUserByEmail(payload.email!);
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none' as const,
-    };
-
     if (user) {
       const { accessToken, refreshToken } = this.jwtToken.generateAccessTokenAndRefreshToken(
         user.id,
@@ -54,16 +55,16 @@ export class AuthController {
 
       return res
         .status(200)
-        .cookie('refreshToken', refreshToken, options) // set the refresh token in the cookie
-        .cookie('accessToken', accessToken, options) // set the refresh token in the cookie
+        .cookie('refreshToken', refreshToken, COOKIE_OPTIONS) // set the refresh token in the cookie
+        .cookie('accessToken', accessToken, COOKIE_OPTIONS) // set the refresh token in the cookie
         .json(
           new ApiResponse(
             200, // send access and refresh token in response if client decides to save them by themselves
             'User signin in successfully',
           ),
         );
-    }
-
+    } else {
+      
     const newUser = await this.userServices.createUser(
       payload.name!,
       payload.email!,
@@ -85,15 +86,17 @@ export class AuthController {
 
     return res
       .status(200)
-      .cookie('accessToken', accessToken, options) // set the access token in the cookie
-      .cookie('refreshToken', refreshToken, options) // set the refresh token in the cookie
+      .cookie('accessToken', accessToken, COOKIE_OPTIONS) // set the access token in the cookie
+      .cookie('refreshToken', refreshToken, COOKIE_OPTIONS) // set the refresh token in the cookie
       .json(
         new ApiResponse(
           200,
-          { user: updatedUser, accessToken, refreshToken }, // send access and refresh token in response if client decides to save them by themselves
+          { user: updatedUser}, // send access and refresh token in response if client decides to save them by themselves
           'User signin in successfully',
         ),
       );
+    }
+
   });
 
   handleRegister: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -119,17 +122,11 @@ export class AuthController {
 
     await this.userServices.activateFreePlan(updatedUser.id);
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none' as const,
-    };
-
 
     return res
       .status(201)
-      .cookie('accessToken', accessToken, options) // set the access token in the cookie
-      .cookie('refreshToken', refreshToken, options) // set the refresh token in the cookie
+      .cookie('accessToken', accessToken, COOKIE_OPTIONS) // set the access token in the cookie
+      .cookie('refreshToken', refreshToken, COOKIE_OPTIONS) // set the refresh token in the cookie
       .json(
         new ApiResponse(
           201, // send access and refresh token in response if client decides to save them by themselves
@@ -165,16 +162,10 @@ export class AuthController {
 
     const updatedUser = await this.userServices.updateUsersRefreshToken(user.id, refreshToken);
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none' as const,
-    };
-
     return res
       .status(200)
-      .cookie('accessToken', accessToken, options) // set the access token in the cookie
-      .cookie('refreshToken', refreshToken, options) // set the refresh token in the cookie
+      .cookie('accessToken', accessToken, COOKIE_OPTIONS) // set the access token in the cookie
+      .cookie('refreshToken', refreshToken, COOKIE_OPTIONS) // set the refresh token in the cookie
       .json(
         new ApiResponse(
           200, // send access and refresh token in response if client decides to save them by themselves
@@ -238,10 +229,6 @@ export class AuthController {
       throw new ApiError(400, 'invalid token');
     }
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
 
     const { accessToken, refreshToken } = this.jwtToken.generateAccessTokenAndRefreshToken(
       user.id,
@@ -257,8 +244,8 @@ export class AuthController {
 
     return res
       .status(200)
-      .cookie('accessToken', accessToken, options)
-      .cookie('refreshToken', refreshToken, options)
+      .cookie('accessToken', accessToken, COOKIE_OPTIONS)
+      .cookie('refreshToken', refreshToken, COOKIE_OPTIONS)
       .json(
         new ApiResponse(
           200,
@@ -349,16 +336,13 @@ export class AuthController {
       throw new ApiError(500, 'failed to toggle onboarding true');
     }
 
-    const options = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-    };
+    
 
     const obtoken = this.jwtToken.generateOnboardingToken(updatedUser.id, updatedUser.isOnboarded);
 
     return res
       .status(200)
-      .cookie('op-iob', obtoken, options)
+      .cookie('op-iob', obtoken, COOKIE_OPTIONS)
       .json(new ApiResponse(200, updatedUser, 'Success'));
   });
 }
