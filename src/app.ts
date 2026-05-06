@@ -23,6 +23,8 @@ app.use(express.json({ limit: '5mb' }));
 
 app.use(express.urlencoded({ limit: '16kb', extended: true }));
 
+app.set('trust proxy', 1);
+
 app.use('/api/', limiter);
 
 

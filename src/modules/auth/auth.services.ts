@@ -90,6 +90,7 @@ export class UserServices {
               connected_accounts: true,
             },
           },
+          
         },
       });
       this.logger.info('User fetched with connected accounts', {
@@ -164,7 +165,7 @@ export class UserServices {
     provider: string,
     providerid?: string,
     refreshToken?: string,
-  ): Promise<User> {
+  ) {
     try {
       const user = await this.prisma.user.update({
         where: {
@@ -176,12 +177,23 @@ export class UserServices {
           provider_id: providerid,
           refresh_token: refreshToken,
         },
+
+        select:{
+          email:true,
+          name:true,
+          profile_picture:true,
+          updatedAt:true,
+          isOnboarded:true,
+
+          
+
+        }
       });
       this.logger.info('User updated successfully', {
-        userId: user.id,
         email: user.email,
         provider: provider,
       });
+
       return user;
     } catch (error) {
       this.logger.error('an error occured during user creation', {
@@ -256,6 +268,15 @@ export class UserServices {
       const deleted = await this.prisma.user.delete({
         where: {
           id: userId,
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          profile_picture: true,
+          isOnboarded: true,
+          createdAt: true,
+          updatedAt: true,
         },
       });
       this.logger.info('User account deleted', { userId: userId, email: deleted.email });

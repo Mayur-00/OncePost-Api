@@ -34,7 +34,7 @@ export class AuthController {
 
     const options = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       sameSite: 'none' as const,
     };
 
@@ -58,8 +58,7 @@ export class AuthController {
         .cookie('accessToken', accessToken, options) // set the refresh token in the cookie
         .json(
           new ApiResponse(
-            200,
-            { user: updatedUser }, // send access and refresh token in response if client decides to save them by themselves
+            200, // send access and refresh token in response if client decides to save them by themselves
             'User signin in successfully',
           ),
         );
@@ -122,9 +121,10 @@ export class AuthController {
 
     const options = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       sameSite: 'none' as const,
     };
+
 
     return res
       .status(201)
@@ -132,8 +132,7 @@ export class AuthController {
       .cookie('refreshToken', refreshToken, options) // set the refresh token in the cookie
       .json(
         new ApiResponse(
-          201,
-          { user: updatedUser }, // send access and refresh token in response if client decides to save them by themselves
+          201, // send access and refresh token in response if client decides to save them by themselves
           'User registered successfully',
         ),
       );
@@ -168,7 +167,7 @@ export class AuthController {
 
     const options = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       sameSite: 'none' as const,
     };
 
@@ -178,8 +177,7 @@ export class AuthController {
       .cookie('refreshToken', refreshToken, options) // set the refresh token in the cookie
       .json(
         new ApiResponse(
-          200,
-          { user: updatedUser }, // send access and refresh token in response if client decides to save them by themselves
+          200, // send access and refresh token in response if client decides to save them by themselves
           'User signin in successfully',
         ),
       );
