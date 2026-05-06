@@ -18,7 +18,7 @@ const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: process.env.NODE_ENV ==="production", // Always true for Render/Vercel HTTPS
   sameSite: 'none' as const,
-  domain: process.env.DOMAIN, 
+  domain: ".oncepost.site", 
   path: '/',
 };
 
