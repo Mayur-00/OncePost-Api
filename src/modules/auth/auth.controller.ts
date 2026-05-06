@@ -35,7 +35,7 @@ export class AuthController {
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      samesite: 'none',
+      sameSite: 'none' as const,
     };
 
     if (user) {
@@ -123,7 +123,7 @@ export class AuthController {
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      samesite: 'none',
+      sameSite: 'none' as const,
     };
 
     return res
@@ -169,7 +169,7 @@ export class AuthController {
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      samesite: 'none',
+      sameSite: 'none' as const,
     };
 
     return res
