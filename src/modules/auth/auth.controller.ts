@@ -16,8 +16,9 @@ import { ApiError } from '../../utils/apiError.js';
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: true, // Always true for Render/Vercel HTTPS
+  secure: process.env.NODE_ENV ==="production", // Always true for Render/Vercel HTTPS
   sameSite: 'none' as const,
+  domain: process.env.DOMAIN, 
   path: '/',
 };
 
