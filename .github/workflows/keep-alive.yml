@@ -12,4 +12,4 @@ jobs:
     steps:
       - name: Ping Render API
         run: |
-          curl -I https://api.oncepost.site/api/v1/health
+          curl -I https://api.oncepost.site/health
