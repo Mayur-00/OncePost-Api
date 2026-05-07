@@ -64,7 +64,6 @@ export class UserServices {
               isExpired: true,
             },
           },
-
           subscriptions: {
             where: {
               status: 'ACTIVE',
@@ -115,9 +114,7 @@ export class UserServices {
       this.logger.info('User fetched by email', { email: email, found: !!user });
       return user;
     } catch (error) {
-      this.logger.error('an error occored while fetching user', {
-        error: error,
-      });
+      this.logger.error(`an error occored while fetching user, Error : ${error}`);
       throw new ApiError(500, 'internal server error');
     }
   }

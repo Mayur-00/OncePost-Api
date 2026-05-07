@@ -70,6 +70,6 @@ export class XController {
 
     this.logger.info('connection successfull', { username: xUserInfo.data.data.username });
 
-    res.redirect(`${process.env.FRONTEND_URI}/dashboard`);
+    res.redirect(`${process.env.FRONTEND_URI}/boarding-gateway`);
   });
 }

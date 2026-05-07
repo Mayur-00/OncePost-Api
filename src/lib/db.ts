@@ -9,6 +9,8 @@ const connectDb = async () => {
     logger.error(`Failed to Connect Database, Error : ${error}`);
     process.exit(1);
   }
+
+      
 };
 
 export default connectDb;

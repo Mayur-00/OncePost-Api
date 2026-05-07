@@ -17,7 +17,7 @@ export class jwtToken {
       },
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: '7d',
+        expiresIn: '1d',
       },
     );
     const refreshToken = jwt.sign({ id: id }, process.env.REFRESH_TOKEN_SECRET, {

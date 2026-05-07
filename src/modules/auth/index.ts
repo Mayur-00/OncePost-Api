@@ -5,6 +5,7 @@ import { googleAuthClient } from '../../config/googleOAuth.config.js';
 import { AuthController } from './auth.controller.js';
 import { createAuthRoutes } from './auth.routes.js';
 import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
+import { generateCookieOptions } from '../../lib/cookies.js';
 
 export const userServices = new UserServices(
   prisma,
@@ -15,7 +16,7 @@ export const userServices = new UserServices(
 
 export const jwtService = new jwtToken();
 
-export const authController = new AuthController(logger, userServices, jwtService);
+export const authController = new AuthController(logger, userServices, jwtService, generateCookieOptions);
 
 export const authRoutes = createAuthRoutes(authController);
 
