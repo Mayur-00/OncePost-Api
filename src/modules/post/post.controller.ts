@@ -18,6 +18,7 @@ import { ApiError } from '../../utils/apiError.js';
 import { postQueue } from '../../queues/queues.js';
 import { jobBody } from '../../workers/worker.types.js';
 import { PrismaClient } from '../../generated/prisma/client.js';
+import { delay } from 'bullmq';
 
 export class PostController {
   constructor(
@@ -225,7 +226,7 @@ export class PostController {
       userid: user.id,
     };
 
-    postQueue.add('post', data, { jobId: post.id });
+    postQueue.add('post', data, { delay:delay, jobId: post.id });
     await this.postServices.LogUsage(user.id);
 
     this.logger.info('Post Queued to platforms');
