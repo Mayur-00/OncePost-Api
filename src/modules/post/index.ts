@@ -3,10 +3,11 @@ import prisma from '../../config/prisma.js';
 import logger from '../../config/logger.config.js';
 import { PostController } from './post.controller.js';
 import { createPostRoutes } from './post.routes.js';
+import { LinkedinService } from '../linkedin/index.js';
 
 export const postServices = new PostService(prisma, logger);
 
-export const postController = new PostController(logger, postServices, prisma);
+export const postController = new PostController(logger, postServices, prisma, LinkedinService);
 
 export const postRoutes = createPostRoutes(postController);
 

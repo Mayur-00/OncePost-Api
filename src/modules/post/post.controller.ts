@@ -19,12 +19,14 @@ import { postQueue } from '../../queues/queues.js';
 import { jobBody } from '../../workers/worker.types.js';
 import { PrismaClient } from '../../generated/prisma/client.js';
 import { delay } from 'bullmq';
+import { linkedinServices } from '../linkedin/linkedin.services.js';
 
 export class PostController {
   constructor(
     private logger: Logger,
     private postServices: PostService,
     private prismaClient: PrismaClient,
+    private linkedinServices: linkedinServices,
   ) {}
 
   createPost: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -164,9 +166,8 @@ export class PostController {
           userid: req.user.id,
         };
 
-
-          postQueue.add('post', data, { jobId: post.id });
-          await this.postServices.LogUsage(userid);
+        postQueue.add('post', data, { jobId: post.id });
+        await this.postServices.LogUsage(userid);
 
         this.logger.info('Post Queued to platforms');
         res.status(200).json(new ApiResponse(203, 'post queued successFully'));
@@ -208,6 +209,19 @@ export class PostController {
       throw new ApiError(401, 'Scheduled time must be in the future');
     }
 
+    // check if the linkedin account is expired or not , unlike x it can't handle automatically
+    if (platforms.includes('LINKEDIN')) {
+      const account = await this.linkedinServices.getUserAccount(user.id);
+      if (!account) {
+        throw new ApiError(404, 'No active LinkedIn account found');
+      }
+
+      const result = await this.linkedinServices.validateAccessToken(account);
+
+      if (!result.success) {
+        throw new ApiError(400, 'Linkedin account expired please reconnect');
+      }
+    }
 
     const post = await this.postServices.createPost(
       content,
@@ -219,19 +233,16 @@ export class PostController {
       scheduledDateAndTime,
     );
 
-  
     const data: jobBody = {
       platfroms: platforms,
       postId: post.id,
       userid: user.id,
     };
 
-    postQueue.add('post', data, { delay:delay, jobId: post.id });
+    postQueue.add('post', data, { delay: delay, jobId: post.id });
     await this.postServices.LogUsage(user.id);
 
     this.logger.info('Post Queued to platforms');
-    res.status(200).json(new ApiResponse(203, post  ,'post queued successFully'));
+    res.status(200).json(new ApiResponse(203, post, 'post queued successFully'));
   });
-
-  
 }
