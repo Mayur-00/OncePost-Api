@@ -55,7 +55,7 @@ src/
 
 ### Prerequisites
 
-- Node.js 18+
+- Docker
 - PostgreSQL
 - Redis
 - Cloudinary account
@@ -70,17 +70,12 @@ git clone https://github.com/Mayur-00/OncePost-Api.git
 cd OncePost-Api
 ```
 
-2. **Install dependencies**
-```bash
-npm install
-```
-
-3. **Set up environment variables**
+2. **Set up environment variables**
 
 Create a `.env` file in the root directory:
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/crosspost
-REDIS_URL=redis://localhost:6379
+DATABASE_URL=postgresql:your_DB_pooler_url
+DIRECT_DATABASE_URL=direct_DB_url
 JWT_SECRET=your_jwt_secret
 JWT_REFRESH_SECRET=your_refresh_secret
 GOOGLE_CLIENT_ID=your_google_client_id
@@ -94,17 +89,23 @@ X_API_KEY=your_x_api_key
 X_API_SECRET=your_x_api_secret
 X_ACCESS_TOKEN=your_x_access_token
 X_ACCESS_TOKEN_SECRET=your_x_access_token_secret
+REDIS_HOST=your_redis_host_uri
+REDIS_PORT=redis_server_port
+REDIS_PASSWORD=redis_password
+REDIS_URL=redis_DB_uri
 PORT=5000
+NODE_ENV:develement
+DOMAIN:domain_name
+CORS_ORIGIN:your_frontend_client_link
+FRONTEND_URI:your_frontend_client_link
+RAZORPAY_KEY_ID=your_razorpay_key
+RAZORPAY_KEY_SECRET=your_razorpay_secret
+
 ```
 
-4. **Set up the database**
+3. **Build and Start Container**
 ```bash
-npx prisma migrate dev
-```
-
-5. **Start the server**
-```bash
-npm run dev
+docker compose up -D        
 ```
 
 The API will be available at `http://localhost:5000`
@@ -125,26 +126,27 @@ The API will be available at `http://localhost:5000`
 
 ### Authentication (`/api/v1/auth`)
 
+- `POST /google` - Login with Google OAuth
 - `POST /register` - Register a new user
 - `POST /login` - Login with email and password
-- `POST /google` - Login with Google OAuth
 - `POST /refresh-access` - Refresh JWT token
 - `GET /user` - Get current user profile (requires auth)
 - `GET /logout` - Logout user (requires auth)
 - `GET /delete` - Request account deletion (requires auth)
 
-### Posts (`/api/v1/post`)
+### Posts (`/api/v1/post`) (requires auth)
 
-- `POST /publish-post` - Queue post for publishing to multiple platforms (requires auth, file upload)
-- `GET /all` - Get all posts including all platfrom posts (requires auth)
+- `POST /publish-post` - Queue post for publishing to multiple platforms 
+- `POST /schedule` - schedule post for publishing later on multiple platforms 
+- `GET /all` - Get all posts including all platfrom posts 
 - `GET /Query` - Get all posts with user's searched query
 
-### LinkedIn (`/api/v1/linkedin`)
+### LinkedIn (`/api/v1/linkedin`) (requires auth)
 
 - `GET /auth` - Initiate LinkedIn OAuth flow (requires auth)
 - `GET /callback` - LinkedIn OAuth callback
 
-### X/Twitter (`/api/v1/x`)
+### X/Twitter (`/api/v1/x`) (requires auth)
 
 - `GET /callback` - X/Twitter OAuth callback
 - `POST /auth` - Initiate X/Twitter OAuth flow (requires auth)
