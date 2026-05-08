@@ -15,12 +15,10 @@ const levels = {
 const level = () => {
   const env = process.env.NODE_ENV || 'development';
   const isDevelopment = env === 'development';
-  return isDevelopment ? 'debug' : 'warn';
+  return isDevelopment ? 'debug' : 'info';
 };
 
-// Define different colors for each level.
-// Colors make the log message more visible,
-// adding the ability to focus or ignore messages.
+
 const colors = {
   error: 'red',
   warn: 'yellow',
@@ -43,10 +41,9 @@ const format = winston.format.combine(
   winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`),
 );
 
-// Define which transports the logger must use to print out messages.
-// In this example, we are using three different transports
+
 const transports = [
-  // Allow the use the console to print the messages
+
   new winston.transports.Console(),
 ];
 

@@ -7,7 +7,7 @@ export const generateCookieOptions = (name: TokenName): CookieOptions => {
       return {
          httpOnly: true,
         secure: isProd, // Always true for Render/Vercel HTTPS
-        sameSite:isProd? 'none' : "lax" as const,
+        sameSite:isProd?'none' : "lax" as const,
         domain: process.env.DOMAIN,
         path: '/',
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),

@@ -51,8 +51,8 @@ export class AuthController {
 
       return res
         .status(200)
-        .cookie('refreshToken', refreshToken, this.cookieOptions('access')) // set the refresh token in the cookie
-        .cookie('accessToken', accessToken, this.cookieOptions('refresh')) // set the refresh token in the cookie
+        .cookie('accessToken', accessToken, this.cookieOptions('access')) 
+        .cookie('refreshToken', refreshToken, this.cookieOptions('refresh')) 
         .json(
           new ApiResponse(
             200,
@@ -162,8 +162,6 @@ export class AuthController {
 
     const accessTokenOptions = this.cookieOptions('access');
     const refreshTokenOption = this.cookieOptions('refresh');
-
-    this.logger.info(` the token options : ${accessTokenOptions.domain}`)
 
     return res
       .status(200)
