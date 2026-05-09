@@ -225,6 +225,7 @@ export class AuthController {
       this.logger.error('user not found ', { id: decoded.id });
       throw new ApiError(500, 'internal server error');
     }
+    this.logger.info(`Incoming refresh Token ${incomingRefreshToken} ; saved refresh token : ${user.refresh_token}`)
 
     if (incomingRefreshToken !== user.refresh_token) {
       this.logger.error('refresh token comparison failed');
