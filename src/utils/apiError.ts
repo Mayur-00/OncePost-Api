@@ -3,15 +3,15 @@ class ApiError extends Error implements IApiError {
   message: string;
   data: any | null;
   success: boolean;
-  errors: any[];
   error_code?: string;
+  errors: any[];
   stack?: string | undefined;
 
   constructor(
     statusCode: number,
     message = 'Something Went wrong',
-    error: any[] = [],
     error_code = 'IMPLEMENTATION_ERROR',
+    error: any[] = [],
     stack = '',
   ) {
     super(message);

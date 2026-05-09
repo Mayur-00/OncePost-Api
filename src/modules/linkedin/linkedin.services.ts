@@ -415,7 +415,7 @@ export class linkedinServices {
     }
   }
 
-  async getUserAccount(userid: string): Promise<SocialAccount> {
+  async   getUserAccount(userid: string): Promise<SocialAccount> {
     try {
       const user = await this.prisma.socialAccount.findFirst({
         where: {
@@ -427,14 +427,14 @@ export class linkedinServices {
       });
       if (!user) {
         this.logger.error('LinkedIn account not found', { userId: userid });
-        throw new ApiError(404, 'account not found , please reconnect to linkedin ');
+        throw new ApiError(404, 'account not found , please reconnect to linkedin ', "LINKEDIN_ACCOUNT_EXPIRED");
       }
 
       this.logger.info('LinkedIn account found', { userId: userid, accountId: user.id });
       return user;
     } catch (error) {
       this.logger.error('account fetch Failed : ', { error });
-      throw new ApiError(500, 'database linkedin account fetch failed');
+      throw new ApiError(404, 'database linkedin account fetch failed', "LINKEDIN_ACCOUNT_EXPIRED");
     }
   }
 

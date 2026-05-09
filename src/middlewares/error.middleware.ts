@@ -22,7 +22,7 @@ export const handleError = (err: any, req: Request, res: Response, next: NextFun
 
       const errors = (error as ZodError).issues || [];
 
-      error = new ApiError(statusCode, message, errors, 'INPUT_VALIDATION_ERROR', error.stack);
+      error = new ApiError(statusCode, message, 'INPUT_VALIDATION_ERROR', errors, error.stack);
 
       logger.error(`Input Validation Error : ${error}`);
 
@@ -32,7 +32,7 @@ export const handleError = (err: any, req: Request, res: Response, next: NextFun
       const message = error && error.message ? error.message : 'Something Went Wrong';
       const error_code = 'SERVER_ERROR';
 
-      error = new ApiError(statusCode, message, error.errors || [], error_code, error.stack);
+      error = new ApiError(statusCode, message, error_code, error.errors || [], error.stack);
       logger.error(`Implementation error : ${error}`);
     }
   }
@@ -40,8 +40,8 @@ export const handleError = (err: any, req: Request, res: Response, next: NextFun
   const response: ResponseType = {
     success: false,
     message: error.message,
+    error_code: error.error_code,
     errors: error.errors || [],
-    error_code: error.code,
     stack: undefined,
   };
 
@@ -53,8 +53,8 @@ export const handleError = (err: any, req: Request, res: Response, next: NextFun
 export type ResponseType = {
   success: boolean;
   message: string;
-  data?: object;
-  errors: unknown[];
   error_code: string;
+  errors: unknown[];
   stack?: string;
+  data?: object;
 };

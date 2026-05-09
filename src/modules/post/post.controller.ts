@@ -113,8 +113,19 @@ export class PostController {
 
       if (!isServiceAvailable) {
         this.logger.error(`service no longer availble `);
-        throw new ApiError(403, 'Posing Limit Exceeded', [], 'USAGE_EXCEEDED');
+        throw new ApiError(403, 'Posing Limit Exceeded', 'USAGE_EXCEEDED');
       }
+
+       // check if the linkedin account is expired or not , unlike x it can't handle automatically
+    if (platforms.includes('LINKEDIN')) {
+      const account = await this.linkedinServices.getUserAccount(req.user.id);  
+
+      const result = await this.linkedinServices.validateAccessToken(account);
+
+      if (!result.success) {
+        throw new ApiError(400, 'Linkedin account expired please reconnect', "LINKEDIN_ACCOUNT_EXPIRED");
+      }
+    }
 
       if (scheduledDateAndTime) {
         const post = await this.postServices.createPost(
@@ -199,7 +210,7 @@ export class PostController {
 
     if (!isServiceAvailable) {
       this.logger.error(`service no longer availble `);
-      throw new ApiError(403, 'Posing Limit Exceeded', [], 'USAGE_EXCEEDED');
+      throw new ApiError(403, 'Posing Limit Exceeded', 'USAGE_EXCEEDED');
     }
 
     const now = new Date();
@@ -212,14 +223,11 @@ export class PostController {
     // check if the linkedin account is expired or not , unlike x it can't handle automatically
     if (platforms.includes('LINKEDIN')) {
       const account = await this.linkedinServices.getUserAccount(user.id);
-      if (!account) {
-        throw new ApiError(404, 'No active LinkedIn account found');
-      }
 
       const result = await this.linkedinServices.validateAccessToken(account);
 
       if (!result.success) {
-        throw new ApiError(400, 'Linkedin account expired please reconnect');
+        throw new ApiError(400, 'Linkedin account expired please reconnect', "LINKEDIN_ACCOUNT_EXPIRED");
       }
     }
 

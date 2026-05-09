@@ -142,7 +142,7 @@ export class AuthController {
 
     if (!user) {
       this.logger.error('account not found');
-      throw new ApiError(404, 'account not found please register', [], "USER_NOT_FOUND");
+      throw new ApiError(404, 'account not found please register', "USER_NOT_FOUND");
     }
 
     const passwordCorrect = await this.userServices.verifyPassword(password, user.password!);
