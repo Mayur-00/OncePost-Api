@@ -56,6 +56,6 @@ export class LinkedinController {
     this.logger.info('user linkedin connection success', {
       email: userInfoResponse.email,
     });
-    res.status(200).redirect(`${process.env.FRONTEND_URI}/boarding-gateway  `);
+    res.status(200).redirect(`${process.env.FRONTEND_URI}/boarding-gateway`);
   });
 }
