@@ -271,7 +271,7 @@ export class PostService {
 
       if (!userSubscription) {
         this.logger.error('no user subscription found');
-        throw new ApiError(404, 'No Active User Subscription', [], 'NO_SUBSCRIPTION');
+        throw new ApiError(404, 'No Active User Subscription', 'NO_SUBSCRIPTION', []);
       }
 
       if (userSubscription.end_date <= new Date()) {
