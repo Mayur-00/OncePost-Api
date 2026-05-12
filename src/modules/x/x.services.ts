@@ -177,7 +177,7 @@ export class XServices {
 
       return res.data;
     } catch (error) {
-      this.logger.error(`an error occured while refreshing accessToken`, { error: error });
+      this.logger.error(`an error occured while refreshing accessToken, error : ${error}`);
       throw new ApiError(500, 'account expired reconnect your account');
     }
   }
@@ -223,7 +223,7 @@ export class XServices {
 
       return account.access_token;
     } catch (error) {
-      this.logger.error('an error occured while validating access token', { error: error });
+      this.logger.error(`an error occured while validating access token, error : ${error}` );
       throw new ApiError(500, 'internal server error');
     }
   }

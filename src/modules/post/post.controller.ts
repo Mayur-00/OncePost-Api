@@ -125,7 +125,7 @@ export class PostController {
       if (!result.success) {
         throw new ApiError(400, 'Linkedin account expired please reconnect', "LINKEDIN_ACCOUNT_EXPIRED");
       }
-    }
+    } 
 
       if (scheduledDateAndTime) {
         const post = await this.postServices.createPost(
