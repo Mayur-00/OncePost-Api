@@ -175,10 +175,29 @@ export class XServices {
         },
       );
 
-      return res.data;
+      return {
+        success: true,
+        message: 'Succcess',
+        data: res.data,
+      };
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          this.logger.error(
+            `an error occured while refreshing accessToken, error : ${error.response?.data}`,
+          );
+          return {
+            success: false,
+            message: 'X_ACCOUNT_EXPIRED',
+            data: {},
+          };
+        }
+      }
       this.logger.error(`an error occured while refreshing accessToken, error : ${error}`);
-      throw new ApiError(500, 'account expired reconnect your account');
+      return {
+        success: false,
+        message: 'REFRESH_FAILED',
+      };
     }
   }
 
@@ -209,22 +228,48 @@ export class XServices {
 
         const tokenObj = await this.refreshAccessToken(account.refresh_token);
 
+        if (!tokenObj.success) {
+          if (tokenObj.message === 'X_ACCOUNT_EXPIRED') {
+            await this.markXAccountExpired(account.id);
+            throw new ApiError(403, 'X Account Expired', 'X_ACCOUNT_EXPIRED');
+          } else {
+            throw new ApiError(500, "Internal Server Error");
+          }
+        }
+
         await this.prismaClient.socialAccount.update({
           where: { id: account.id },
           data: {
-            access_token: tokenObj.access_token,
-            refresh_token: tokenObj.refresh_token ?? account.refresh_token,
-            token_expiry: new Date(Date.now() + tokenObj.expires_in * 1000),
+            access_token: tokenObj.data.access_token,
+            refresh_token: tokenObj.data.refresh_token ?? account.refresh_token,
+            token_expiry: new Date(Date.now() + tokenObj.data.expires_in * 1000),
           },
         });
 
-        return tokenObj.access_token;
+        return tokenObj.data.access_token;
       }
 
       return account.access_token;
     } catch (error) {
-      this.logger.error(`an error occured while validating access token, error : ${error}` );
-      throw new ApiError(500, 'internal server error');
+      this.logger.error(`an error occured while validating access token, error : ${error}`);
+      throw new ApiError(500, 'X Account Expired', 'X_ACCOUNT_EXPIRED');
+    }
+  }
+
+  async markXAccountExpired(id: string) {
+    try {
+      return await this.prismaClient.socialAccount.update({
+        where: {
+          id: id,
+        },
+        data: {
+          isExpired: true,
+          isActive: false,
+        },
+      });
+    } catch (error) {
+      this.logger.error(`failed to mark x account as failed, error : ${error}`);
+      throw new ApiError(500, 'Internal Server Error');
     }
   }
 

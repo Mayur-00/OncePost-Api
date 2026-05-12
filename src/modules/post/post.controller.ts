@@ -18,8 +18,8 @@ import { ApiError } from '../../utils/apiError.js';
 import { postQueue } from '../../queues/queues.js';
 import { jobBody } from '../../workers/worker.types.js';
 import { PrismaClient } from '../../generated/prisma/client.js';
-import { delay } from 'bullmq';
 import { linkedinServices } from '../linkedin/linkedin.services.js';
+import { XServices } from '../x/x.services.js';
 
 export class PostController {
   constructor(
@@ -27,6 +27,7 @@ export class PostController {
     private postServices: PostService,
     private prismaClient: PrismaClient,
     private linkedinServices: linkedinServices,
+    private xServices: XServices,
   ) {}
 
   createPost: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -116,16 +117,38 @@ export class PostController {
         throw new ApiError(403, 'Posing Limit Exceeded', 'USAGE_EXCEEDED');
       }
 
-       // check if the linkedin account is expired or not , unlike x it can't handle automatically
-    if (platforms.includes('LINKEDIN')) {
-      const account = await this.linkedinServices.getUserAccount(req.user.id);  
+      // check if the linkedin x account is expired or not
 
-      const result = await this.linkedinServices.validateAccessToken(account);
+      for (const platform of platforms) {
+        switch (platform) {
+          case 'LINKEDIN': {
+            const account = await this.linkedinServices.getUserAccount(req.user.id);
 
-      if (!result.success) {
-        throw new ApiError(400, 'Linkedin account expired please reconnect', "LINKEDIN_ACCOUNT_EXPIRED");
+            const result = await this.linkedinServices.validateAccessToken(account);
+
+            if (!result.success) {
+              throw new ApiError(
+                400,
+                'Linkedin account expired please reconnect',
+                'LINKEDIN_ACCOUNT_EXPIRED',
+              );
+            }
+
+            break;
+          }
+          case 'X': {
+            const account = await this.xServices.getActiveXAccount(req.user.id);
+            if (!account) {
+              throw new Error('No active X account found');
+            }
+            await this.xServices.validateAccessToken(account);
+            break;
+          }
+          default: {
+            throw new ApiError(404, 'Unknown Platform');
+          }
+        }
       }
-    } 
 
       if (scheduledDateAndTime) {
         const post = await this.postServices.createPost(
@@ -221,13 +244,34 @@ export class PostController {
     }
 
     // check if the linkedin account is expired or not , unlike x it can't handle automatically
-    if (platforms.includes('LINKEDIN')) {
-      const account = await this.linkedinServices.getUserAccount(user.id);
+    for (const platform of platforms) {
+      switch (platform) {
+        case 'LINKEDIN': {
+          const account = await this.linkedinServices.getUserAccount(user.id);
 
-      const result = await this.linkedinServices.validateAccessToken(account);
+          const result = await this.linkedinServices.validateAccessToken(account);
 
-      if (!result.success) {
-        throw new ApiError(400, 'Linkedin account expired please reconnect', "LINKEDIN_ACCOUNT_EXPIRED");
+          if (!result.success) {
+            throw new ApiError(
+              400,
+              'Linkedin account expired please reconnect',
+              'LINKEDIN_ACCOUNT_EXPIRED',
+            );
+          }
+
+          break;
+        }
+        case 'X': {
+          const account = await this.xServices.getActiveXAccount(user.id);
+          if (!account) {
+            throw new Error('No active X account found');
+          }
+          await this.xServices.validateAccessToken(account);
+          break;
+        }
+        default: {
+          throw new ApiError(404, 'Unknown Platform');
+        }
       }
     }
 
