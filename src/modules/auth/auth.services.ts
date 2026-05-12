@@ -247,7 +247,7 @@ export class UserServices {
       return payload;
     } catch (error) {
       this.logger.error("token didn't verify", { error: error });
-      throw new ApiError(401, 'token expired or invalid', [], "INCORRECT_PASSWORD");
+      throw new ApiError(401, 'token expired or invalid', "INCORRECT_PASSWORD" ,[]  );
     }
   }
   async verifyPassword(new_password: string, user_password: string): Promise<boolean> {
