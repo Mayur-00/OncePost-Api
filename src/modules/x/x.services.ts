@@ -219,6 +219,7 @@ export class XServices {
     try {
       const now = Date.now();
       const isExpired = !account.token_expiry || account.token_expiry.getTime() <= now;
+      this.logger.info(`is access token expired ${isExpired}`)
 
       if (isExpired) {
         if (!account.refresh_token) {
