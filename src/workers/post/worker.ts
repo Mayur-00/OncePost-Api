@@ -1,12 +1,13 @@
 import { Worker } from 'bullmq';
-import { jobBody, PostJobData } from './worker.types.js';
-import logger from '../config/logger.config.js';
-import { LinkedinService } from '../modules/linkedin/index.js';
-import { redisConnection } from '../config/redis.config.js';
-import { postServices } from '../modules/post/index.js';
+import { redisConnection } from '../../config/redis.config.js';
+import { jobBody, PostJobData } from '../worker.types.js';
+import logger from '../../config/logger.config.js';
+import { postServices } from '../../modules/post/index.js';
+import { LinkedinService } from '../../modules/linkedin/index.js';
+import { xServices } from '../../modules/x/index.js';
 import { linkedinHandler } from './handlers/linkedin.handler.js';
 import { Xhandler } from './handlers/x.handler.js';
-import { xServices } from '../modules/x/index.js';
+
 
 export const postWorker = new Worker<jobBody>(
   'post',
@@ -68,11 +69,11 @@ export const postWorker = new Worker<jobBody>(
 
       return true;
     } catch (error) {
-      logger.error(`LinkedIn Worker Error: ${error}`);
+      logger.error(`Post Worker Error: ${error}`);
       throw error;
     }
   },
-  { connection: redisConnection, concurrency: 3 },
+  { connection: redisConnection, concurrency: 1 },
 );
 
 // Worker event listeners
@@ -92,7 +93,7 @@ postWorker.on('error', (err) => {
 if (import.meta.url === `file://${process.argv[1]}`) {
   logger.info('🚀 publish Post Worker started on separate process');
   process.on('SIGTERM', async () => {
-    logger.info('SIGTERM received, closing LinkedIn worker...');
+    logger.info('SIGTERM received, closing Post worker...');
     await postWorker.close();
     process.exit(0);
   });

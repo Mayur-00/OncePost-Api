@@ -283,10 +283,10 @@ export type SubscriptionPlanOrderByWithRelationInput = {
 
 export type SubscriptionPlanWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  plan_tier?: $Enums.PlanTier
   AND?: Prisma.SubscriptionPlanWhereInput | Prisma.SubscriptionPlanWhereInput[]
   OR?: Prisma.SubscriptionPlanWhereInput[]
   NOT?: Prisma.SubscriptionPlanWhereInput | Prisma.SubscriptionPlanWhereInput[]
-  plan_tier?: Prisma.EnumPlanTierFilter<"SubscriptionPlan"> | $Enums.PlanTier
   price?: Prisma.IntFilter<"SubscriptionPlan"> | number
   currency?: Prisma.StringFilter<"SubscriptionPlan"> | string
   description?: Prisma.StringFilter<"SubscriptionPlan"> | string
@@ -297,7 +297,7 @@ export type SubscriptionPlanWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SubscriptionPlan"> | Date | string
   subscriptions?: Prisma.SubscriptionListRelationFilter
-}, "id">
+}, "id" | "plan_tier">
 
 export type SubscriptionPlanOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

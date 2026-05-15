@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
-import logger from '../config/logger.config.js';
+import logger from '../../config/logger.config.js';
+import connectDb from '../../lib/db.js';
 import { postWorker } from './worker.js';
-import connectDb from '../lib/db.js';
 
 if (process.env.NODE_ENV !== 'production') {
   dotenv.config();

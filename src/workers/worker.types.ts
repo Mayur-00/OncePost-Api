@@ -4,6 +4,11 @@ export interface jobBody {
   platfroms: any[];
 }
 
+export interface ExpireSubscriptionJobBody {
+  subscriptionId: string;
+  userId: string;
+};
+
 export interface PostJobData {
   postId: string;
   userId: string;

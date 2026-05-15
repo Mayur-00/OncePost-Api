@@ -1,6 +1,7 @@
 import { Logger } from 'winston';
-import { linkedinServices } from '../../modules/linkedin/linkedin.services.js';
-import { PostJobData } from '../worker.types.js';
+import { linkedinServices } from '../../../modules/linkedin/linkedin.services.js';
+import { PostJobData } from '../../worker.types.js';
+
 
 export class linkedinHandler {
   constructor(

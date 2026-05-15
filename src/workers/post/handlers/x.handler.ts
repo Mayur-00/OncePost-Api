@@ -1,6 +1,7 @@
 import { Logger } from 'winston';
-import { XServices } from '../../modules/x/x.services.js';
-import { PostJobData } from '../worker.types.js';
+import { XServices } from '../../../modules/x/x.services.js';
+import { PostJobData } from '../../worker.types.js';
+
 
 export class Xhandler {
   constructor(

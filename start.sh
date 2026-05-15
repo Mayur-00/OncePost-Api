@@ -10,6 +10,9 @@ echo "Starting OncePost Monolith..."
 node --max-old-space-size=256 dist/server.js &
 
 # Start Worker (Foreground)
-echo "Starting Background Worker..."
+echo "Starting Background Post Worker..."
+node --max-old-space-size=100 dist/workers/post/start-worker.js &
 
-exec node --max-old-space-size=192 dist/workers/start-worker.js
+echo "Starting Background Subscription Worker..."
+
+exec node --max-old-space-size=92 dist/workers/subscription/start-worker.js

@@ -8,6 +8,8 @@ import { initateOrderSchema, verifyPaymentSchema } from './subscription.dto.js';
 import { ApiError } from '../../utils/apiError.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
 import { RazorpayWebhookSchema } from '../razorpay/razorpay.dto.js';
+import { subscriptionExpirationQueue } from '../../queues/queues.js';
+import { ExpireSubscriptionJobBody } from '../../workers/worker.types.js';
 
 export class SubscriptionControllerClass {
   constructor(
@@ -83,9 +85,29 @@ export class SubscriptionControllerClass {
         throw new ApiError(401, 'payment is not valid');
       }
 
-      await this.subscriptionService.handleSuccessfulPayment({
+      const subscription = await this.subscriptionService.handleSuccessfulPayment({
         transactionId: transaction.id,
         paymentId: payment_id,
+      });
+
+      if (!subscription) {
+        this.logger.error('failed to update subscription');
+        throw new ApiError(500, 'Internal Server Error');
+      }
+
+      const now = new Date();
+      const delay = subscription.end_date.getTime() - now.getTime();
+      if (delay < 0) {
+        throw new ApiError(400, 'subscription expiration time must be in the future');
+      }
+
+      const jobData: ExpireSubscriptionJobBody = {
+        subscriptionId: subscription.id,
+        userId: userid,
+      };
+      subscriptionExpirationQueue.add(`subscription-expire-${subscription.id}-${userid}`, jobData, {
+        delay: delay,
+        jobId: `${subscription.id}-${Date.now()}`,
       });
 
       this.logger.info(`Subscription activated for transaction ${transaction.id}`);
@@ -145,11 +167,11 @@ export class SubscriptionControllerClass {
       const amount = payment.amount;
 
       const transaction = await this.razorpayServices.getTransactionByOrderId(razorpayOrderId!);
-
       if (!transaction) {
         this.logger.error(`Transaction not found for order: ${razorpayOrderId}`);
         return res.status(200).json({ status: 'ignored' });
       }
+      const userid = transaction.user_id;
 
       // 🚨 Amount validation
       if (transaction.amount !== amount) {
@@ -158,9 +180,29 @@ export class SubscriptionControllerClass {
       }
 
       // 🔥 5️⃣ Atomic Update (VERY IMPORTANT)
-      await this.subscriptionService.handleSuccessfulPayment({
+      const subscription = await this.subscriptionService.handleSuccessfulPayment({
         transactionId: transaction.id,
         paymentId: razorpayPaymentId,
+      });
+
+      if (!subscription) {
+        this.logger.error('failed to update subscription');
+        throw new ApiError(500, 'Internal Server Error');
+      }
+
+      const now = new Date();
+      const delay = subscription.end_date.getTime() - now.getTime();
+      if (delay < 0) {
+        throw new ApiError(400, 'subscription expiration time must be in the future');
+      }
+
+      const jobData: ExpireSubscriptionJobBody = {
+        subscriptionId: subscription.id,
+        userId: userid,
+      };
+      subscriptionExpirationQueue.add(`subscription-expire-${subscription.id}-${userid}`, jobData, {
+        delay: delay,
+        jobId: `${subscription.id}-${Date.now()}`,
       });
 
       this.logger.info(`Subscription activated for transaction ${transaction.id}`);

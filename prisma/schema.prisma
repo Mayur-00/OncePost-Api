@@ -209,7 +209,7 @@ model job {
 
 model SubscriptionPlan {
   id                String   @id @default(cuid())
-  plan_tier         PlanTier
+  plan_tier         PlanTier @unique
   price             Int // Price in INR
   currency          String   @default("INR")
   description       String

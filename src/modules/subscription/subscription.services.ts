@@ -135,7 +135,6 @@ export class SubscriptionService {
       throw new ApiError(500, 'intenal server error');
     }
   }
-
   async getAllSubscriptionPlans() {
     try {
       const plans = await this.prismaClient.subscriptionPlan.findMany();
@@ -168,7 +167,7 @@ export class SubscriptionService {
     transactionId: string;
     paymentId: string;
   }) {
-    await this.prismaClient.$transaction(async (tx) => {
+  return await this.prismaClient.$transaction(async (tx) => {
       const transaction = await tx.transaction.findUnique({
         where: { id: transactionId },
       });
@@ -205,7 +204,7 @@ export class SubscriptionService {
       });
 
       // Activate new subscription
-      await tx.subscription.update({
+    const subs =  await tx.subscription.update({
         where: { id: transaction.subscription_id },
         data: {
           status: 'ACTIVE',
@@ -217,6 +216,8 @@ export class SubscriptionService {
         transactionId: transactionId,
         userId: transaction.user_id,
       });
+
+      return subs
     });
   }
 
@@ -234,6 +235,70 @@ export class SubscriptionService {
       this.logger.info('Failed payment processed', { orderId: orderId, eventId: eventId });
     } catch (error) {
       this.logger.error('Error processing failed payment', { orderId: orderId, error: error });
+      throw error;
+    }
+  }
+  async getSubcriptionById(subscription_id:string) {
+    try {
+     return await this.prismaClient.subscription.findUnique({
+        where:{
+          id:subscription_id,
+        }
+      })
+    } catch (error) {
+      this.logger.error(`Failed To get Subscription by id: ${subscription_id}`);
+      throw error;
+    }
+  };
+
+  async ReactivateFreeSubscription(userId:string) {
+    try {
+    const freePlan = await this.prismaClient.subscriptionPlan.findUnique({
+        where: { plan_tier: "FREE" },
+        select: { id: true, maxPostsPerMonth: true }
+      });
+
+      if (!freePlan) {
+        this.logger.error("Database initialization error: Free Plan configuration not found");
+        throw new Error("Free Plan Not Found");
+      }
+
+      // Look for any existing free tier subscription records
+      const existingSubscription = await this.prismaClient.subscription.findFirst({
+        where: {
+          user_id: userId,
+          plan_id: freePlan.id,
+        },
+        select: { id: true }
+      });
+
+      const farFutureDate = new Date();
+      farFutureDate.setFullYear(farFutureDate.getFullYear() + 10); // Free tiers valid for 10 years
+
+      if (existingSubscription) {
+        return await this.prismaClient.subscription.update({
+          where: { id: existingSubscription.id },
+          data: {
+            status: 'ACTIVE',
+            start_date: new Date(),
+            end_date: farFutureDate,
+          },
+        });
+      } else {
+        // Fallback safety if the user never had a free subscription record
+        return await this.prismaClient.subscription.create({
+          data: {
+            user_id: userId,
+            plan_id: freePlan.id,
+            status: 'ACTIVE',
+            start_date: new Date(),
+            end_date: farFutureDate,
+            post_creation_remaining: freePlan.maxPostsPerMonth ?? 10,
+          }
+        });
+      }
+    } catch (error) {
+      this.logger.error(`Failed to ReActivate User Free Subscription`);
       throw error;
     }
   }

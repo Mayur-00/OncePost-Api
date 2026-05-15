@@ -174,14 +174,13 @@ export class PostController {
           userid: req.user.id,
         };
 
-        await this.prismaClient.$transaction(async () => {
-          postQueue.add('post', data, {
-            delay: delay,
-            jobId: post.id,
-          });
-
-          await this.postServices.LogUsage(userid);
+        postQueue.add('post', data, {
+          delay: delay,
+          jobId: post.id,
         });
+  
+          
+          await this.postServices.LogUsage(userid);
 
         this.logger.info('Post Scheduled Successfuly');
         res.status(200).json(new ApiResponse(203, 'Scheduled successFully'));

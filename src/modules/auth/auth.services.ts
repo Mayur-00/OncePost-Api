@@ -328,7 +328,10 @@ export class UserServices {
       if (!plan) {
         this.logger.error(`Free plan not found`);
         throw new ApiError(404, 'Plan not found');
-      }
+      };
+
+      const farFutureDate = new Date();
+      farFutureDate.setFullYear(farFutureDate.getFullYear() + 10);
 
       const subscriptions = await this.prisma.subscription.create({
         data: {
@@ -336,7 +339,7 @@ export class UserServices {
           plan_id: plan.id,
           post_creation_remaining: plan.maxPostsPerMonth,
           start_date: new Date(),
-          end_date: new Date(Date.now() + 12 * 30 * 24 * 60 * 60 * 1000),
+          end_date: farFutureDate,
           status: 'ACTIVE',
         },
       });
