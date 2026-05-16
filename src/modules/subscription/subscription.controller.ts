@@ -236,4 +236,15 @@ export class SubscriptionControllerClass {
 
     return res.status(200).json(new ApiResponse(200, plan, 'Success'));
   });
+  getCurrentPlan: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
+      const userid = req.user?.id;
+
+    if (!userid) {
+      throw new ApiError(401, 'unauthorized');
+    } 
+
+    const plan = await this.subscriptionService.getSubscription(userid);
+
+    return res.status(200).json(new ApiResponse(200, plan, 'Success'));
+  });
 }

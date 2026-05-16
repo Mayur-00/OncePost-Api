@@ -15,6 +15,7 @@ export function createSubscriptionRoutes(controller: SubscriptionControllerClass
     controller.initateOrder,
   );
 
+  router.get('/current',authorize, controller.getCurrentPlan);
   //get all posts with pagination and limit
   router.post('/verify-payment', authorize, controller.verifyPaymentAndActivateSubscription);
   router.post(

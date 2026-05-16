@@ -125,7 +125,17 @@ export class SubscriptionService {
           status: 'ACTIVE',
         },
         include: {
-          plan: true,
+          plan: {
+            select: {
+              id: true,
+              plan_tier: true,
+              price: true,
+              currency: true,
+              description: true,
+              features: true,
+              maxPostsPerMonth: true,
+            },
+          },
         },
       });
       this.logger.info('Active subscription retrieved', { userId: user_id, found: !!subscription });
@@ -167,63 +177,63 @@ export class SubscriptionService {
     transactionId: string;
     paymentId: string;
   }) {
- try {
-   return await this.prismaClient.$transaction(async (tx) => {
-      const transaction = await tx.transaction.findUnique({
-        where: { id: transactionId },
+    try {
+      return await this.prismaClient.$transaction(async (tx) => {
+        const transaction = await tx.transaction.findUnique({
+          where: { id: transactionId },
+        });
+
+        if (!transaction) {
+          this.logger.warn('Transaction not found for payment', { transactionId: transactionId });
+          return;
+        }
+
+        if (transaction.status === 'COMPLETED') {
+          this.logger.info('Transaction already completed', { transactionId: transactionId });
+          return;
+        }
+
+        // Mark transaction completed
+        await tx.transaction.update({
+          where: { id: transactionId },
+          data: {
+            status: 'COMPLETED',
+            razorpay_payment_id: paymentId,
+            webhook_processed: true,
+          },
+        });
+
+        // Expire old active subscriptions
+        await tx.subscription.updateMany({
+          where: {
+            user_id: transaction.user_id,
+            status: 'ACTIVE',
+          },
+          data: {
+            status: 'EXPIRED',
+          },
+        });
+
+        // Activate new subscription
+        const subs = await tx.subscription.update({
+          where: { id: transaction.subscription_id },
+          data: {
+            status: 'ACTIVE',
+            start_date: new Date(),
+            end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          },
+        });
+        this.logger.info('Successful payment processed and subscription activated', {
+          transactionId: transactionId,
+          userId: transaction.user_id,
+        });
+
+        return subs;
       });
-
-      if (!transaction) {
-        this.logger.warn('Transaction not found for payment', { transactionId: transactionId });
-        return;
-      }
-
-      if (transaction.status === 'COMPLETED') {
-        this.logger.info('Transaction already completed', { transactionId: transactionId });
-        return;
-      }
-
-      // Mark transaction completed
-      await tx.transaction.update({
-        where: { id: transactionId },
-        data: {
-          status: 'COMPLETED',
-          razorpay_payment_id: paymentId,
-          webhook_processed: true,
-        },
-      });
-
-      // Expire old active subscriptions
-      await tx.subscription.updateMany({
-        where: {
-          user_id: transaction.user_id,
-          status: 'ACTIVE',
-        },
-        data: {
-          status: 'EXPIRED',
-        },
-      });
-
-      // Activate new subscription
-    const subs =  await tx.subscription.update({
-        where: { id: transaction.subscription_id },
-        data: {
-          status: 'ACTIVE',
-          start_date: new Date(),
-          end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        },
-      });
-      this.logger.info('Successful payment processed and subscription activated', {
-        transactionId: transactionId,
-        userId: transaction.user_id,
-      });
-
-      return subs
-    });
- } catch (error) {
-  this.logger.error(`Failed to Handle Successfull payment, error: ${error}`);
-  throw new ApiError(500, "Internal Server Error")
- }
+    } catch (error) {
+      this.logger.error(`Failed to Handle Successfull payment, error: ${error}`);
+      throw new ApiError(500, 'Internal Server Error');
+    }
   }
 
   async handleFailedPayment(orderId: string, eventId: string) {
@@ -243,29 +253,29 @@ export class SubscriptionService {
       throw error;
     }
   }
-  async getSubcriptionById(subscription_id:string) {
+  async getSubcriptionById(subscription_id: string) {
     try {
-     return await this.prismaClient.subscription.findUnique({
-        where:{
-          id:subscription_id,
-        }
-      })
+      return await this.prismaClient.subscription.findUnique({
+        where: {
+          id: subscription_id,
+        },
+      });
     } catch (error) {
       this.logger.error(`Failed To get Subscription by id: ${subscription_id}`);
       throw error;
     }
-  };
+  }
 
-  async ReactivateFreeSubscription(userId:string) {
+  async ReactivateFreeSubscription(userId: string) {
     try {
-    const freePlan = await this.prismaClient.subscriptionPlan.findUnique({
-        where: { plan_tier: "FREE" },
-        select: { id: true, maxPostsPerMonth: true }
+      const freePlan = await this.prismaClient.subscriptionPlan.findUnique({
+        where: { plan_tier: 'FREE' },
+        select: { id: true, maxPostsPerMonth: true },
       });
 
       if (!freePlan) {
-        this.logger.error("Database initialization error: Free Plan configuration not found");
-        throw new Error("Free Plan Not Found");
+        this.logger.error('Database initialization error: Free Plan configuration not found');
+        throw new Error('Free Plan Not Found');
       }
 
       // Look for any existing free tier subscription records
@@ -274,7 +284,7 @@ export class SubscriptionService {
           user_id: userId,
           plan_id: freePlan.id,
         },
-        select: { id: true }
+        select: { id: true },
       });
 
       const farFutureDate = new Date();
@@ -299,7 +309,7 @@ export class SubscriptionService {
             start_date: new Date(),
             end_date: farFutureDate,
             post_creation_remaining: freePlan.maxPostsPerMonth ?? 10,
-          }
+          },
         });
       }
     } catch (error) {
