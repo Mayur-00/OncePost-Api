@@ -21,16 +21,17 @@ export class RazorpayService {
   ): Promise<{ order: Orders.RazorpayOrder; transaction_id: string }> {
     try {
       const options = {
-        amount: amount, // convert it into paise
+        amount: amount,
         currency,
         reciept,
       };
       const rxp = await this.razorpay.orders.create(options);
+      console.log(amount);
 
       const transaction = await this.prismaClient.transaction.create({
         data: {
           user_id: user_id,
-          amount: amount * 100,
+          amount: amount,
           currency: currency,
           razorpay_order_id: rxp.id,
           subscription_id: subscription_id,
@@ -65,7 +66,7 @@ export class RazorpayService {
     }
   }
 
-  async varifyPaymentSignatureAndFlagTransactionCompleated(
+  async varifyPaymentSignature(
     order_id: string,
     payment_id: string,
     payment_signature: string,
@@ -75,18 +76,7 @@ export class RazorpayService {
       const generatedSignature = this.generatePaymentSignature(order_id, payment_id);
 
       if (generatedSignature === payment_signature) {
-        await this.prismaClient.transaction.update({
-          where: {
-            id: transaction_id,
-            status: 'PENDING',
-          },
-          data: {
-            razorpay_order_id: order_id,
-            razorpay_payment_id: payment_id,
-            razorpay_signature: payment_signature,
-            status: 'COMPLETED',
-          },
-        });
+        this.logger.info('verification success')
         this.logger.info('Payment signature verified and transaction completed', {
           transactionId: transaction_id,
           orderId: order_id,

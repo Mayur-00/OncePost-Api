@@ -167,7 +167,8 @@ export class SubscriptionService {
     transactionId: string;
     paymentId: string;
   }) {
-  return await this.prismaClient.$transaction(async (tx) => {
+ try {
+   return await this.prismaClient.$transaction(async (tx) => {
       const transaction = await tx.transaction.findUnique({
         where: { id: transactionId },
       });
@@ -219,6 +220,10 @@ export class SubscriptionService {
 
       return subs
     });
+ } catch (error) {
+  this.logger.error(`Failed to Handle Successfull payment, error: ${error}`);
+  throw new ApiError(500, "Internal Server Error")
+ }
   }
 
   async handleFailedPayment(orderId: string, eventId: string) {

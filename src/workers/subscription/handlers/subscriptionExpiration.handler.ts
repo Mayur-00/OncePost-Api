@@ -24,10 +24,10 @@ export class SubscriptionExpirationHandler {
       }
 
       // Check if it's too early to expire it
-      if (currentSubscription.end_date > now) {
-        this.logger.error(`Aborting Expiration: end_date (${currentSubscription.end_date}) is in the future for ID: ${subscription_id}`);
-        throw new Error('Subscription cannot be expired yet!');
-      }
+      // if (currentSubscription.end_date > now) {
+      //   this.logger.error(`Aborting Expiration: end_date (${currentSubscription.end_date}) is in the future for ID: ${subscription_id}`);
+      //   throw new Error('Subscription cannot be expired yet!');
+      // }
 
       const expiredSubscription = await this.SubscriptionServices.expireSubscription(currentSubscription.id);
 

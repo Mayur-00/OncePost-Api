@@ -73,7 +73,7 @@ export class SubscriptionControllerClass {
         throw new ApiError(404, 'Transaction not found');
       }
       const isPaymentVerified =
-        this.razorpayServices.varifyPaymentSignatureAndFlagTransactionCompleated(
+      await  this.razorpayServices.varifyPaymentSignature(
           order_id,
           payment_id,
           payment_signature,
@@ -90,25 +90,32 @@ export class SubscriptionControllerClass {
         paymentId: payment_id,
       });
 
+      this.logger.info(`subscription : ${subscription}`);
+
       if (!subscription) {
         this.logger.error('failed to update subscription');
         throw new ApiError(500, 'Internal Server Error');
       }
 
       const now = new Date();
+
       const delay = subscription.end_date.getTime() - now.getTime();
       if (delay < 0) {
         throw new ApiError(400, 'subscription expiration time must be in the future');
       }
+     
 
       const jobData: ExpireSubscriptionJobBody = {
         subscriptionId: subscription.id,
         userId: userid,
       };
+       const jobId = `expire-${subscription.id}`
       subscriptionExpirationQueue.add(`subscription-expire-${subscription.id}-${userid}`, jobData, {
         delay: delay,
-        jobId: `${subscription.id}-${Date.now()}`,
+        jobId: jobId,
       });
+
+      this.logger.info(`Subscription Added To Queue By Controller, JobId : ${jobId} `);
 
       this.logger.info(`Subscription activated for transaction ${transaction.id}`);
 
@@ -200,10 +207,14 @@ export class SubscriptionControllerClass {
         subscriptionId: subscription.id,
         userId: userid,
       };
+      const jobId = `expire-${subscription.id}`
+
       subscriptionExpirationQueue.add(`subscription-expire-${subscription.id}-${userid}`, jobData, {
         delay: delay,
-        jobId: `${subscription.id}-${Date.now()}`,
+        jobId: jobId,
       });
+
+      this.logger.info(`Subscription Added To Queue By Webhook, JobId : ${jobId} `);
 
       this.logger.info(`Subscription activated for transaction ${transaction.id}`);
     } else if (event === 'payment.failed') {
