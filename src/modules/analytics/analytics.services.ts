@@ -1,3 +1,4 @@
+import { Logger } from 'winston';
 import {
   PlatformPost,
   PlatfromPostStatus,
@@ -7,7 +8,7 @@ import {
 
 
 export class AnalyticsService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient, private logger:Logger) {}
 
   async getPastSixMonthsMetrics(userId: string) {
     // 1️⃣ Calculate a moving window boundary (start of the month, 5 months ago)
@@ -74,16 +75,17 @@ export class AnalyticsService {
     const platformPosts = await this.prisma.post.findMany({
       where: {
         owner_id: userId,
-        status: "PUBLISHED", // PlatfromPostStatus enum
-        createdAt: { gte: thirtyDaysAgo },
+        status: "UPLOADED", // PlatfromPostStatus enum
+        updatedAt: { gte: thirtyDaysAgo },
       },
       select: {
-        createdAt: true,
+        updatedAt: true,
       },
     });
 
     // 3️⃣ Pre-populate every calendar date key to avoid gaps
     const dataMap: Record<string, { date: string; posts: number }> = {};
+    // console.log(platformPosts)
     
     for (let i = 29; i >= 0; i--) {
       const loopDate = new Date();
@@ -94,8 +96,10 @@ export class AnalyticsService {
     }
 
     // 4️⃣ Aggregate total platform actions into their calendar date slots
+    this.logger.info(platformPosts);
     platformPosts.forEach((pPost) => {
-      const dateKey = pPost.createdAt.toISOString().split("T")[0];
+      
+      const dateKey = pPost.updatedAt.toISOString().split("T")[0];
       
       if (dataMap[dateKey]) {
         dataMap[dateKey].posts += 1;

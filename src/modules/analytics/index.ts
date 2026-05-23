@@ -5,6 +5,6 @@ import { AnalyticsService } from './analytics.services.js';
 import { AnalyticsController } from './analytics.controller.js';
 import { createAnalyticsRoutes } from './analytics.router.js';
 
-const analyticsService = new AnalyticsService(prisma);
+const analyticsService = new AnalyticsService(prisma, logger);
  const analyticsController = new AnalyticsController(analyticsService, logger);
  export const analyticsRoutes = createAnalyticsRoutes(analyticsController);
