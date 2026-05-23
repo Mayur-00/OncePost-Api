@@ -1,5 +1,7 @@
 
 import prisma from '../src/config/prisma.js'
+import dotenv from "dotenv";
+dotenv.config()
 
 async function main() {
   // Clear existing plans
@@ -14,13 +16,12 @@ async function main() {
       description:
         "Perfect for trying out. Limited features for casual content creators.",
       features: [
-        "Up to 5 posts per month",
+        "Up to 2 posts per month",
         "2 social account connection",
         "Basic post scheduling",
-        "Standard analytics (last 7 days)",
-        "Community support",
+        "Standard analytics ",
       ],
-      maxPostsPerMonth: 5,
+      maxPostsPerMonth: 2,
       schedulingEnabled: true,
       prioritySupport: false,
     },
@@ -28,60 +29,31 @@ async function main() {
 
   const basicPlan = await prisma.subscriptionPlan.create({
     data: {
-      plan_tier: "BASIC",
-      price: 499,
+      plan_tier: "PRO",
+      price: 199,
       currency: "INR",
       description:
         "Great for small creators and freelancers. Grow your presence across platforms.",
       features: [
-        "Up to 50 posts per month",
-        "Up to 5 social accounts",
-        "Advanced scheduling (queue posts)",
+        "Up to 20 posts per month",
+        "Unlimited social accounts",
+        "Advanced scheduling ",
         "Full analytics dashboard (last 30 days)",
-        "Post performance insights",
-        "Bulk upload support",
         "Email support (24-48 hours)",
         "Basic content calendar",
       ],
-      maxPostsPerMonth: 50,
+      maxPostsPerMonth: 20,
       schedulingEnabled: true,
       prioritySupport: false,
 
     },
   });
 
-  const proPlan = await prisma.subscriptionPlan.create({
-    data: {
-      plan_tier: "PRO",
-      price: 1999,
-      currency: "INR",
-      description:
-        "For serious content creators and agencies. Advanced tools for managing multiple clients.",
-      features: [
-        "Unlimited posts per month",
-        "Unlimited social accounts",
-        "Advanced AI-powered scheduling",
-        "Unlimited analytics & insights",
-        "Competitor analysis",
-        "Team collaboration (up to 5 members)",
-        "Priority support (2-hour response)",
-        "Custom branding & white-label options",
-        "Advanced reporting & exports",
-        "API access",
-        "Content calendar with collaboration",
-        "Post templates & drafts library",
-        "Multi-language support",
-      ],
-      maxPostsPerMonth: 99999,
-      schedulingEnabled: true,
-      prioritySupport: true,
-    },
-  });
+ 
 
   console.log("Subscription plans seeded successfully:");
   console.log(`✓ FREE Plan - ₹${freePlan.price}`);
   console.log(`✓ BASIC Plan - ₹${basicPlan.price}/month`);
-  console.log(`✓ PRO Plan - ₹${proPlan.price}/month`);
 }
 
 main()

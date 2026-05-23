@@ -48,11 +48,10 @@ export class AuthController {
         refreshToken,
       );
 
-
       return res
         .status(200)
-        .cookie('accessToken', accessToken, this.cookieOptions('access')) 
-        .cookie('refreshToken', refreshToken, this.cookieOptions('refresh')) 
+        .cookie('accessToken', accessToken, this.cookieOptions('access'))
+        .cookie('refreshToken', refreshToken, this.cookieOptions('refresh'))
         .json(
           new ApiResponse(
             200,
@@ -61,39 +60,31 @@ export class AuthController {
           ),
         );
     } else {
-      
-    const newUser = await this.userServices.createUser(
-      payload.name!,
-      payload.email!,
-      'GOOGLE',
-      '',
-      payload.sub,
-      payload.picture,
-    );
-
-    const { accessToken, refreshToken } = this.jwtToken.generateAccessTokenAndRefreshToken(
-      newUser.id,
-      newUser.email,
-      newUser.name,
-    );
-
-    const updatedUser = await this.userServices.updateUsersRefreshToken(newUser.id, refreshToken);
-
-    await this.userServices.activateFreePlan(updatedUser.id);
-
-    return res
-      .status(200)
-      .cookie('accessToken', accessToken, this.cookieOptions('access')) // set the access token in the cookie
-      .cookie('refreshToken', refreshToken, this.cookieOptions('refresh')) // set the refresh token in the cookie
-      .json(
-        new ApiResponse(
-          200, 
-          {},
-          'User signin in successfully',
-        ),
+      const newUser = await this.userServices.createUser(
+        payload.name!,
+        payload.email!,
+        'GOOGLE',
+        '',
+        payload.sub,
+        payload.picture,
       );
-    }
 
+      const { accessToken, refreshToken } = this.jwtToken.generateAccessTokenAndRefreshToken(
+        newUser.id,
+        newUser.email,
+        newUser.name,
+      );
+
+      const updatedUser = await this.userServices.updateUsersRefreshToken(newUser.id, refreshToken);
+
+      await this.userServices.activateFreePlan(updatedUser.id);
+
+      return res
+        .status(200)
+        .cookie('accessToken', accessToken, this.cookieOptions('access')) // set the access token in the cookie
+        .cookie('refreshToken', refreshToken, this.cookieOptions('refresh')) // set the refresh token in the cookie
+        .json(new ApiResponse(200, {}, 'User signin in successfully'));
+    }
   });
 
   handleRegister: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -119,7 +110,6 @@ export class AuthController {
 
     await this.userServices.activateFreePlan(updatedUser.id);
 
-
     return res
       .status(201)
       .cookie('accessToken', accessToken, this.cookieOptions('access')) // set the access token in the cookie
@@ -142,7 +132,7 @@ export class AuthController {
 
     if (!user) {
       this.logger.error('account not found');
-      throw new ApiError(404, 'account not found please register', "USER_NOT_FOUND");
+      throw new ApiError(404, 'account not found please register', 'USER_NOT_FOUND');
     }
 
     const passwordCorrect = await this.userServices.verifyPassword(password, user.password!);
@@ -166,7 +156,7 @@ export class AuthController {
     return res
       .status(200)
       .cookie('accessToken', accessToken, accessTokenOptions) // set the access token in the cookie
-      .cookie('refreshToken', refreshToken,refreshTokenOption) // set the refresh token in the cookie
+      .cookie('refreshToken', refreshToken, refreshTokenOption) // set the refresh token in the cookie
       .json(
         new ApiResponse(
           200,
@@ -192,8 +182,8 @@ export class AuthController {
 
     return res
       .status(200)
-      .clearCookie('accessToken', options)
-      .clearCookie('refreshToken', options)
+      .clearCookie('accessToken', this.cookieOptions('access'))
+      .clearCookie('refreshToken', this.cookieOptions('access'))
       .json(new ApiResponse(200, {}, 'User logged out'));
   });
 
@@ -225,13 +215,14 @@ export class AuthController {
       this.logger.error('user not found ', { id: decoded.id });
       throw new ApiError(500, 'internal server error');
     }
-    this.logger.info(`Incoming refresh Token ${incomingRefreshToken} ; saved refresh token : ${user.refresh_token}`)
+    this.logger.info(
+      `Incoming refresh Token ${incomingRefreshToken} ; saved refresh token : ${user.refresh_token}`,
+    );
 
     if (incomingRefreshToken !== user.refresh_token) {
       this.logger.error('refresh token comparison failed');
       throw new ApiError(400, 'invalid token');
     }
-
 
     const { accessToken, refreshToken } = this.jwtToken.generateAccessTokenAndRefreshToken(
       user.id,
@@ -247,15 +238,9 @@ export class AuthController {
 
     return res
       .status(200)
-      .cookie('accessToken', accessToken, this.cookieOptions("access"))
-      .cookie('refreshToken', refreshToken, this.cookieOptions("refresh"))
-      .json(
-        new ApiResponse(
-          200,
-          {},
-          "Access token refreshed",
-        ),
-      );
+      .cookie('accessToken', accessToken, this.cookieOptions('access'))
+      .cookie('refreshToken', refreshToken, this.cookieOptions('refresh'))
+      .json(new ApiResponse(200, {}, 'Access token refreshed'));
   });
 
   handleDeleteAccountRequest: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -278,8 +263,8 @@ export class AuthController {
 
     return res
       .status(200)
-      .clearCookie('accessToken', options)
-      .clearCookie('refreshToken', options)
+      .clearCookie('accessToken', this.cookieOptions('access'))
+      .clearCookie('refreshToken', this.cookieOptions('access'))
       .json(new ApiResponse(200, {}, 'Account Deleted Successfully'));
   });
 
@@ -336,8 +321,6 @@ export class AuthController {
       throw new ApiError(500, 'failed to toggle onboarding true');
     }
 
-    return res
-      .status(200)
-      .json(new ApiResponse(200, updatedUser, 'Success'));
+    return res.status(200).json(new ApiResponse(200, updatedUser, 'Success'));
   });
 }

@@ -71,10 +71,10 @@ export class AnalyticsService {
     thirtyDaysAgo.setHours(0, 0, 0, 0);
 
     // 2️⃣ Fetch raw successful postings matching your enums
-    const platformPosts = await this.prisma.platformPost.findMany({
+    const platformPosts = await this.prisma.post.findMany({
       where: {
         owner_id: userId,
-        status: "POSTED", // PlatfromPostStatus enum
+        status: "PUBLISHED", // PlatfromPostStatus enum
         createdAt: { gte: thirtyDaysAgo },
       },
       select: {

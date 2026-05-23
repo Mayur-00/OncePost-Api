@@ -17,13 +17,13 @@ export class RazorpayService {
     currency: string,
     subscription_id: string,
     user_id: string,
-    reciept?: string,
+    receipt?: string,
   ): Promise<{ order: Orders.RazorpayOrder; transaction_id: string }> {
     try {
       const options = {
         amount: amount,
         currency,
-        reciept,
+        receipt,
       };
       const rxp = await this.razorpay.orders.create(options);
       console.log(amount);
