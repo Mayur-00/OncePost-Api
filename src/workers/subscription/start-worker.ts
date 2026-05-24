@@ -3,7 +3,6 @@ import logger from '../../config/logger.config.js';
 import connectDb from '../../lib/db.js';
 import { Subscription_Worker } from './worker.js';
 
-
 if (process.env.NODE_ENV !== 'production') {
   dotenv.config();
 }

@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { Logger } from 'winston';
 import {
   AccessTokenResponseType,
@@ -129,53 +129,56 @@ export class linkedinServices {
       this.logger.info('linkedin acccess token obtained by this code', {
         code: code.substring(0, 5),
       });
+
       return response.data;
-    } catch (error: any) {
-      if (error.response) {
-        this.logger.error('LinkedIn API Error Response', {
-          status: error.response.status,
-          statusText: error.response.statusText,
-          data: error.response.data,
-          headers: error.response.headers,
-        });
-      } else {
-        this.logger.error('LinkedIn Request Failed', {
-          message: error.message,
-          code: error.code,
-        });
-      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          this.logger.error('LinkedIn API Error Response', {
+            status: error.response.status,
+            statusText: error.response.statusText,
+            data: error.response.data,
+            headers: error.response.headers,
+          });
+        } else {
+          this.logger.error('LinkedIn Request Failed', {
+            message: error.message,
+            code: error.code,
+          });
+        }
 
-      if (error.response?.status === 400) {
-        const errorData = error.response.data;
+        if (error.response?.status === 400) {
+          const errorData = error.response.data;
 
-        // LinkedIn returns specific error messages
-        if (errorData?.error === 'invalid_grant') {
+          // LinkedIn returns specific error messages
+          if (errorData?.error === 'invalid_grant') {
+            throw new ApiError(
+              400,
+              'Authorization code is invalid or expired. Please try logging in again.',
+            );
+          }
+
+          if (errorData?.error === 'invalid_redirect_uri') {
+            throw new ApiError(400, 'Redirect URI mismatch. Please contact support.');
+          }
+
           throw new ApiError(
             400,
-            'Authorization code is invalid or expired. Please try logging in again.',
+            `LinkedIn authentication failed: ${errorData?.error_description || 'Invalid request'}`,
           );
         }
 
-        if (errorData?.error === 'invalid_redirect_uri') {
-          throw new ApiError(400, 'Redirect URI mismatch. Please contact support.');
+        if (error.response?.status === 401) {
+          throw new ApiError(409, 'Invalid client credentials');
         }
 
-        throw new ApiError(
-          400,
-          `LinkedIn authentication failed: ${errorData?.error_description || 'Invalid request'}`,
-        );
+        if (error.response?.status === 429) {
+          throw new ApiError(429, 'Rate limit exceeded. Please try again later.');
+        }
       }
-
-      if (error.response?.status === 401) {
-        throw new ApiError(409, 'Invalid client credentials');
-      }
-
-      if (error.response?.status === 429) {
-        throw new ApiError(429, 'Rate limit exceeded. Please try again later.');
-      }
+      throw new ApiError(500, 'Failed to authenticate with LinkedIn');
 
       // Generic error
-      throw new ApiError(500, 'Failed to authenticate with LinkedIn');
     }
   }
 
@@ -415,7 +418,7 @@ export class linkedinServices {
     }
   }
 
-  async   getUserAccount(userid: string): Promise<SocialAccount> {
+  async getUserAccount(userid: string): Promise<SocialAccount> {
     try {
       const user = await this.prisma.socialAccount.findFirst({
         where: {
@@ -427,14 +430,18 @@ export class linkedinServices {
       });
       if (!user) {
         this.logger.error('LinkedIn account not found', { userId: userid });
-        throw new ApiError(404, 'account not found , please reconnect to linkedin ', "LINKEDIN_ACCOUNT_EXPIRED");
+        throw new ApiError(
+          404,
+          'account not found , please reconnect to linkedin ',
+          'LINKEDIN_ACCOUNT_EXPIRED',
+        );
       }
 
       this.logger.info('LinkedIn account found', { userId: userid, accountId: user.id });
       return user;
     } catch (error) {
       this.logger.error('account fetch Failed : ', { error });
-      throw new ApiError(404, 'database linkedin account fetch failed', "LINKEDIN_ACCOUNT_EXPIRED");
+      throw new ApiError(404, 'database linkedin account fetch failed', 'LINKEDIN_ACCOUNT_EXPIRED');
     }
   }
 

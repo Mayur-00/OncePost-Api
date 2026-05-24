@@ -3,16 +3,15 @@ import { ApiError, IApiError } from '../utils/apiError.js';
 import { ZodError } from 'zod';
 import logger from '../config/logger.config.js';
 
-export const handleError = (err: any, req: Request, res: Response, next: NextFunction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const handleError = (err: unknown, _req: Request, res: Response, next: NextFunction) => {
   console.log(err);
-  let error: IApiError | Error | ZodError | any = err;
+  let error: IApiError | Error | ZodError | unknown = err;
 
   const IsInDevelopment = process.env.NODE_ENV === 'development';
 
   if (!(error instanceof ApiError)) {
-
     if (error instanceof ZodError) {
-
       const statusCode = 400;
 
       const message =
@@ -25,36 +24,42 @@ export const handleError = (err: any, req: Request, res: Response, next: NextFun
       error = new ApiError(statusCode, message, 'INPUT_VALIDATION_ERROR', errors, error.stack);
 
       logger.error(`Input Validation Error : ${error}`);
-
     } else {
-      
-      const statusCode = error && error.statusCode ? error.statusCode : 500;
-      const message = error && error.message ? error.message : 'Something Went Wrong';
+      const statusCode = (error as { statusCode?: number })?.statusCode ?? 500;
+      const message = (error as { message?: string })?.message ?? 'Something Went Wrong';
       const error_code = 'SERVER_ERROR';
 
-      error = new ApiError(statusCode, message, error_code, error.errors || [], error.stack);
+      error = new ApiError(
+        statusCode,
+        message,
+        error_code,
+        (error as { errors?: unknown[] })?.errors ?? [],
+        (error as { stack?: string })?.stack,
+      );
       logger.error(`Implementation error : ${error}`);
     }
   }
 
+  const errorObj = error as ApiError;
+
   const response: ResponseType = {
     success: false,
-    message: error.message,
-    error_code: error.error_code,
-    errors: error.errors || [],
+    message: errorObj.message,
+    error_code: errorObj.error_code,
+    errors: errorObj.errors || [],
     stack: undefined,
   };
 
-  if (IsInDevelopment) response.stack = error.stack;
+  if (IsInDevelopment) response.stack = errorObj.stack;
 
-  res.status(error.statusCode || 500).json(response);
+  res.status(errorObj.statusCode || 500).json(response);
 };
 
 export type ResponseType = {
   success: boolean;
   message: string;
-  error_code: string;
   errors: unknown[];
+  error_code?: string;
   stack?: string;
   data?: object;
 };

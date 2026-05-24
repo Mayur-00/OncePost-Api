@@ -28,7 +28,6 @@ app.set('trust proxy', 1);
 
 app.use('/api/', limiter);
 
-
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'ok',

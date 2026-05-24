@@ -76,7 +76,7 @@ export class RazorpayService {
       const generatedSignature = this.generatePaymentSignature(order_id, payment_id);
 
       if (generatedSignature === payment_signature) {
-        this.logger.info('verification success')
+        this.logger.info('verification success');
         this.logger.info('Payment signature verified and transaction completed', {
           transactionId: transaction_id,
           orderId: order_id,

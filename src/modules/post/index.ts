@@ -8,7 +8,13 @@ import { xServices } from '../x/index.js';
 
 export const postServices = new PostService(prisma, logger);
 
-export const postController = new PostController(logger, postServices, prisma, LinkedinService, xServices);
+export const postController = new PostController(
+  logger,
+  postServices,
+  prisma,
+  LinkedinService,
+  xServices,
+);
 
 export const postRoutes = createPostRoutes(postController);
 

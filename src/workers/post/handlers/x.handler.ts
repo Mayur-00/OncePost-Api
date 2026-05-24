@@ -2,14 +2,13 @@ import { Logger } from 'winston';
 import { XServices } from '../../../modules/x/x.services.js';
 import { PostJobData } from '../../worker.types.js';
 
-
 export class Xhandler {
   constructor(
     private xServices: XServices,
     private logger: Logger,
   ) {}
 
-  async handle(jobData: PostJobData): Promise<any> {
+  async handle(jobData: PostJobData): Promise<unknown> {
     const { postId, userId, content, mediaUrl, mediaType } = jobData;
 
     try {

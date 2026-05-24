@@ -219,7 +219,7 @@ export class XServices {
     try {
       const now = Date.now();
       const isExpired = !account.token_expiry || account.token_expiry.getTime() <= now;
-      this.logger.info(`is access token expired ${isExpired}`)
+      this.logger.info(`is access token expired ${isExpired}`);
 
       if (isExpired) {
         if (!account.refresh_token) {
@@ -234,7 +234,7 @@ export class XServices {
             await this.markXAccountExpired(account.id);
             throw new ApiError(403, 'X Account Expired', 'X_ACCOUNT_EXPIRED');
           } else {
-            throw new ApiError(500, "Internal Server Error");
+            throw new ApiError(500, 'Internal Server Error');
           }
         }
 
@@ -280,7 +280,7 @@ export class XServices {
     accessToken: string,
   ): Promise<TweetResponse> {
     try {
-      const payload: { text: string; media?: {} } = { text };
+      const payload: { text: string; media?: unknown } = { text };
 
       // Only add media if mediaIds exist and array is not empty
       if (mediaIds && mediaIds.length > 0) {

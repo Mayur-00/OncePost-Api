@@ -1,17 +1,17 @@
 class ApiError extends Error implements IApiError {
   statusCode: number;
   message: string;
-  data: any | null;
+  data: unknown | null;
   success: boolean;
   error_code?: string;
-  errors: any[];
+  errors: unknown[];
   stack?: string | undefined;
 
   constructor(
     statusCode: number,
     message = 'Something Went wrong',
     error_code = 'IMPLEMENTATION_ERROR',
-    error: any[] = [],
+    error: unknown[] = [],
     stack = '',
   ) {
     super(message);
@@ -33,9 +33,9 @@ class ApiError extends Error implements IApiError {
 interface IApiError {
   statusCode: number;
   message: string;
-  data: any | null;
+  data: unknown | null;
   success: boolean;
-  errors: any[];
+  errors: unknown[];
   error_code?: string;
   stack?: string | undefined;
 }

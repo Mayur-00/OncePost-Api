@@ -8,7 +8,6 @@ import { xServices } from '../../modules/x/index.js';
 import { linkedinHandler } from './handlers/linkedin.handler.js';
 import { Xhandler } from './handlers/x.handler.js';
 
-
 export const postWorker = new Worker<jobBody>(
   'post',
   async (job) => {
@@ -27,9 +26,7 @@ export const postWorker = new Worker<jobBody>(
       }
 
       for (const platform of platfroms) {
-
         switch (platform) {
-          
           case 'LINKEDIN': {
             const lnkHandler = new linkedinHandler(LinkedinService, logger);
             const linkedinJobData: PostJobData = {

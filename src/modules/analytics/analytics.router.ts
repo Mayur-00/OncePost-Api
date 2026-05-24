@@ -1,12 +1,6 @@
-import { Router } from "express";
-
- // Adjust import to your architecture
-import logger from "../../config/logger.config.js";
-import { authorize } from "../../middlewares/auth.middleware.js";
-import { AnalyticsController } from "./analytics.controller.js";
-
-const router = Router();
-
+import { Router } from 'express';
+import { authorize } from '../../middlewares/auth.middleware.js';
+import { AnalyticsController } from './analytics.controller.js';
 
 export function createAnalyticsRoutes(controller: AnalyticsController): Router {
   const router = Router();

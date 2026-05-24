@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { Request, Response, RequestHandler } from 'express';
 import { Logger } from 'winston';
 import { AnalyticsService } from './analytics.services.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';

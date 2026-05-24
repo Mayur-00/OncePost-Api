@@ -119,36 +119,36 @@ export class PostController {
 
       // check if the linkedin x account is expired or not
 
-        for (const platform of platforms) {
-          switch (platform) {
-            case 'LINKEDIN': {
-              const account = await this.linkedinServices.getUserAccount(req.user.id);
+      for (const platform of platforms) {
+        switch (platform) {
+          case 'LINKEDIN': {
+            const account = await this.linkedinServices.getUserAccount(req.user.id);
 
-              const result = await this.linkedinServices.validateAccessToken(account);
+            const result = await this.linkedinServices.validateAccessToken(account);
 
-              if (!result.success) {
-                throw new ApiError(
-                  400,
-                  'Linkedin account expired please reconnect',
-                  'LINKEDIN_ACCOUNT_EXPIRED',
-                );
-              }
+            if (!result.success) {
+              throw new ApiError(
+                400,
+                'Linkedin account expired please reconnect',
+                'LINKEDIN_ACCOUNT_EXPIRED',
+              );
+            }
 
-              break;
+            break;
+          }
+          case 'X': {
+            const account = await this.xServices.getActiveXAccount(req.user.id);
+            if (!account) {
+              throw new Error('No active X account found');
             }
-            case 'X': {
-              const account = await this.xServices.getActiveXAccount(req.user.id);
-              if (!account) {
-                throw new Error('No active X account found');
-              }
-              await this.xServices.validateAccessToken(account);
-              break;
-            }
-            default: {
-              throw new ApiError(404, 'Unknown Platform');
-            }
+            await this.xServices.validateAccessToken(account);
+            break;
+          }
+          default: {
+            throw new ApiError(404, 'Unknown Platform');
           }
         }
+      }
 
       if (scheduledDateAndTime) {
         const post = await this.postServices.createPost(
@@ -178,9 +178,8 @@ export class PostController {
           delay: delay,
           jobId: post.id,
         });
-  
-          
-          await this.postServices.LogUsage(userid);
+
+        await this.postServices.LogUsage(userid);
 
         this.logger.info('Post Scheduled Successfuly');
         res.status(200).json(new ApiResponse(203, 'Scheduled successFully'));

@@ -16,7 +16,12 @@ export const userServices = new UserServices(
 
 export const jwtService = new jwtToken();
 
-export const authController = new AuthController(logger, userServices, jwtService, generateCookieOptions);
+export const authController = new AuthController(
+  logger,
+  userServices,
+  jwtService,
+  generateCookieOptions,
+);
 
 export const authRoutes = createAuthRoutes(authController);
 

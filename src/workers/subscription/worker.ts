@@ -1,19 +1,18 @@
 import { Worker } from 'bullmq';
 import { redisConnection } from '../../config/redis.config.js';
-import { ExpireSubscriptionJobBody, } from '../worker.types.js';
+import { ExpireSubscriptionJobBody } from '../worker.types.js';
 import logger from '../../config/logger.config.js';
 import { SubscriptionExpirationHandler } from './handlers/subscriptionExpiration.handler.js';
 import { SubscriptionServices } from '../../modules/subscription/index.js';
-
 
 export const Subscription_Worker = new Worker<ExpireSubscriptionJobBody>(
   'subscription_expire',
   async (job) => {
     try {
-      const {subscriptionId, userId} = job.data;
+      const { subscriptionId, userId } = job.data;
       const subscriptionHander = new SubscriptionExpirationHandler(SubscriptionServices, logger);
 
-       await subscriptionHander.Handle(subscriptionId, userId);
+      await subscriptionHander.Handle(subscriptionId, userId);
 
       return true;
     } catch (error) {

@@ -18,7 +18,6 @@ const level = () => {
   return isDevelopment ? 'debug' : 'info';
 };
 
-
 const colors = {
   error: 'red',
   warn: 'yellow',
@@ -41,11 +40,7 @@ const format = winston.format.combine(
   winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`),
 );
 
-
-const transports = [
-
-  new winston.transports.Console(),
-];
+const transports = [new winston.transports.Console()];
 
 // Create the logger instance that has to be exported
 // and used to log messages.

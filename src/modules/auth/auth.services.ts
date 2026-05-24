@@ -89,7 +89,6 @@ export class UserServices {
               connected_accounts: true,
             },
           },
-          
         },
       });
       this.logger.info('User fetched with connected accounts', {
@@ -157,12 +156,7 @@ export class UserServices {
       throw new ApiError(500, 'internal server error');
     }
   }
-  async updateUser(
-    email: string,
-    provider: string,
-    providerid?: string,
-    refreshToken?: string,
-  ) {
+  async updateUser(email: string, provider: string, providerid?: string, refreshToken?: string) {
     try {
       const user = await this.prisma.user.update({
         where: {
@@ -175,16 +169,13 @@ export class UserServices {
           refresh_token: refreshToken,
         },
 
-        select:{
-          email:true,
-          name:true,
-          profile_picture:true,
-          updatedAt:true,
-          isOnboarded:true,
-
-          
-
-        }
+        select: {
+          email: true,
+          name: true,
+          profile_picture: true,
+          updatedAt: true,
+          isOnboarded: true,
+        },
       });
       this.logger.info('User updated successfully', {
         email: user.email,
@@ -247,7 +238,7 @@ export class UserServices {
       return payload;
     } catch (error) {
       this.logger.error("token didn't verify", { error: error });
-      throw new ApiError(401, 'token expired or invalid', "INCORRECT_PASSWORD" ,[]  );
+      throw new ApiError(401, 'token expired or invalid', 'INCORRECT_PASSWORD', []);
     }
   }
   async verifyPassword(new_password: string, user_password: string): Promise<boolean> {
@@ -256,7 +247,7 @@ export class UserServices {
       this.logger.info('Password verification completed', { isMatched: isMatched });
       return isMatched;
     } catch (error) {
-      this.logger.error("failed to verify password", { error: error });
+      this.logger.error('failed to verify password', { error: error });
       throw new ApiError(400, 'Incorrect Password');
     }
   }
@@ -328,7 +319,7 @@ export class UserServices {
       if (!plan) {
         this.logger.error(`Free plan not found`);
         throw new ApiError(404, 'Plan not found');
-      };
+      }
 
       const farFutureDate = new Date();
       farFutureDate.setFullYear(farFutureDate.getFullYear() + 10);

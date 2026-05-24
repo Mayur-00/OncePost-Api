@@ -2,14 +2,13 @@ import { Logger } from 'winston';
 import { linkedinServices } from '../../../modules/linkedin/linkedin.services.js';
 import { PostJobData } from '../../worker.types.js';
 
-
 export class linkedinHandler {
   constructor(
     private linkedinServices: linkedinServices,
     private logger: Logger,
   ) {}
 
-  async handle(jobData: PostJobData): Promise<any> {
+  async handle(jobData: PostJobData): Promise<unknown> {
     const { postId, userId, content, mediaUrl } = jobData;
 
     try {
@@ -42,7 +41,7 @@ export class linkedinHandler {
         throw new Error('Account expired');
       }
 
-      let publishPost: any;
+      let publishPost;
 
       if (mediaUrl) {
         // Post with image

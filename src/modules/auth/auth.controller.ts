@@ -20,7 +20,7 @@ export class AuthController {
     private logger: Logger,
     private userServices: UserServices,
     private jwtToken: jwtToken,
-    private cookieOptions:generateCookieOptionsType
+    private cookieOptions: generateCookieOptionsType,
   ) {}
 
   handleGoogleLogin: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -41,12 +41,7 @@ export class AuthController {
         user.name,
       );
 
-      const updatedUser = await this.userServices.updateUser(
-        user.email,
-        'GOOGLE',
-        payload?.sub,
-        refreshToken,
-      );
+      await this.userServices.updateUser(user.email, 'GOOGLE', payload?.sub, refreshToken);
 
       return res
         .status(200)
@@ -148,7 +143,7 @@ export class AuthController {
       user.name,
     );
 
-    const updatedUser = await this.userServices.updateUsersRefreshToken(user.id, refreshToken);
+    await this.userServices.updateUsersRefreshToken(user.id, refreshToken);
 
     const accessTokenOptions = this.cookieOptions('access');
     const refreshTokenOption = this.cookieOptions('refresh');
@@ -174,11 +169,6 @@ export class AuthController {
     }
 
     await this.userServices.clearUsersRefreshToken(reqUserId);
-
-    const options = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-    };
 
     return res
       .status(200)
@@ -255,11 +245,6 @@ export class AuthController {
       this.logger.error(`can't delete account due to db failure `);
       throw new ApiError(500, 'Internal Server Error');
     }
-
-    const options = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-    };
 
     return res
       .status(200)

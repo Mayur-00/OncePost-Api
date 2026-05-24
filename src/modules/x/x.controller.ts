@@ -55,7 +55,7 @@ export class XController {
     }
 
     await this.XServices.markSessionAsUsed(sessionResponse.id);
-    
+
     const accessTokenResponse = await this.XServices.getAccessToken(
       sessionResponse.codeVerifier,
       code,

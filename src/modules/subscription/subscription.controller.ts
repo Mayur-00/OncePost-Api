@@ -72,13 +72,12 @@ export class SubscriptionControllerClass {
         this.logger.error('transaction detailes not found');
         throw new ApiError(404, 'Transaction not found');
       }
-      const isPaymentVerified =
-      await  this.razorpayServices.varifyPaymentSignature(
-          order_id,
-          payment_id,
-          payment_signature,
-          transaction.id,
-        );
+      const isPaymentVerified = await this.razorpayServices.varifyPaymentSignature(
+        order_id,
+        payment_id,
+        payment_signature,
+        transaction.id,
+      );
 
       if (!isPaymentVerified) {
         this.logger.error(`the payment is not verified or currupt`);
@@ -103,13 +102,12 @@ export class SubscriptionControllerClass {
       if (delay < 0) {
         throw new ApiError(400, 'subscription expiration time must be in the future');
       }
-     
 
       const jobData: ExpireSubscriptionJobBody = {
         subscriptionId: subscription.id,
         userId: userid,
       };
-       const jobId = `expire-${subscription.id}`
+      const jobId = `expire-${subscription.id}`;
       subscriptionExpirationQueue.add(`subscription-expire-${subscription.id}-${userid}`, jobData, {
         delay: delay,
         jobId: jobId,
@@ -207,7 +205,7 @@ export class SubscriptionControllerClass {
         subscriptionId: subscription.id,
         userId: userid,
       };
-      const jobId = `expire-${subscription.id}`
+      const jobId = `expire-${subscription.id}`;
 
       subscriptionExpirationQueue.add(`subscription-expire-${subscription.id}-${userid}`, jobData, {
         delay: delay,
@@ -237,11 +235,11 @@ export class SubscriptionControllerClass {
     return res.status(200).json(new ApiResponse(200, plan, 'Success'));
   });
   getCurrentPlan: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
-      const userid = req.user?.id;
+    const userid = req.user?.id;
 
     if (!userid) {
       throw new ApiError(401, 'unauthorized');
-    } 
+    }
 
     const plan = await this.subscriptionService.getSubscription(userid);
 

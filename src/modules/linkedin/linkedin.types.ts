@@ -21,7 +21,7 @@ export interface LinkedinUserInfoResponse {
   };
   given_name: string;
   family_name: string;
-  email: string;  
+  email: string;
   picture: string;
 }
 

@@ -9,11 +9,13 @@ export class SubscriptionExpirationHandler {
 
   async Handle(subscription_id: string, userId: string) {
     try {
-      const now = new Date();
-      const currentSubscription = await this.SubscriptionServices.getSubcriptionById(subscription_id);
-      
+      const currentSubscription =
+        await this.SubscriptionServices.getSubcriptionById(subscription_id);
+
       if (!currentSubscription) {
-        this.logger.warn(`Subscription target processing skipped: ID ${subscription_id} not found.`);
+        this.logger.warn(
+          `Subscription target processing skipped: ID ${subscription_id} not found.`,
+        );
         return false;
       }
 
@@ -29,25 +31,30 @@ export class SubscriptionExpirationHandler {
       //   throw new Error('Subscription cannot be expired yet!');
       // }
 
-      const expiredSubscription = await this.SubscriptionServices.expireSubscription(currentSubscription.id);
+      const expiredSubscription = await this.SubscriptionServices.expireSubscription(
+        currentSubscription.id,
+      );
 
-      if (!expiredSubscription || expiredSubscription.status !== "EXPIRED") {
-        this.logger.error(`Prisma failed to commit EXPIRED status for subscription ID: ${subscription_id}`);
+      if (!expiredSubscription || expiredSubscription.status !== 'EXPIRED') {
+        this.logger.error(
+          `Prisma failed to commit EXPIRED status for subscription ID: ${subscription_id}`,
+        );
         throw new Error('failed to expire subscription');
       }
 
       const activateFreePlan = await this.SubscriptionServices.ReactivateFreeSubscription(userId);
-      if (!activateFreePlan || activateFreePlan.status !== "ACTIVE") {
-        this.logger.error(`Downgrade failure: Couldn't reactivate Free Plan for user ID: ${userId}`);
-        throw new Error("Failed To Re Activate Free Plan");
+      if (!activateFreePlan || activateFreePlan.status !== 'ACTIVE') {
+        this.logger.error(
+          `Downgrade failure: Couldn't reactivate Free Plan for user ID: ${userId}`,
+        );
+        throw new Error('Failed To Re Activate Free Plan');
       }
-      
+
       this.logger.info(`Successfully transitioned User ${userId} to Free Tier.`);
       return true;
-
     } catch (error) {
-        this.logger.error(`Failed To Expire Subscription ${subscription_id}: ${error}`);
-        throw error;
+      this.logger.error(`Failed To Expire Subscription ${subscription_id}: ${error}`);
+      throw error;
     }
   }
 }
