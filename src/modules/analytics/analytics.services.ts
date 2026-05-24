@@ -1,9 +1,6 @@
 import { Logger } from 'winston';
 import {
-  PlatformPost,
-  PlatfromPostStatus,
   PrismaClient,
-  SocialAccount,
 } from '../../generated/prisma/client.js';
 
 
@@ -85,7 +82,6 @@ export class AnalyticsService {
 
     // 3️⃣ Pre-populate every calendar date key to avoid gaps
     const dataMap: Record<string, { date: string; posts: number }> = {};
-    // console.log(platformPosts)
     
     for (let i = 29; i >= 0; i--) {
       const loopDate = new Date();
@@ -96,7 +92,6 @@ export class AnalyticsService {
     }
 
     // 4️⃣ Aggregate total platform actions into their calendar date slots
-    this.logger.info(platformPosts);
     platformPosts.forEach((pPost) => {
       
       const dateKey = pPost.updatedAt.toISOString().split("T")[0];
