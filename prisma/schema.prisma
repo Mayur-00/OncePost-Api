@@ -110,8 +110,8 @@ model SocialAccount {
   platform_post  PlatformPost[]
   post_analytics PostAnalytic[]
 
-  @@index([owner_id])
-  @@index([platform])
+  @@index([owner_id, platform])
+
 }
 
 model Post {
@@ -231,6 +231,7 @@ enum SubscriptionStatus {
   FAILED
 }
 
+
 model Subscription {
   id                      String             @id @default(cuid())
   user_id                 String
@@ -250,8 +251,8 @@ model Subscription {
   plan         SubscriptionPlan @relation(fields: [plan_id], references: [id])
   transactions Transaction[]
 
-  @@index([user_id])
-  @@index([status])
+  @@index([user_id, status])
+ 
 }
 
 enum TransactionStatus {
