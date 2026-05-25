@@ -26,7 +26,7 @@ export class RazorpayService {
         receipt,
       };
       const rxp = await this.razorpay.orders.create(options);
-      console.log(amount);
+      // console.log(amount);
 
       const transaction = await this.prismaClient.transaction.create({
         data: {
@@ -92,6 +92,7 @@ export class RazorpayService {
   }
 
   async getTransactionById(transaction_id: string) {
+    
     try {
       const transaction = await this.prismaClient.transaction.findUnique({
         where: {

@@ -64,24 +64,6 @@ export class UserServices {
               isExpired: true,
             },
           },
-          subscriptions: {
-            where: {
-              status: 'ACTIVE',
-            },
-            select: {
-              end_date: true,
-              start_date: true,
-              post_creation_remaining: true,
-              status: true,
-              plan: {
-                select: {
-                  plan_tier: true,
-                  maxPostsPerMonth: true,
-                  price: true,
-                },
-              },
-            },
-          },
           _count: {
             select: {
               posts: true,
