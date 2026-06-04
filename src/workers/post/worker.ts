@@ -7,12 +7,15 @@ import { LinkedinService } from '../../modules/linkedin/index.js';
 import { xServices } from '../../modules/x/index.js';
 import { linkedinHandler } from './handlers/linkedin.handler.js';
 import { Xhandler } from './handlers/x.handler.js';
+import { blueskyHandler } from './handlers/Bluesky.handler.js';
+import { BlueskyServices } from '../../modules/blueksky/index.js';
 
 export const postWorker = new Worker<jobBody>(
   'post',
   async (job) => {
     try {
       const { postId, userid, platfroms } = job.data;
+
       if (!postId) {
         logger.error(`post id or userid not found`);
         throw new Error('postid not found');
@@ -55,6 +58,21 @@ export const postWorker = new Worker<jobBody>(
             await xhandler.handle(xjobData);
 
             logger.info('tweet published on x successfully');
+            break;
+          }
+          case 'BLUESKY': {
+            const blsHander = new blueskyHandler(BlueskyServices, logger);
+            const blsJobData: PostJobData = {
+              postId,
+              content: post.content || '',
+              mediaType: post.mediaType || '',
+              mediaUrl: post.mediaUrl || '',
+              userId: userid,
+            };
+
+            await blsHander.handle(blsJobData);
+
+            logger.info('post published on Bluesky successfully');
             break;
           }
           default:

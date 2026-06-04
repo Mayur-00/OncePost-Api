@@ -219,7 +219,6 @@ export type PostWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   platform_post?: Prisma.PlatformPostListRelationFilter
-  related_job?: Prisma.JobListRelationFilter
 }
 
 export type PostOrderByWithRelationInput = {
@@ -235,7 +234,6 @@ export type PostOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   owner?: Prisma.UserOrderByWithRelationInput
   platform_post?: Prisma.PlatformPostOrderByRelationAggregateInput
-  related_job?: Prisma.jobOrderByRelationAggregateInput
 }
 
 export type PostWhereUniqueInput = Prisma.AtLeast<{
@@ -254,7 +252,6 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   platform_post?: Prisma.PlatformPostListRelationFilter
-  related_job?: Prisma.JobListRelationFilter
 }, "id">
 
 export type PostOrderByWithAggregationInput = {
@@ -301,7 +298,6 @@ export type PostCreateInput = {
   updatedAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutPostsInput
   platform_post?: Prisma.PlatformPostCreateNestedManyWithoutPostInput
-  related_job?: Prisma.jobCreateNestedManyWithoutRelated_postInput
 }
 
 export type PostUncheckedCreateInput = {
@@ -316,7 +312,6 @@ export type PostUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutPostInput
-  related_job?: Prisma.jobUncheckedCreateNestedManyWithoutRelated_postInput
 }
 
 export type PostUpdateInput = {
@@ -331,7 +326,6 @@ export type PostUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   platform_post?: Prisma.PlatformPostUpdateManyWithoutPostNestedInput
-  related_job?: Prisma.jobUpdateManyWithoutRelated_postNestedInput
 }
 
 export type PostUncheckedUpdateInput = {
@@ -346,7 +340,6 @@ export type PostUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutPostNestedInput
-  related_job?: Prisma.jobUncheckedUpdateManyWithoutRelated_postNestedInput
 }
 
 export type PostCreateManyInput = {
@@ -520,20 +513,6 @@ export type PostUpdateOneRequiredWithoutPlatform_postNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutPlatform_postInput, Prisma.PostUpdateWithoutPlatform_postInput>, Prisma.PostUncheckedUpdateWithoutPlatform_postInput>
 }
 
-export type PostCreateNestedOneWithoutRelated_jobInput = {
-  create?: Prisma.XOR<Prisma.PostCreateWithoutRelated_jobInput, Prisma.PostUncheckedCreateWithoutRelated_jobInput>
-  connectOrCreate?: Prisma.PostCreateOrConnectWithoutRelated_jobInput
-  connect?: Prisma.PostWhereUniqueInput
-}
-
-export type PostUpdateOneRequiredWithoutRelated_jobNestedInput = {
-  create?: Prisma.XOR<Prisma.PostCreateWithoutRelated_jobInput, Prisma.PostUncheckedCreateWithoutRelated_jobInput>
-  connectOrCreate?: Prisma.PostCreateOrConnectWithoutRelated_jobInput
-  upsert?: Prisma.PostUpsertWithoutRelated_jobInput
-  connect?: Prisma.PostWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutRelated_jobInput, Prisma.PostUpdateWithoutRelated_jobInput>, Prisma.PostUncheckedUpdateWithoutRelated_jobInput>
-}
-
 export type PostCreateWithoutOwnerInput = {
   id?: string
   content?: string | null
@@ -545,7 +524,6 @@ export type PostCreateWithoutOwnerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   platform_post?: Prisma.PlatformPostCreateNestedManyWithoutPostInput
-  related_job?: Prisma.jobCreateNestedManyWithoutRelated_postInput
 }
 
 export type PostUncheckedCreateWithoutOwnerInput = {
@@ -559,7 +537,6 @@ export type PostUncheckedCreateWithoutOwnerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutPostInput
-  related_job?: Prisma.jobUncheckedCreateNestedManyWithoutRelated_postInput
 }
 
 export type PostCreateOrConnectWithoutOwnerInput = {
@@ -615,7 +592,6 @@ export type PostCreateWithoutPlatform_postInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutPostsInput
-  related_job?: Prisma.jobCreateNestedManyWithoutRelated_postInput
 }
 
 export type PostUncheckedCreateWithoutPlatform_postInput = {
@@ -629,7 +605,6 @@ export type PostUncheckedCreateWithoutPlatform_postInput = {
   scheduledAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  related_job?: Prisma.jobUncheckedCreateNestedManyWithoutRelated_postInput
 }
 
 export type PostCreateOrConnectWithoutPlatform_postInput = {
@@ -659,7 +634,6 @@ export type PostUpdateWithoutPlatform_postInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
-  related_job?: Prisma.jobUpdateManyWithoutRelated_postNestedInput
 }
 
 export type PostUncheckedUpdateWithoutPlatform_postInput = {
@@ -673,79 +647,6 @@ export type PostUncheckedUpdateWithoutPlatform_postInput = {
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  related_job?: Prisma.jobUncheckedUpdateManyWithoutRelated_postNestedInput
-}
-
-export type PostCreateWithoutRelated_jobInput = {
-  id?: string
-  content?: string | null
-  mediaUrl?: string | null
-  mediaType?: string | null
-  status: $Enums.PostStatus
-  scheduled_for?: Prisma.PostCreatescheduled_forInput | $Enums.SocialPlatforms[]
-  scheduledAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutPostsInput
-  platform_post?: Prisma.PlatformPostCreateNestedManyWithoutPostInput
-}
-
-export type PostUncheckedCreateWithoutRelated_jobInput = {
-  id?: string
-  owner_id: string
-  content?: string | null
-  mediaUrl?: string | null
-  mediaType?: string | null
-  status: $Enums.PostStatus
-  scheduled_for?: Prisma.PostCreatescheduled_forInput | $Enums.SocialPlatforms[]
-  scheduledAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutPostInput
-}
-
-export type PostCreateOrConnectWithoutRelated_jobInput = {
-  where: Prisma.PostWhereUniqueInput
-  create: Prisma.XOR<Prisma.PostCreateWithoutRelated_jobInput, Prisma.PostUncheckedCreateWithoutRelated_jobInput>
-}
-
-export type PostUpsertWithoutRelated_jobInput = {
-  update: Prisma.XOR<Prisma.PostUpdateWithoutRelated_jobInput, Prisma.PostUncheckedUpdateWithoutRelated_jobInput>
-  create: Prisma.XOR<Prisma.PostCreateWithoutRelated_jobInput, Prisma.PostUncheckedCreateWithoutRelated_jobInput>
-  where?: Prisma.PostWhereInput
-}
-
-export type PostUpdateToOneWithWhereWithoutRelated_jobInput = {
-  where?: Prisma.PostWhereInput
-  data: Prisma.XOR<Prisma.PostUpdateWithoutRelated_jobInput, Prisma.PostUncheckedUpdateWithoutRelated_jobInput>
-}
-
-export type PostUpdateWithoutRelated_jobInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
-  scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
-  platform_post?: Prisma.PlatformPostUpdateManyWithoutPostNestedInput
-}
-
-export type PostUncheckedUpdateWithoutRelated_jobInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mediaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mediaType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-  scheduled_for?: Prisma.PostUpdatescheduled_forInput | $Enums.SocialPlatforms[]
-  scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateManyOwnerInput = {
@@ -771,7 +672,6 @@ export type PostUpdateWithoutOwnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   platform_post?: Prisma.PlatformPostUpdateManyWithoutPostNestedInput
-  related_job?: Prisma.jobUpdateManyWithoutRelated_postNestedInput
 }
 
 export type PostUncheckedUpdateWithoutOwnerInput = {
@@ -785,7 +685,6 @@ export type PostUncheckedUpdateWithoutOwnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutPostNestedInput
-  related_job?: Prisma.jobUncheckedUpdateManyWithoutRelated_postNestedInput
 }
 
 export type PostUncheckedUpdateManyWithoutOwnerInput = {
@@ -807,12 +706,10 @@ export type PostUncheckedUpdateManyWithoutOwnerInput = {
 
 export type PostCountOutputType = {
   platform_post: number
-  related_job: number
 }
 
 export type PostCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   platform_post?: boolean | PostCountOutputTypeCountPlatform_postArgs
-  related_job?: boolean | PostCountOutputTypeCountRelated_jobArgs
 }
 
 /**
@@ -832,13 +729,6 @@ export type PostCountOutputTypeCountPlatform_postArgs<ExtArgs extends runtime.Ty
   where?: Prisma.PlatformPostWhereInput
 }
 
-/**
- * PostCountOutputType without action
- */
-export type PostCountOutputTypeCountRelated_jobArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.jobWhereInput
-}
-
 
 export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -853,7 +743,6 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   platform_post?: boolean | Prisma.Post$platform_postArgs<ExtArgs>
-  related_job?: boolean | Prisma.Post$related_jobArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -902,7 +791,6 @@ export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   platform_post?: boolean | Prisma.Post$platform_postArgs<ExtArgs>
-  related_job?: boolean | Prisma.Post$related_jobArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PostIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -917,7 +805,6 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     owner: Prisma.$UserPayload<ExtArgs>
     platform_post: Prisma.$PlatformPostPayload<ExtArgs>[]
-    related_job: Prisma.$jobPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1326,7 +1213,6 @@ export interface Prisma__PostClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   platform_post<T extends Prisma.Post$platform_postArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$platform_postArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  related_job<T extends Prisma.Post$related_jobArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$related_jobArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$jobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1783,30 +1669,6 @@ export type Post$platform_postArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.PlatformPostScalarFieldEnum | Prisma.PlatformPostScalarFieldEnum[]
-}
-
-/**
- * Post.related_job
- */
-export type Post$related_jobArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the job
-   */
-  select?: Prisma.jobSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the job
-   */
-  omit?: Prisma.jobOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.jobInclude<ExtArgs> | null
-  where?: Prisma.jobWhereInput
-  orderBy?: Prisma.jobOrderByWithRelationInput | Prisma.jobOrderByWithRelationInput[]
-  cursor?: Prisma.jobWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.JobScalarFieldEnum | Prisma.JobScalarFieldEnum[]
 }
 
 /**

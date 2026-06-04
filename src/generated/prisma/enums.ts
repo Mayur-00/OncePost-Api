@@ -19,6 +19,7 @@ export type AuthProviderType = (typeof AuthProviderType)[keyof typeof AuthProvid
 export const SocialPlatforms = {
   LINKEDIN: 'LINKEDIN',
   X: 'X',
+  BLUESKY: 'BLUESKY',
   NONE: 'NONE'
 } as const
 
@@ -40,7 +41,8 @@ export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]
 
 export const Provieder = {
   X: 'X',
-  LINKEDIN: 'LINKEDIN'
+  LINKEDIN: 'LINKEDIN',
+  BLUESKY: 'BLUESKY'
 } as const
 
 export type Provieder = (typeof Provieder)[keyof typeof Provieder]

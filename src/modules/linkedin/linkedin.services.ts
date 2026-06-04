@@ -506,29 +506,7 @@ export class linkedinServices {
     }
   }
 
-  async flagPostSuccess(postid: string, linkedin_post_id: string) {
-    try {
-      const updated = await this.prisma.platformPost.update({
-        where: {
-          id: postid,
-        },
-        data: {
-          status: 'POSTED',
-          platform_post_id: linkedin_post_id,
-          platform_post_url: `https://www.linkedin.com/feed/update/${linkedin_post_id}/ `,
-        },
-      });
-      this.logger.info('LinkedIn post flagged as successfully posted', {
-        postId: postid,
-        linkedinPostId: linkedin_post_id,
-      });
-      return updated;
-    } catch (error) {
-      this.logger.error(`failed to update flag ${error}`);
-      throw new ApiError(500, 'internal server error');
-    }
-  }
-
+ 
   async isAlreadyPosted(postid: string) {
     try {
       const posted = await this.prisma.platformPost.findFirst({

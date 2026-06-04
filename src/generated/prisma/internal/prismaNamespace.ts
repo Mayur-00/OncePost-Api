@@ -393,8 +393,6 @@ export const ModelName = {
   Post: 'Post',
   PlatformPost: 'PlatformPost',
   OAuthSession: 'OAuthSession',
-  PostAnalytic: 'PostAnalytic',
-  job: 'job',
   SubscriptionPlan: 'SubscriptionPlan',
   Subscription: 'Subscription',
   Transaction: 'Transaction'
@@ -413,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "socialAccount" | "post" | "platformPost" | "oAuthSession" | "postAnalytic" | "job" | "subscriptionPlan" | "subscription" | "transaction"
+    modelProps: "user" | "socialAccount" | "post" | "platformPost" | "oAuthSession" | "subscriptionPlan" | "subscription" | "transaction"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -787,154 +785,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    PostAnalytic: {
-      payload: Prisma.$PostAnalyticPayload<ExtArgs>
-      fields: Prisma.PostAnalyticFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.PostAnalyticFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.PostAnalyticFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload>
-        }
-        findFirst: {
-          args: Prisma.PostAnalyticFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.PostAnalyticFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload>
-        }
-        findMany: {
-          args: Prisma.PostAnalyticFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload>[]
-        }
-        create: {
-          args: Prisma.PostAnalyticCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload>
-        }
-        createMany: {
-          args: Prisma.PostAnalyticCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.PostAnalyticCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload>[]
-        }
-        delete: {
-          args: Prisma.PostAnalyticDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload>
-        }
-        update: {
-          args: Prisma.PostAnalyticUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload>
-        }
-        deleteMany: {
-          args: Prisma.PostAnalyticDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.PostAnalyticUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.PostAnalyticUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload>[]
-        }
-        upsert: {
-          args: Prisma.PostAnalyticUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PostAnalyticPayload>
-        }
-        aggregate: {
-          args: Prisma.PostAnalyticAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePostAnalytic>
-        }
-        groupBy: {
-          args: Prisma.PostAnalyticGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PostAnalyticGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.PostAnalyticCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PostAnalyticCountAggregateOutputType> | number
-        }
-      }
-    }
-    job: {
-      payload: Prisma.$jobPayload<ExtArgs>
-      fields: Prisma.jobFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.jobFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.jobFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
-        }
-        findFirst: {
-          args: Prisma.jobFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.jobFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
-        }
-        findMany: {
-          args: Prisma.jobFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>[]
-        }
-        create: {
-          args: Prisma.jobCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
-        }
-        createMany: {
-          args: Prisma.jobCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.jobCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>[]
-        }
-        delete: {
-          args: Prisma.jobDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
-        }
-        update: {
-          args: Prisma.jobUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
-        }
-        deleteMany: {
-          args: Prisma.jobDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.jobUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.jobUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>[]
-        }
-        upsert: {
-          args: Prisma.jobUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$jobPayload>
-        }
-        aggregate: {
-          args: Prisma.JobAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateJob>
-        }
-        groupBy: {
-          args: Prisma.jobGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.JobGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.jobCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.JobCountAggregateOutputType> | number
-        }
-      }
-    }
     SubscriptionPlan: {
       payload: Prisma.$SubscriptionPlanPayload<ExtArgs>
       fields: Prisma.SubscriptionPlanFieldRefs
@@ -1284,37 +1134,6 @@ export const OAuthSessionScalarFieldEnum = {
 export type OAuthSessionScalarFieldEnum = (typeof OAuthSessionScalarFieldEnum)[keyof typeof OAuthSessionScalarFieldEnum]
 
 
-export const PostAnalyticScalarFieldEnum = {
-  id: 'id',
-  account_id: 'account_id',
-  platform_post_id: 'platform_post_id',
-  platform: 'platform',
-  likes: 'likes',
-  comments: 'comments',
-  reach: 'reach',
-  views: 'views',
-  members_added: 'members_added',
-  reshares: 'reshares',
-  timestamp: 'timestamp'
-} as const
-
-export type PostAnalyticScalarFieldEnum = (typeof PostAnalyticScalarFieldEnum)[keyof typeof PostAnalyticScalarFieldEnum]
-
-
-export const JobScalarFieldEnum = {
-  id: 'id',
-  owner_id: 'owner_id',
-  job_type: 'job_type',
-  related_post_id: 'related_post_id',
-  platforms: 'platforms',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
-
-
 export const SubscriptionPlanScalarFieldEnum = {
   id: 'id',
   plan_tier: 'plan_tier',
@@ -1523,62 +1342,6 @@ export type ListEnumPlatfromPostStatusFieldRefInput<$PrismaModel> = FieldRefInpu
 
 
 /**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
- * Reference to a field of type 'JobType'
- */
-export type EnumJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobType'>
-    
-
-
-/**
- * Reference to a field of type 'JobType[]'
- */
-export type ListEnumJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobType[]'>
-    
-
-
-/**
- * Reference to a field of type 'JobStatus'
- */
-export type EnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus'>
-    
-
-
-/**
- * Reference to a field of type 'JobStatus[]'
- */
-export type ListEnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'PlanTier'
  */
 export type EnumPlanTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanTier'>
@@ -1589,6 +1352,20 @@ export type EnumPlanTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'PlanTier[]'
  */
 export type ListEnumPlanTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanTier[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1631,6 +1408,20 @@ export type EnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'TransactionType[]'
  */
 export type ListEnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1725,8 +1516,6 @@ export type GlobalOmitConfig = {
   post?: Prisma.PostOmit
   platformPost?: Prisma.PlatformPostOmit
   oAuthSession?: Prisma.OAuthSessionOmit
-  postAnalytic?: Prisma.PostAnalyticOmit
-  job?: Prisma.jobOmit
   subscriptionPlan?: Prisma.SubscriptionPlanOmit
   subscription?: Prisma.SubscriptionOmit
   transaction?: Prisma.TransactionOmit

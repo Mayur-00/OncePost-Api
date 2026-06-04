@@ -9,4 +9,3 @@ ALTER TABLE "OAuthSession" ALTER COLUMN "expiresAt" SET DEFAULT NOW() + INTERVAL
 
 -- CreateIndex
 CREATE INDEX "Subscription_user_id_status_idx" ON "Subscription"("user_id", "status");
-npx prisma generate

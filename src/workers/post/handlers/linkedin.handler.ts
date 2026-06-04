@@ -20,10 +20,10 @@ export class linkedinHandler {
       }
 
       const account = await this.linkedinServices.getUserAccount(userId);
+
       if (!account) {
         throw new Error('No active LinkedIn account found');
       }
-
       const postDbRecord = await this.linkedinServices.createEmptyLinkedinPostDbRecord(
         userId,
         postId,
@@ -35,6 +35,7 @@ export class linkedinHandler {
       }
 
       // Validate token
+
       const result = await this.linkedinServices.validateAccessToken(account);
       if (!result.success) {
         await this.linkedinServices.flagPostFailed(postDbRecord.id, 'Account Expired');
@@ -45,6 +46,7 @@ export class linkedinHandler {
 
       if (mediaUrl) {
         // Post with image
+        
         const registerImageResponse = await this.linkedinServices.registerImageUpload(
           account.access_token,
           account.platform_userid,

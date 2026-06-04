@@ -17,18 +17,18 @@ export const multerFileSchema = z.object({
 
 export const publishPostToMultiplePlatfromsSchema = z.object({
   content: z.string().min(2).max(280),
-  platforms: z.array(z.enum(['LINKEDIN', 'X'])),
+  platforms: z.array(z.enum(['LINKEDIN', 'X', 'BLUESKY'])),
 });
 export const publishPostToMultiplePlatfromsSchemaQueued = z.object({
   content: z.string().min(2).max(280),
-  platforms: z.array(z.enum(['LINKEDIN', 'X'])),
+  platforms: z.array(z.enum(['LINKEDIN', 'X', 'BLUESKY'])),
   imageLink: z.string().min(5).optional(),
   imageMimeType: z.string().optional(),
   scheduledDateAndTime: z.coerce.date().optional(),
 });
 export const schedulePostSchema = z.object({
   content: z.string().min(2).max(280),
-  platforms: z.array(z.enum(['LINKEDIN', 'X'])),
+  platforms: z.array(z.enum(['LINKEDIN', 'X', 'BLUESKY'])),
   imageLink: z.string().optional(),
   imageMimeType: z.string().optional(),
   scheduledDateAndTime: z.coerce.date(),

@@ -267,7 +267,6 @@ export type SocialAccountWhereInput = {
   isExpired?: Prisma.BoolFilter<"SocialAccount"> | boolean
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   platform_post?: Prisma.PlatformPostListRelationFilter
-  post_analytics?: Prisma.PostAnalyticListRelationFilter
 }
 
 export type SocialAccountOrderByWithRelationInput = {
@@ -289,7 +288,6 @@ export type SocialAccountOrderByWithRelationInput = {
   isExpired?: Prisma.SortOrder
   owner?: Prisma.UserOrderByWithRelationInput
   platform_post?: Prisma.PlatformPostOrderByRelationAggregateInput
-  post_analytics?: Prisma.PostAnalyticOrderByRelationAggregateInput
 }
 
 export type SocialAccountWhereUniqueInput = Prisma.AtLeast<{
@@ -314,7 +312,6 @@ export type SocialAccountWhereUniqueInput = Prisma.AtLeast<{
   isExpired?: Prisma.BoolFilter<"SocialAccount"> | boolean
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   platform_post?: Prisma.PlatformPostListRelationFilter
-  post_analytics?: Prisma.PostAnalyticListRelationFilter
 }, "id">
 
 export type SocialAccountOrderByWithAggregationInput = {
@@ -379,7 +376,6 @@ export type SocialAccountCreateInput = {
   isExpired?: boolean
   owner: Prisma.UserCreateNestedOneWithoutConnected_accountsInput
   platform_post?: Prisma.PlatformPostCreateNestedManyWithoutSocialAccountInput
-  post_analytics?: Prisma.PostAnalyticCreateNestedManyWithoutSocialAccountInput
 }
 
 export type SocialAccountUncheckedCreateInput = {
@@ -400,7 +396,6 @@ export type SocialAccountUncheckedCreateInput = {
   updatedAt?: Date | string
   isExpired?: boolean
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutSocialAccountInput
-  post_analytics?: Prisma.PostAnalyticUncheckedCreateNestedManyWithoutSocialAccountInput
 }
 
 export type SocialAccountUpdateInput = {
@@ -421,7 +416,6 @@ export type SocialAccountUpdateInput = {
   isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   owner?: Prisma.UserUpdateOneRequiredWithoutConnected_accountsNestedInput
   platform_post?: Prisma.PlatformPostUpdateManyWithoutSocialAccountNestedInput
-  post_analytics?: Prisma.PostAnalyticUpdateManyWithoutSocialAccountNestedInput
 }
 
 export type SocialAccountUncheckedUpdateInput = {
@@ -442,7 +436,6 @@ export type SocialAccountUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutSocialAccountNestedInput
-  post_analytics?: Prisma.PostAnalyticUncheckedUpdateManyWithoutSocialAccountNestedInput
 }
 
 export type SocialAccountCreateManyInput = {
@@ -631,20 +624,6 @@ export type SocialAccountUpdateOneRequiredWithoutPlatform_postNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SocialAccountUpdateToOneWithWhereWithoutPlatform_postInput, Prisma.SocialAccountUpdateWithoutPlatform_postInput>, Prisma.SocialAccountUncheckedUpdateWithoutPlatform_postInput>
 }
 
-export type SocialAccountCreateNestedOneWithoutPost_analyticsInput = {
-  create?: Prisma.XOR<Prisma.SocialAccountCreateWithoutPost_analyticsInput, Prisma.SocialAccountUncheckedCreateWithoutPost_analyticsInput>
-  connectOrCreate?: Prisma.SocialAccountCreateOrConnectWithoutPost_analyticsInput
-  connect?: Prisma.SocialAccountWhereUniqueInput
-}
-
-export type SocialAccountUpdateOneRequiredWithoutPost_analyticsNestedInput = {
-  create?: Prisma.XOR<Prisma.SocialAccountCreateWithoutPost_analyticsInput, Prisma.SocialAccountUncheckedCreateWithoutPost_analyticsInput>
-  connectOrCreate?: Prisma.SocialAccountCreateOrConnectWithoutPost_analyticsInput
-  upsert?: Prisma.SocialAccountUpsertWithoutPost_analyticsInput
-  connect?: Prisma.SocialAccountWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.SocialAccountUpdateToOneWithWhereWithoutPost_analyticsInput, Prisma.SocialAccountUpdateWithoutPost_analyticsInput>, Prisma.SocialAccountUncheckedUpdateWithoutPost_analyticsInput>
-}
-
 export type SocialAccountCreateWithoutOwnerInput = {
   id?: string
   platform: $Enums.SocialPlatforms
@@ -662,7 +641,6 @@ export type SocialAccountCreateWithoutOwnerInput = {
   updatedAt?: Date | string
   isExpired?: boolean
   platform_post?: Prisma.PlatformPostCreateNestedManyWithoutSocialAccountInput
-  post_analytics?: Prisma.PostAnalyticCreateNestedManyWithoutSocialAccountInput
 }
 
 export type SocialAccountUncheckedCreateWithoutOwnerInput = {
@@ -682,7 +660,6 @@ export type SocialAccountUncheckedCreateWithoutOwnerInput = {
   updatedAt?: Date | string
   isExpired?: boolean
   platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutSocialAccountInput
-  post_analytics?: Prisma.PostAnalyticUncheckedCreateNestedManyWithoutSocialAccountInput
 }
 
 export type SocialAccountCreateOrConnectWithoutOwnerInput = {
@@ -750,7 +727,6 @@ export type SocialAccountCreateWithoutPlatform_postInput = {
   updatedAt?: Date | string
   isExpired?: boolean
   owner: Prisma.UserCreateNestedOneWithoutConnected_accountsInput
-  post_analytics?: Prisma.PostAnalyticCreateNestedManyWithoutSocialAccountInput
 }
 
 export type SocialAccountUncheckedCreateWithoutPlatform_postInput = {
@@ -770,7 +746,6 @@ export type SocialAccountUncheckedCreateWithoutPlatform_postInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   isExpired?: boolean
-  post_analytics?: Prisma.PostAnalyticUncheckedCreateNestedManyWithoutSocialAccountInput
 }
 
 export type SocialAccountCreateOrConnectWithoutPlatform_postInput = {
@@ -806,7 +781,6 @@ export type SocialAccountUpdateWithoutPlatform_postInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   owner?: Prisma.UserUpdateOneRequiredWithoutConnected_accountsNestedInput
-  post_analytics?: Prisma.PostAnalyticUpdateManyWithoutSocialAccountNestedInput
 }
 
 export type SocialAccountUncheckedUpdateWithoutPlatform_postInput = {
@@ -826,103 +800,6 @@ export type SocialAccountUncheckedUpdateWithoutPlatform_postInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  post_analytics?: Prisma.PostAnalyticUncheckedUpdateManyWithoutSocialAccountNestedInput
-}
-
-export type SocialAccountCreateWithoutPost_analyticsInput = {
-  id?: string
-  platform: $Enums.SocialPlatforms
-  platform_userid: string
-  username?: string | null
-  display_name?: string | null
-  profile_picture?: string | null
-  access_token: string
-  refresh_token?: string | null
-  token_expiry: Date | string
-  platformData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: boolean
-  lastSync: Date | string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isExpired?: boolean
-  owner: Prisma.UserCreateNestedOneWithoutConnected_accountsInput
-  platform_post?: Prisma.PlatformPostCreateNestedManyWithoutSocialAccountInput
-}
-
-export type SocialAccountUncheckedCreateWithoutPost_analyticsInput = {
-  id?: string
-  owner_id: string
-  platform: $Enums.SocialPlatforms
-  platform_userid: string
-  username?: string | null
-  display_name?: string | null
-  profile_picture?: string | null
-  access_token: string
-  refresh_token?: string | null
-  token_expiry: Date | string
-  platformData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: boolean
-  lastSync: Date | string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isExpired?: boolean
-  platform_post?: Prisma.PlatformPostUncheckedCreateNestedManyWithoutSocialAccountInput
-}
-
-export type SocialAccountCreateOrConnectWithoutPost_analyticsInput = {
-  where: Prisma.SocialAccountWhereUniqueInput
-  create: Prisma.XOR<Prisma.SocialAccountCreateWithoutPost_analyticsInput, Prisma.SocialAccountUncheckedCreateWithoutPost_analyticsInput>
-}
-
-export type SocialAccountUpsertWithoutPost_analyticsInput = {
-  update: Prisma.XOR<Prisma.SocialAccountUpdateWithoutPost_analyticsInput, Prisma.SocialAccountUncheckedUpdateWithoutPost_analyticsInput>
-  create: Prisma.XOR<Prisma.SocialAccountCreateWithoutPost_analyticsInput, Prisma.SocialAccountUncheckedCreateWithoutPost_analyticsInput>
-  where?: Prisma.SocialAccountWhereInput
-}
-
-export type SocialAccountUpdateToOneWithWhereWithoutPost_analyticsInput = {
-  where?: Prisma.SocialAccountWhereInput
-  data: Prisma.XOR<Prisma.SocialAccountUpdateWithoutPost_analyticsInput, Prisma.SocialAccountUncheckedUpdateWithoutPost_analyticsInput>
-}
-
-export type SocialAccountUpdateWithoutPost_analyticsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  platform?: Prisma.EnumSocialPlatformsFieldUpdateOperationsInput | $Enums.SocialPlatforms
-  platform_userid?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  display_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  access_token?: Prisma.StringFieldUpdateOperationsInput | string
-  refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  token_expiry?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  platformData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  lastSync?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  owner?: Prisma.UserUpdateOneRequiredWithoutConnected_accountsNestedInput
-  platform_post?: Prisma.PlatformPostUpdateManyWithoutSocialAccountNestedInput
-}
-
-export type SocialAccountUncheckedUpdateWithoutPost_analyticsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  owner_id?: Prisma.StringFieldUpdateOperationsInput | string
-  platform?: Prisma.EnumSocialPlatformsFieldUpdateOperationsInput | $Enums.SocialPlatforms
-  platform_userid?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  display_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile_picture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  access_token?: Prisma.StringFieldUpdateOperationsInput | string
-  refresh_token?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  token_expiry?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  platformData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  lastSync?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutSocialAccountNestedInput
 }
 
 export type SocialAccountCreateManyOwnerInput = {
@@ -960,7 +837,6 @@ export type SocialAccountUpdateWithoutOwnerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   platform_post?: Prisma.PlatformPostUpdateManyWithoutSocialAccountNestedInput
-  post_analytics?: Prisma.PostAnalyticUpdateManyWithoutSocialAccountNestedInput
 }
 
 export type SocialAccountUncheckedUpdateWithoutOwnerInput = {
@@ -980,7 +856,6 @@ export type SocialAccountUncheckedUpdateWithoutOwnerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isExpired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   platform_post?: Prisma.PlatformPostUncheckedUpdateManyWithoutSocialAccountNestedInput
-  post_analytics?: Prisma.PostAnalyticUncheckedUpdateManyWithoutSocialAccountNestedInput
 }
 
 export type SocialAccountUncheckedUpdateManyWithoutOwnerInput = {
@@ -1008,12 +883,10 @@ export type SocialAccountUncheckedUpdateManyWithoutOwnerInput = {
 
 export type SocialAccountCountOutputType = {
   platform_post: number
-  post_analytics: number
 }
 
 export type SocialAccountCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   platform_post?: boolean | SocialAccountCountOutputTypeCountPlatform_postArgs
-  post_analytics?: boolean | SocialAccountCountOutputTypeCountPost_analyticsArgs
 }
 
 /**
@@ -1031,13 +904,6 @@ export type SocialAccountCountOutputTypeDefaultArgs<ExtArgs extends runtime.Type
  */
 export type SocialAccountCountOutputTypeCountPlatform_postArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PlatformPostWhereInput
-}
-
-/**
- * SocialAccountCountOutputType without action
- */
-export type SocialAccountCountOutputTypeCountPost_analyticsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PostAnalyticWhereInput
 }
 
 
@@ -1060,7 +926,6 @@ export type SocialAccountSelect<ExtArgs extends runtime.Types.Extensions.Interna
   isExpired?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   platform_post?: boolean | Prisma.SocialAccount$platform_postArgs<ExtArgs>
-  post_analytics?: boolean | Prisma.SocialAccount$post_analyticsArgs<ExtArgs>
   _count?: boolean | Prisma.SocialAccountCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["socialAccount"]>
 
@@ -1127,7 +992,6 @@ export type SocialAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalA
 export type SocialAccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   platform_post?: boolean | Prisma.SocialAccount$platform_postArgs<ExtArgs>
-  post_analytics?: boolean | Prisma.SocialAccount$post_analyticsArgs<ExtArgs>
   _count?: boolean | Prisma.SocialAccountCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SocialAccountIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1142,7 +1006,6 @@ export type $SocialAccountPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     owner: Prisma.$UserPayload<ExtArgs>
     platform_post: Prisma.$PlatformPostPayload<ExtArgs>[]
-    post_analytics: Prisma.$PostAnalyticPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1557,7 +1420,6 @@ export interface Prisma__SocialAccountClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   platform_post<T extends Prisma.SocialAccount$platform_postArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SocialAccount$platform_postArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  post_analytics<T extends Prisma.SocialAccount$post_analyticsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SocialAccount$post_analyticsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostAnalyticPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2020,30 +1882,6 @@ export type SocialAccount$platform_postArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.PlatformPostScalarFieldEnum | Prisma.PlatformPostScalarFieldEnum[]
-}
-
-/**
- * SocialAccount.post_analytics
- */
-export type SocialAccount$post_analyticsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the PostAnalytic
-   */
-  select?: Prisma.PostAnalyticSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the PostAnalytic
-   */
-  omit?: Prisma.PostAnalyticOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PostAnalyticInclude<ExtArgs> | null
-  where?: Prisma.PostAnalyticWhereInput
-  orderBy?: Prisma.PostAnalyticOrderByWithRelationInput | Prisma.PostAnalyticOrderByWithRelationInput[]
-  cursor?: Prisma.PostAnalyticWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PostAnalyticScalarFieldEnum | Prisma.PostAnalyticScalarFieldEnum[]
 }
 
 /**

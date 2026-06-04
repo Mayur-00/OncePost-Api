@@ -23,6 +23,7 @@ enum AuthProviderType {
 enum SocialPlatforms {
   LINKEDIN
   X
+  BLUESKY
   NONE
 }
 
@@ -39,6 +40,7 @@ enum PostStatus {
 enum Provieder {
   X
   LINKEDIN
+  BLUESKY
 }
 
 enum PlatfromPostStatus {
@@ -82,7 +84,6 @@ model User {
   posts              Post[]
   platform_post      PlatformPost[]
   Auth_sessions      OAuthSession[]
-  user_job           job[]
   subscriptions      Subscription[]
   transactions       Transaction[]
 }
@@ -108,7 +109,6 @@ model SocialAccount {
   // relation
   owner          User           @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   platform_post  PlatformPost[]
-  post_analytics PostAnalytic[]
 
   @@index([owner_id, platform])
 
@@ -128,7 +128,6 @@ model Post {
 
   owner         User           @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   platform_post PlatformPost[]
-  related_job   job[]
 
   @@index([owner_id, status])
 }
@@ -151,7 +150,6 @@ model PlatformPost {
   post          Post           @relation(fields: [post_id], references: [id], onDelete: Cascade)
   owner         User           @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   socialAccount SocialAccount  @relation(fields: [account_id], references: [id], onDelete: Cascade)
-  analytics     PostAnalytic[]
 
   @@index([post_id, platform])
 }
@@ -172,40 +170,6 @@ model OAuthSession {
   @@index([state])
 }
 
-model PostAnalytic {
-  id               String          @id @default(cuid())
-  account_id       String
-  platform_post_id String
-  platform         SocialPlatforms
-  likes            Int
-  comments         Int
-  reach            Float
-  views            Int
-  members_added    Int
-  reshares         Int
-  timestamp        DateTime        @default(now())
-
-  platform_post PlatformPost  @relation(fields: [platform_post_id], references: [id], onDelete: Cascade)
-  socialAccount SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
-}
-
-model job {
-  id              String            @id @default(cuid())
-  owner_id        String
-  job_type        JobType
-  related_post_id String
-  platforms       SocialPlatforms[]
-  status          JobStatus
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt()
-
-  // relations 
-
-  owner        User @relation(fields: [owner_id], references: [id], onDelete: Cascade)
-  related_post Post @relation(fields: [related_post_id], references: [id], onDelete: Cascade)
-
-  @@index([owner_id, job_type, status])
-}
 
 model SubscriptionPlan {
   id                String   @id @default(cuid())

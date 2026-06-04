@@ -17,16 +17,16 @@ import { ApiResponse } from '../../utils/apiResponse.js';
 import { ApiError } from '../../utils/apiError.js';
 import { postQueue } from '../../queues/queues.js';
 import { jobBody } from '../../workers/worker.types.js';
-import { PrismaClient } from '../../generated/prisma/client.js';
 import { linkedinServices } from '../linkedin/linkedin.services.js';
 import { XServices } from '../x/x.services.js';
+import { BlueskyService } from '../blueksky/bluesky.services.js';
 
 export class PostController {
   constructor(
     private logger: Logger,
     private postServices: PostService,
-    private prismaClient: PrismaClient,
     private linkedinServices: linkedinServices,
+    private blueskyServices: BlueskyService,
     private xServices: XServices,
   ) {}
 
@@ -144,6 +144,13 @@ export class PostController {
             await this.xServices.validateAccessToken(account);
             break;
           }
+          case 'BLUESKY': {
+            const agent = await this.blueskyServices.getAuthenticatedAgent(req.user.id);
+            if (!agent) {
+              throw new Error('No active Bluesky account found');
+            }
+            break;
+          }
           default: {
             throw new ApiError(404, 'Unknown Platform');
           }
@@ -206,17 +213,6 @@ export class PostController {
       }
     },
   );
-
-  getScheduledPosts: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
-    if (!req.user) {
-      throw new ApiError(401, 'Unauthorized');
-    }
-
-    const posts = await this.postServices.getAllScheduledPosts(req.user.id);
-
-    res.status(200).json(new ApiResponse(200, posts, 'success'));
-  });
-
   schedule: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     const { content, platforms, imageLink, imageMimeType, scheduledDateAndTime } =
       schedulePostSchema.parse(req.body);
@@ -267,6 +263,13 @@ export class PostController {
           await this.xServices.validateAccessToken(account);
           break;
         }
+        case 'BLUESKY': {
+          const agent = await this.blueskyServices.getAuthenticatedAgent(user.id);
+          if (!agent) {
+            throw new Error('No active Bluesky account found');
+          }
+          break;
+        }
         default: {
           throw new ApiError(404, 'Unknown Platform');
         }
@@ -294,5 +297,15 @@ export class PostController {
 
     this.logger.info('Post Queued to platforms');
     res.status(200).json(new ApiResponse(203, post, 'post queued successFully'));
+  });
+
+  getScheduledPosts: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+      throw new ApiError(401, 'Unauthorized');
+    }
+
+    const posts = await this.postServices.getAllScheduledPosts(req.user.id);
+
+    res.status(200).json(new ApiResponse(200, posts, 'success'));
   });
 }

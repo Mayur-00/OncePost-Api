@@ -53,8 +53,6 @@ export const ModelName = {
   Post: 'Post',
   PlatformPost: 'PlatformPost',
   OAuthSession: 'OAuthSession',
-  PostAnalytic: 'PostAnalytic',
-  job: 'job',
   SubscriptionPlan: 'SubscriptionPlan',
   Subscription: 'Subscription',
   Transaction: 'Transaction'
@@ -162,37 +160,6 @@ export const OAuthSessionScalarFieldEnum = {
 } as const
 
 export type OAuthSessionScalarFieldEnum = (typeof OAuthSessionScalarFieldEnum)[keyof typeof OAuthSessionScalarFieldEnum]
-
-
-export const PostAnalyticScalarFieldEnum = {
-  id: 'id',
-  account_id: 'account_id',
-  platform_post_id: 'platform_post_id',
-  platform: 'platform',
-  likes: 'likes',
-  comments: 'comments',
-  reach: 'reach',
-  views: 'views',
-  members_added: 'members_added',
-  reshares: 'reshares',
-  timestamp: 'timestamp'
-} as const
-
-export type PostAnalyticScalarFieldEnum = (typeof PostAnalyticScalarFieldEnum)[keyof typeof PostAnalyticScalarFieldEnum]
-
-
-export const JobScalarFieldEnum = {
-  id: 'id',
-  owner_id: 'owner_id',
-  job_type: 'job_type',
-  related_post_id: 'related_post_id',
-  platforms: 'platforms',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
 
 
 export const SubscriptionPlanScalarFieldEnum = {
