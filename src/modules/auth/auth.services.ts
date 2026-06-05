@@ -36,13 +36,14 @@ export class UserServices {
         where: {
           id: id,
         },
+      
       });
-      this.logger.info('User fetched by ID', { userId: id, found: !!user });
+      this.logger.info(`User fetched by ID ${ !!user }`);
       return user;
     } catch (error) {
-      this.logger.error('an error occored while fetching user', {
+      this.logger.error(`an error occored while fetching user. ${{
         error: error,
-      });
+      }}`);
       throw new ApiError(500, 'internal server error');
     }
   }
