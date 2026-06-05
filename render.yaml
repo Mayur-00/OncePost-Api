@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: OncePost-Api
+    env: docker
+    plan: free # or starter/standard depending on your tier
+    releaseCommand: DATABASE_URL=$DIRECT_DATABASE_URL npx prisma migrate deploy
