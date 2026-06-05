@@ -10,7 +10,7 @@ import { postRoutes } from './modules/post/index.js';
 import { subscriptionRoutes } from './modules/subscription/index.js';
 import { limiter } from './config/limiter.config.js';
 import { analyticsRoutes } from './modules/analytics/index.js';
-import { blueskyRoutes } from './modules/blueksky/index.js';
+import { blueskyRoutes } from './modules/bluesky/index.js';
 dotenv.config();
 export const app = express();
 

@@ -26,7 +26,8 @@ export class BlueskyControllerClass {
             this.logger.error("Failed to Connect Bluesky Account");
             throw new ApiError(500, "Failed")
         };
+        const blueskyAccount = await this.blueskyServices.getUserAccount(userid);
 
-        return res.status(200).json(new ApiResponse(200, {}, "Success"));
+        return res.status(200).json(new ApiResponse(200, blueskyAccount, "Success"));
     });
 }

@@ -135,15 +135,14 @@ export class BlueskyService {
 
     // CASE B: Token is aged past 2 hours but safe to refresh
     if (msElapsed >= TWO_HOURS_MS || now >= new Date(account.token_expiry)) {
-      await agent.resumeSession({
-        did: account.platform_userid,
-        handle: account.username || platformMeta.handle,
-        accessJwt: account.access_token,
-        refreshJwt: account.refresh_token || '',
-        active: true,
-      });
-
-      const refreshResponse = await agent.com.atproto.server.refreshSession();
+      const refreshResponse = await agent.com.atproto.server.refreshSession(
+        undefined, // No body parameters required
+        {
+          headers: {
+            authorization: `Bearer ${account.refresh_token}`,
+          },
+        },
+      );
 
       if (!refreshResponse.success) {
         throw new ApiError(
@@ -152,6 +151,14 @@ export class BlueskyService {
           'BLUESKY_ACCOUNT_EXPIRED',
         );
       }
+
+      await agent.resumeSession({
+        did: account.platform_userid,
+        handle: account.username || platformMeta.handle,
+        accessJwt: refreshResponse.data.accessJwt,
+        refreshJwt: refreshResponse.data.refreshJwt,
+        active: true,
+      });
 
       const newExpiry = new Date(Date.now() + 2 * 60 * 60 * 1000);
 
@@ -372,7 +379,7 @@ export class BlueskyService {
     }
   }
 
-  async getUserAccount(userid: string): Promise<SocialAccount> {
+  async getUserAccount(userid: string) {
     try {
       const user = await this.prisma.socialAccount.findFirst({
         where: {
@@ -380,6 +387,14 @@ export class BlueskyService {
           platform: 'BLUESKY',
           isActive: true,
           isExpired: false,
+        },
+        select: {
+          id: true,
+          isActive: true,
+          platform: true,
+          isExpired: true,
+          display_name: true,
+          profile_picture: true,
         },
       });
       if (!user) {

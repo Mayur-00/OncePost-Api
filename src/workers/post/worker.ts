@@ -8,7 +8,7 @@ import { xServices } from '../../modules/x/index.js';
 import { linkedinHandler } from './handlers/linkedin.handler.js';
 import { Xhandler } from './handlers/x.handler.js';
 import { blueskyHandler } from './handlers/Bluesky.handler.js';
-import { BlueskyServices } from '../../modules/blueksky/index.js';
+import { BlueskyServices } from '../../modules/bluesky/index.js';
 
 export const postWorker = new Worker<jobBody>(
   'post',

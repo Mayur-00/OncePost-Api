@@ -19,7 +19,7 @@ import { postQueue } from '../../queues/queues.js';
 import { jobBody } from '../../workers/worker.types.js';
 import { linkedinServices } from '../linkedin/linkedin.services.js';
 import { XServices } from '../x/x.services.js';
-import { BlueskyService } from '../blueksky/bluesky.services.js';
+import { BlueskyService } from '../bluesky/bluesky.services.js';
 
 export class PostController {
   constructor(

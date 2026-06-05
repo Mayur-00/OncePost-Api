@@ -1,7 +1,7 @@
 import { Logger } from 'winston';
 import { linkedinServices } from '../../../modules/linkedin/linkedin.services.js';
 import { PostJobData } from '../../worker.types.js';
-import { BlueskyService } from '../../../modules/blueksky/bluesky.services.js';
+import { BlueskyService } from '../../../modules/bluesky/bluesky.services.js';
 
 export class blueskyHandler {
   constructor(
