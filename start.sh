@@ -1,9 +1,25 @@
 #!/bin/sh
 
 echo "Checking for database migrations..."
-# npx prisma migrate deploy applies any pending migrations in your /prisma/migrations folder
-# It's safe to run even if there are no new migrations.
-npx prisma migrate deploy
+
+echo "Checking for database migrations..."
+
+# Retry migrate deploy up to 5 times with a delay
+MAX_RETRIES=5
+RETRY_DELAY=5
+attempt=1
+
+until npx prisma migrate deploy; do
+  if [ $attempt -ge $MAX_RETRIES ]; then
+    echo "Migration failed after $MAX_RETRIES attempts. Exiting."
+    exit 1
+  fi
+  echo "Migration attempt $attempt failed. Retrying in ${RETRY_DELAY}s..."
+  attempt=$((attempt + 1))
+  sleep $RETRY_DELAY
+done
+
+echo "Migrations applied successfully."
 
 echo "Starting OncePost Monolith..."
 
