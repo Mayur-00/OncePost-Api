@@ -53,6 +53,8 @@ RUN chmod +x start.sh && chown expressjs:expressjs start.sh
 
 USER expressjs
 
+RUN npm run migrate
+
 CMD ["./start.sh"]
 
 
