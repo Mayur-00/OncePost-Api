@@ -46,13 +46,14 @@ WORKDIR /app
 
 RUN addgroup --system --gid 1001 expressjs
 RUN adduser --system --uid 1001 expressjs 
-USER expressjs
 
 COPY --from=installer /app .
 
-# RUN chmod +x start.sh && chown expressjs:expressjs start.sh
+RUN chmod +x start.sh && chown expressjs:expressjs start.sh
 
-CMD ["npm", "run", "start"]
+USER expressjs
+
+CMD ["./start.sh"]
 
 
 
