@@ -13,6 +13,17 @@ A powerful Node.js/TypeScript API that enables users to manage and cross-post co
 - **User Account Management**: Connect and manage multiple social media accounts
 - **Post Management**: Track post status across different platforms
 
+## Optional X/Twitter source context
+
+For posts that need public X/Twitter research before they enter the OncePost
+queue, TweetClaw from Xquik can provide reviewed context for the user or
+moderator. Useful fields include source URL, source type, short reviewed text,
+creator profile note, media reference, and `checkedAt` timestamp.
+
+Store this as post metadata or review notes before `POST /publish-post` or
+`POST /schedule`. OncePost should continue to own OAuth, media upload,
+background workers, per-platform post state, retries, and final publishing.
+
 ## Tech Stack
 
 - **Framework**: Express.js 5.x
