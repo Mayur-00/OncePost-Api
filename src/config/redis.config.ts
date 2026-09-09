@@ -14,7 +14,7 @@ if (!redisUri) {
 }
 
 const redis = new Redis(redisUri, {
-  lazyConnect: true,
+  // lazyConnect: true,
   maxRetriesPerRequest: null,
   enableReadyCheck: false,
   enableOfflineQueue: true,
