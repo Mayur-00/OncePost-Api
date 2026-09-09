@@ -1,4 +1,4 @@
-import { BskyAgent } from "@atproto/api";
+import { BskyAgent } from '@atproto/api';
 
 export interface BlueskyAccountData {
   did: string;
@@ -6,12 +6,12 @@ export interface BlueskyAccountData {
   accessJwt: string;
   refreshJwt: string;
   updatedAt: Date;
-} 
+}
 
- export interface LoginCredentials {
-  userId: string;       // Your local application user id
-  identifier: string;   // The user's Bluesky handle or email
-  appPassword: string;  // The user's Bluesky App Password
+export interface LoginCredentials {
+  userId: string; // Your local application user id
+  identifier: string; // The user's Bluesky handle or email
+  appPassword: string; // The user's Bluesky App Password
 }
 
 export interface BlueskyPlatformData {
@@ -19,8 +19,8 @@ export interface BlueskyPlatformData {
   handle: string;
 }
 
-export interface BlueskyPostData{
+export interface BlueskyPostData {
   text: string;
   ImageBuffer: Buffer;
-  userId:string;
+  userId: string;
 }

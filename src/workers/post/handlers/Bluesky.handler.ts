@@ -10,7 +10,7 @@ export class blueskyHandler {
   ) {}
 
   async handle(jobData: PostJobData): Promise<unknown> {
-    const { postId, userId, content, mediaUrl ,mediaType} = jobData;
+    const { postId, userId, content, mediaUrl, mediaType } = jobData;
 
     try {
       // Get account
@@ -35,36 +35,27 @@ export class blueskyHandler {
         throw new Error('Failed to create db record');
       }
 
-
-      let response :{uri:string, cid:string};
+      let response: { uri: string; cid: string };
 
       if (mediaUrl) {
         const imagebuffer = await this.blueskyServices.getImageBufferFromCloudinary(mediaUrl);
 
         const imageObj = {
-            buffer:imagebuffer,
-            mimeType:mediaType
-        }
+          buffer: imagebuffer,
+          mimeType: mediaType,
+        };
 
-         response = await this.blueskyServices.publishPost(
-            userId,
-            content,
-            imageObj
-        );
-
+        response = await this.blueskyServices.publishPost(userId, content, imageObj);
       } else {
         // Text-only post
-        response = await this.blueskyServices.publishPost(
-            userId,
-            content,
-        );
+        response = await this.blueskyServices.publishPost(userId, content);
       }
 
       // Save to DB
       const platformPost = await this.blueskyServices.flagPostSuccess(
-      postDbRecord.id,
-      response.cid,
-      response.uri
+        postDbRecord.id,
+        response.cid,
+        response.uri,
       );
 
       this.logger.info(`post successfully published to Bluesky ${postId}`);

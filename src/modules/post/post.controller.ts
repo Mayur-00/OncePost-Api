@@ -89,6 +89,7 @@ export class PostController {
       throw new ApiError(401, 'Unauthorized');
     }
     const { limit, skip, query, type } = getSearchPostsSchema.parse(req.query);
+
     this.logger.info(`limit= ${limit} skip=${skip} query=${query} type=${type}`);
 
     const posts = await this.postServices.getPostsByQuery(req.user.id, query, limit, skip, type);
@@ -147,7 +148,7 @@ export class PostController {
           case 'BLUESKY': {
             const agent = await this.blueskyServices.getAuthenticatedAgent(req.user.id);
             if (!agent) {
-              throw new Error('No active Bluesky account found');
+              throw new ApiError(404, 'No active Bluesky account found', 'BLUESKY_ACCOUNT_EXPIRED');
             }
             break;
           }

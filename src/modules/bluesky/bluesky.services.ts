@@ -135,42 +135,46 @@ export class BlueskyService {
 
     // CASE B: Token is aged past 2 hours but safe to refresh
     if (msElapsed >= TWO_HOURS_MS || now >= new Date(account.token_expiry)) {
-      const refreshResponse = await agent.com.atproto.server.refreshSession(
-        undefined, // No body parameters required
-        {
-          headers: {
-            authorization: `Bearer ${account.refresh_token}`,
+      try {
+        const refreshResponse = await agent.com.atproto.server.refreshSession(
+          undefined, // No body parameters required
+          {
+            headers: {
+              authorization: `Bearer ${account.refresh_token}`,
+            },
           },
-        },
-      );
-
-      if (!refreshResponse.success) {
-        throw new ApiError(
-          400,
-          'PDS refused to rotate session tokens. Re-authentication required.',
-          'BLUESKY_ACCOUNT_EXPIRED',
         );
+
+        await agent.resumeSession({
+          did: account.platform_userid,
+          handle: account.username || platformMeta.handle,
+          accessJwt: refreshResponse.data.accessJwt,
+          refreshJwt: refreshResponse.data.refreshJwt,
+          active: true,
+        });
+
+        const newExpiry = new Date(Date.now() + 2 * 60 * 60 * 1000);
+
+        await this.prisma.socialAccount.update({
+          where: { id: account.id },
+          data: {
+            access_token: refreshResponse.data.accessJwt,
+            refresh_token: refreshResponse.data.refreshJwt,
+            token_expiry: newExpiry,
+            lastSync: new Date(),
+          },
+        });
+      } catch (error) {
+        this.logger.error(`Failed to refresh session error ${error}`);
+        await this.prisma.socialAccount.update({
+          where: { id: account.id },
+          data: {
+            isExpired: true,
+            isActive: false,
+          },
+        });
+        throw new ApiError(500, 'Failed to refresh session', 'BLUESKY_ACCOUNT_EXPIRED');
       }
-
-      await agent.resumeSession({
-        did: account.platform_userid,
-        handle: account.username || platformMeta.handle,
-        accessJwt: refreshResponse.data.accessJwt,
-        refreshJwt: refreshResponse.data.refreshJwt,
-        active: true,
-      });
-
-      const newExpiry = new Date(Date.now() + 2 * 60 * 60 * 1000);
-
-      await this.prisma.socialAccount.update({
-        where: { id: account.id },
-        data: {
-          access_token: refreshResponse.data.accessJwt,
-          refresh_token: refreshResponse.data.refreshJwt,
-          token_expiry: newExpiry,
-          lastSync: new Date(),
-        },
-      });
     }
     // CASE C: Safe to reuse memory cache tokens (< 2 hours)
     else {

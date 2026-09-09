@@ -46,7 +46,7 @@ export class linkedinHandler {
 
       if (mediaUrl) {
         // Post with image
-        
+
         const registerImageResponse = await this.linkedinServices.registerImageUpload(
           account.access_token,
           account.platform_userid,

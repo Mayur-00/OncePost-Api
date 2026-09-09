@@ -506,7 +506,6 @@ export class linkedinServices {
     }
   }
 
- 
   async isAlreadyPosted(postid: string) {
     try {
       const posted = await this.prisma.platformPost.findFirst({

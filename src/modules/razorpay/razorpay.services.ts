@@ -92,7 +92,6 @@ export class RazorpayService {
   }
 
   async getTransactionById(transaction_id: string) {
-    
     try {
       const transaction = await this.prismaClient.transaction.findUnique({
         where: {
