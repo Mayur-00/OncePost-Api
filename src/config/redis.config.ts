@@ -25,6 +25,8 @@ const redis = new Redis(redisUri, {
   },
 });
 
+export type redisClientType = typeof redis;
+
 redis.on('connect', () => {
   console.log('✓ Connected to Redis Cloud ❤️');
 });

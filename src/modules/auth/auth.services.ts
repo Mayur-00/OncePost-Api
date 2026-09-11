@@ -5,6 +5,7 @@ import { ApiError } from '../../utils/apiError.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { myJwtPayload } from '../../middlewares/auth.middleware.js';
+import { CacheClass } from '../shared/cache/cache.services.js';
 
 export class UserServices {
   constructor(
@@ -12,6 +13,7 @@ export class UserServices {
     private logger: Logger,
     private googleClient: OAuth2Client,
     private googleClientId: string,
+    private cacheService: CacheClass,
   ) {}
 
   async verifyGoogleIdTokn(token: string) {
@@ -50,43 +52,59 @@ export class UserServices {
   }
   async getUserByIdWithConnectedAccounts(id: string) {
     try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          id: id,
-        },
-        include: {
-          connected_accounts: {
-            select: {
-              id: true,
-              platform: true,
-              display_name: true,
-              profile_picture: true,
-              username: true,
-              isActive: true,
-              isExpired: true,
-            },
+      let wholeUser;
+      const response = await this.cacheService.getCache(`user:${id}:profile`);
+      if (!response.success) {
+        const user = await this.prisma.user.findUnique({
+          where: {
+            id: id,
           },
-          _count: {
-            select: {
-              posts: true,
-              platform_post: true,
-              connected_accounts: true,
-            },
+          select: {
+            id: true,
+            profile_picture: true,
+            name: true,
+            email: true,
+            isOnboarded: true,
+            createdAt: true,
           },
-        },
-      });
+        });
+        const connectedAccounts = await this.prisma.socialAccount.findMany({
+          where: {
+            owner_id: id,
+          },
+          select: {
+            id: true,
+            platform: true,
+            isActive: true,
+            isExpired: true,
+            updatedAt: true,
+          },
+        });
+
+        const wholeUser = {
+          ...user,
+          connected_accounts: connectedAccounts,
+        };
+
+        await this.cacheService.setCache(`user:${id}:profile`, wholeUser);
+      }
+      wholeUser = response.data;
+
       this.logger.info('User fetched with connected accounts', {
         userId: id,
-        connectedAccounts: user?._count.connected_accounts,
+        connectedAccounts: wholeUser.connected_accounts.length,
       });
-      return user;
+
+      return wholeUser;
     } catch (error) {
+      console.log(error);
       this.logger.error('an error occored while fetching user', {
         error: error,
       });
       throw new ApiError(500, 'internal server error');
     }
   }
+
   async getUserByEmail(email: string) {
     try {
       const user = await this.prisma.user.findUnique({
@@ -329,7 +347,6 @@ export class UserServices {
       throw new ApiError(500, 'Internal Service Error');
     }
   }
-
   async setOnboardedTrue(user_id: string) {
     try {
       const updated = await this.prisma.user.update({

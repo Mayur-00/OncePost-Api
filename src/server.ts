@@ -1,5 +1,4 @@
 import { app } from './app.js';
-import redis from './config/redis.config.js';
 import connectDb from './lib/db.js';
 
 async function startServer() {

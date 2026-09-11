@@ -1,5 +1,5 @@
 import { BskyAgent } from '@atproto/api';
-import { PrismaClient, SocialAccount, SocialPlatforms } from '../../generated/prisma/client.js';
+import { PrismaClient, SocialPlatforms } from '../../generated/prisma/client.js';
 import { ApiError } from '../../utils/apiError.js';
 import { Logger } from 'winston';
 import { Axios } from 'axios';

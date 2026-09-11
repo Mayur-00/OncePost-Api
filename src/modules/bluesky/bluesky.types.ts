@@ -1,5 +1,3 @@
-import { BskyAgent } from '@atproto/api';
-
 export interface BlueskyAccountData {
   did: string;
   handle: string;

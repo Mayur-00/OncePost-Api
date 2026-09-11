@@ -185,9 +185,9 @@ export class AuthController {
       throw new ApiError(401, 'unauthorized');
     }
 
-    const user = await this.userServices.getUserByIdWithConnectedAccounts(reqUserId);
+    const data = await this.userServices.getUserByIdWithConnectedAccounts(reqUserId);
 
-    res.status(200).json(new ApiResponse(200, user, 'success'));
+    res.status(200).json(new ApiResponse(200, data, 'success'));
   });
 
   handleAccessTokenRefresh: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
