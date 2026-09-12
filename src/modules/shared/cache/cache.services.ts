@@ -35,7 +35,7 @@ export class CacheClass {
       }
       const data = JSON.parse(cache);
 
-      return { success: false, data: data };
+      return { success: true, data: data };
     } catch (error) {
       this.logger.error(`failed to get cache by this key : ${key}`);
       return { success: false, data: null };
