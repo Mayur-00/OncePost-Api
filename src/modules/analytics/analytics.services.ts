@@ -1,13 +1,21 @@
 import { Logger } from 'winston';
 import { PrismaClient } from '../../generated/prisma/client.js';
+import { CacheClass } from '../shared/cache/cache.services.js';
+import { TTL_IN_SECONDS } from '../../lib/constants.js';
 
 export class AnalyticsService {
   constructor(
     private prisma: PrismaClient,
     private logger: Logger,
+    private cacheService:CacheClass
   ) {}
 
   async getPastSixMonthsMetrics(userId: string) {
+
+    const response = await this.cacheService.getCache(`user:${userId}:metric:platform`);
+    if(response.success && response.data){
+      return response.data;
+    };
     // 1️⃣ Calculate a moving window boundary (start of the month, 5 months ago)
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
@@ -69,10 +77,17 @@ export class AnalyticsService {
     });
 
     // Flatten your dictionary into a list of monthly values for Recharts
-    return Object.values(dataMap);
+    const data = Object.values(dataMap);
+    await this.cacheService.setCache(`user:${userId}:metric:platform`, data, TTL_IN_SECONDS.FIFTEEN_MINUTES)
+    return data
   }
 
   async getMonthlyConsistencyMetrics(userId: string) {
+
+    const response = await this.cacheService.getCache(`user:${userId}:metric:consistancy`);
+    if(response.success && response.data){
+      return response.data
+    }
     // 1️⃣ Calculate a 30-day lookback window boundary
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29);
@@ -110,6 +125,8 @@ export class AnalyticsService {
       }
     });
 
-    return Object.values(dataMap);
+    const data = Object.values(dataMap);
+    await this.cacheService.setCache(`user:${userId}:metric:consistancy`, data,TTL_IN_SECONDS.FIFTEEN_MINUTES);
+    return data;
   }
 }

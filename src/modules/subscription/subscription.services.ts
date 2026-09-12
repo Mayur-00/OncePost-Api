@@ -2,10 +2,12 @@ import { Logger } from 'winston';
 import { PrismaClient, SubscriptionPlan } from '../../generated/prisma/client.js';
 
 import { ApiError } from '../../utils/apiError.js';
+import { CacheClass } from '../shared/cache/cache.services.js';
 export class SubscriptionService {
   constructor(
     private prismaClient: PrismaClient,
     private logger: Logger,
+    private cacheService: CacheClass,
   ) {}
 
   async createSubscription(user_id: string, plan: SubscriptionPlan) {
@@ -63,7 +65,27 @@ export class SubscriptionService {
         data: {
           status: 'EXPIRED',
         },
+        select: {
+          id: true,
+          user_id: true,
+          plan_id: true,
+          end_date: true,
+          start_date: true,
+          post_creation_remaining: true,
+          status: true,
+          plan: {
+            select: {
+              id: true,
+              plan_tier: true,
+              price: true,
+              description: true,
+              maxPostsPerMonth: true,
+            },
+          },
+        },
       });
+
+      await this.cacheService.setCache(`user:${subscription.user_id}:subscription`, subscription);
       this.logger.info('Subscription expired', {
         subscriptionId: subscription_id,
         userId: subscription.user_id,
@@ -119,25 +141,48 @@ export class SubscriptionService {
   }
   async getSubscription(user_id: string) {
     try {
-      const subscription = await this.prismaClient.subscription.findFirst({
-        where: {
-          user_id: user_id,
-          status: 'ACTIVE',
-        },
-        include: {
-          plan: {
-            select: {
-              id: true,
-              plan_tier: true,
-              price: true,
-              description: true,
-              maxPostsPerMonth: true,
+      const response = await this.cacheService.getCache(`user:${user_id}:subscription`);
+      let subscription;
+      if (!response.success) {
+        const data = await this.prismaClient.subscription.findFirst({
+          where: {
+            user_id: user_id,
+            status: 'ACTIVE',
+          },
+          select: {
+            id: true,
+            plan_id: true,
+            end_date: true,
+            start_date: true,
+            post_creation_remaining: true,
+            status: true,
+            plan: {
+              select: {
+                id: true,
+                plan_tier: true,
+                price: true,
+                description: true,
+                maxPostsPerMonth: true,
+              },
             },
           },
-        },
-      });
-      this.logger.info('Active subscription retrieved', { userId: user_id, found: !!subscription });
-      return subscription;
+        });
+
+        await this.cacheService.setCache(`user:${user_id}:subscription`, data);
+        subscription = data;
+        this.logger.info('Active subscription retrieved', {
+          userId: user_id,
+          found: !!subscription,
+        });
+        return subscription;
+      } else {
+        subscription = response.data;
+        this.logger.info('Active subscription retrieved', {
+          userId: user_id,
+          found: !!subscription,
+        });
+        return subscription;
+      }
     } catch (error) {
       this.logger.error(`failed to get Current subscription : ${error}`);
       throw new ApiError(500, 'intenal server error');
@@ -176,7 +221,7 @@ export class SubscriptionService {
     paymentId: string;
   }) {
     try {
-      return await this.prismaClient.$transaction(async (tx) => {
+      const subscription = await this.prismaClient.$transaction(async (tx) => {
         const transaction = await tx.transaction.findUnique({
           where: { id: transactionId },
         });
@@ -220,6 +265,24 @@ export class SubscriptionService {
             start_date: new Date(),
             end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           },
+          select: {
+            id: true,
+            user_id: true,
+            plan_id: true,
+            end_date: true,
+            start_date: true,
+            post_creation_remaining: true,
+            status: true,
+            plan: {
+              select: {
+                id: true,
+                plan_tier: true,
+                price: true,
+                description: true,
+                maxPostsPerMonth: true,
+              },
+            },
+          },
         });
         this.logger.info('Successful payment processed and subscription activated', {
           transactionId: transactionId,
@@ -228,6 +291,12 @@ export class SubscriptionService {
 
         return subs;
       });
+      if (!subscription) {
+        this.logger.error('failed to update subscription');
+        throw new ApiError(500, 'Internal Server Error');
+      }
+      await this.cacheService.setCache(`user:${subscription.user_id}:subscription`, subscription);
+      return subscription;
     } catch (error) {
       this.logger.error(`Failed to Handle Successfull payment, error: ${error}`);
       throw new ApiError(500, 'Internal Server Error');

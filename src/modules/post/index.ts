@@ -6,8 +6,9 @@ import { createPostRoutes } from './post.routes.js';
 import { LinkedinService } from '../linkedin/index.js';
 import { xServices } from '../x/index.js';
 import { BlueskyServices } from '../bluesky/index.js';
+import { cacheService } from '../shared/cache/index.js';
 
-export const postServices = new PostService(prisma, logger);
+export const postServices = new PostService(prisma, logger, cacheService);
 
 export const postController = new PostController(
   logger,
@@ -15,6 +16,7 @@ export const postController = new PostController(
   LinkedinService,
   BlueskyServices,
   xServices,
+  cacheService
 );
 
 export const postRoutes = createPostRoutes(postController);

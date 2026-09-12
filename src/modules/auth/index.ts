@@ -6,14 +6,14 @@ import { AuthController } from './auth.controller.js';
 import { createAuthRoutes } from './auth.routes.js';
 import { jwtToken } from '../shared/jwt/jwtCookie.service.js';
 import { generateCookieOptions } from '../../lib/cookies.js';
-import { CacheAdapter } from '../shared/cache/index.js';
+import { cacheService } from '../shared/cache/index.js';
 
 export const userServices = new UserServices(
   prisma,
   logger,
   googleAuthClient,
   process.env.GOOGLE_CLIENT_ID!,
-  CacheAdapter,
+  cacheService,
 );
 
 export const jwtService = new jwtToken();

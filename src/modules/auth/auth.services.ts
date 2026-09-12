@@ -79,15 +79,20 @@ export class UserServices {
         });
 
         await this.cacheService.setCache(`user:${id}:profile`, wholeUser);
+        this.logger.info('User fetched with connected accounts', {
+          userId: id,
+          connectedAccounts: wholeUser.connected_accounts.length,
+        });
+        return wholeUser;
+      } else {
+        wholeUser = response.data;
+        this.logger.info('User fetched with connected accounts', {
+          userId: id,
+          connectedAccounts: wholeUser.connected_accounts.length,
+        });
+
+        return wholeUser;
       }
-      wholeUser = response.data;
-
-      this.logger.info('User fetched with connected accounts', {
-        userId: id,
-        connectedAccounts: wholeUser.connected_accounts.length,
-      });
-
-      return wholeUser;
     } catch (error) {
       console.log(error);
       this.logger.error('an error occored while fetching user', {
@@ -96,7 +101,6 @@ export class UserServices {
       throw new ApiError(500, 'internal server error');
     }
   }
-
   async getUserByEmail(email: string) {
     try {
       const user = await this.prisma.user.findUnique({
@@ -277,7 +281,25 @@ export class UserServices {
         data: {
           profile_picture: imageUrl,
         },
+          select: {
+            id: true,
+            profile_picture: true,
+            name: true,
+            email: true,
+            isOnboarded: true,
+            createdAt: true,
+            connected_accounts: {
+              select: {
+                id: true,
+                platform: true,
+                isActive: true,
+                isExpired: true,
+                updatedAt: true,
+              },
+            },
+          },
       });
+       await this.cacheService.setCache(`user:${userid}:profile`, updated);
       this.logger.info('User profile picture updated', { userId: userid });
       return updated;
     } catch (error) {
@@ -294,7 +316,25 @@ export class UserServices {
         data: {
           name: name,
         },
+          select: {
+            id: true,
+            profile_picture: true,
+            name: true,
+            email: true,
+            isOnboarded: true,
+            createdAt: true,
+            connected_accounts: {
+              select: {
+                id: true,
+                platform: true,
+                isActive: true,
+                isExpired: true,
+                updatedAt: true,
+              },
+            },
+          },
       });
+       await this.cacheService.setCache(`user:${userid}:profile`, updated);
       this.logger.info('User name updated', { userId: userid, newName: name });
       return updated;
     } catch (error) {
@@ -348,7 +388,25 @@ export class UserServices {
         data: {
           isOnboarded: true,
         },
+          select: {
+            id: true,
+            profile_picture: true,
+            name: true,
+            email: true,
+            isOnboarded: true,
+            createdAt: true,
+            connected_accounts: {
+              select: {
+                id: true,
+                platform: true,
+                isActive: true,
+                isExpired: true,
+                updatedAt: true,
+              },
+            },
+          },
       });
+       await this.cacheService.setCache(`user:${user_id}:profile`, updated);
       this.logger.info('User onboarding completed', { userId: user_id });
       return updated;
     } catch (error) {

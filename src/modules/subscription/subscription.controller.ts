@@ -129,7 +129,6 @@ export class SubscriptionControllerClass {
       );
     },
   );
-
   webhookHandler: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
     const signature = req.headers['x-razorpay-signature'] as string;
 

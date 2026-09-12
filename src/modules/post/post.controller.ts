@@ -20,6 +20,7 @@ import { jobBody } from '../../workers/worker.types.js';
 import { linkedinServices } from '../linkedin/linkedin.services.js';
 import { XServices } from '../x/x.services.js';
 import { BlueskyService } from '../bluesky/bluesky.services.js';
+import { CacheClass } from '../shared/cache/cache.services.js';
 
 export class PostController {
   constructor(
@@ -28,6 +29,7 @@ export class PostController {
     private linkedinServices: linkedinServices,
     private blueskyServices: BlueskyService,
     private xServices: XServices,
+    private cacheService:CacheClass,
   ) {}
 
   createPost: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
@@ -79,7 +81,7 @@ export class PostController {
 
     const posts = await this.postServices.getAllPosts(req.user.id, limit, skip);
 
-    this.logger.info(`all posts fetched successfully, total post ${posts.length}`);
+    this.logger.info(`all posts fetched successfully`);
 
     res.status(200).json(new ApiResponse(200, posts, 'success'));
   });
@@ -128,6 +130,7 @@ export class PostController {
             const result = await this.linkedinServices.validateAccessToken(account);
 
             if (!result.success) {
+             await this.cacheService.deleteCache(`user:${userid}:profile`)
               throw new ApiError(
                 400,
                 'Linkedin account expired please reconnect',
@@ -140,6 +143,7 @@ export class PostController {
           case 'X': {
             const account = await this.xServices.getActiveXAccount(req.user.id);
             if (!account) {
+              await this.cacheService.deleteCache(`user:${userid}:profile`)
               throw new Error('No active X account found');
             }
             await this.xServices.validateAccessToken(account);
@@ -148,6 +152,7 @@ export class PostController {
           case 'BLUESKY': {
             const agent = await this.blueskyServices.getAuthenticatedAgent(req.user.id);
             if (!agent) {
+            await this.cacheService.deleteCache(`user:${userid}:profile`)
               throw new ApiError(404, 'No active Bluesky account found', 'BLUESKY_ACCOUNT_EXPIRED');
             }
             break;
@@ -247,6 +252,7 @@ export class PostController {
           const result = await this.linkedinServices.validateAccessToken(account);
 
           if (!result.success) {
+            await this.cacheService.deleteCache(`user:${user.id}:profile`)
             throw new ApiError(
               400,
               'Linkedin account expired please reconnect',
@@ -259,6 +265,7 @@ export class PostController {
         case 'X': {
           const account = await this.xServices.getActiveXAccount(user.id);
           if (!account) {
+            await this.cacheService.deleteCache(`user:${user.id}:profile`)
             throw new Error('No active X account found');
           }
           await this.xServices.validateAccessToken(account);
@@ -267,6 +274,7 @@ export class PostController {
         case 'BLUESKY': {
           const agent = await this.blueskyServices.getAuthenticatedAgent(user.id);
           if (!agent) {
+            await this.cacheService.deleteCache(`user:${user.id}:profile`)
             throw new Error('No active Bluesky account found');
           }
           break;

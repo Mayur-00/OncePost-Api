@@ -37,25 +37,40 @@ export class CacheClass {
 
       return { success: true, data: data };
     } catch (error) {
-      this.logger.error(`failed to get cache by this key : ${key}`);
+      this.logger.error(`failed to get cache by this key : ${key} ; error:${error}`);
       return { success: false, data: null };
     }
   }
 
-  async setCache(key: string, freshData: unknown): Promise<{ success: boolean; message: string }> {
+  async setCache(
+    key: string,
+    freshData: unknown,
+    ttl?: number,
+  ): Promise<{ success: boolean; message: string }> {
     try {
       if (freshData == null) {
         this.logger.error('Provided data is null');
         return { success: false, message: 'Provided data is null' };
       }
-
+      const expiry = ttl || 3600;
       const data = JSON.stringify(freshData);
-      await this.redis.set(key, data, 'EX', 3600);
+      await this.redis.set(key, data, 'EX', expiry);
 
       return { success: true, message: 'success' };
     } catch (error) {
-      this.logger.error(`failed to set cache by this key : ${key}`);
+      this.logger.error(`failed to set cache by this key : ${key} ; error : ${error}`);
       return { success: false, message: 'Internal Server Error' };
+    }
+  }
+
+  async deleteCache(key: string): Promise<{ success: boolean }> {
+    try {
+      await this.redis.del(key);
+
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`failed to delete cache by this key : ${key} ; error:${error}`);
+      return { success: false };
     }
   }
 }
