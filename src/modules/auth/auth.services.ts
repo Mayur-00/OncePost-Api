@@ -55,7 +55,7 @@ export class UserServices {
       let wholeUser;
       const response = await this.cacheService.getCache(`user:${id}:profile`);
       if (!response.success) {
-        const user = await this.prisma.user.findUnique({
+        wholeUser = await this.prisma.user.findUnique({
           where: {
             id: id,
           },
@@ -66,25 +66,17 @@ export class UserServices {
             email: true,
             isOnboarded: true,
             createdAt: true,
+            connected_accounts: {
+              select: {
+                id: true,
+                platform: true,
+                isActive: true,
+                isExpired: true,
+                updatedAt: true,
+              },
+            },
           },
         });
-        const connectedAccounts = await this.prisma.socialAccount.findMany({
-          where: {
-            owner_id: id,
-          },
-          select: {
-            id: true,
-            platform: true,
-            isActive: true,
-            isExpired: true,
-            updatedAt: true,
-          },
-        });
-
-        const wholeUser = {
-          ...user,
-          connected_accounts: connectedAccounts,
-        };
 
         await this.cacheService.setCache(`user:${id}:profile`, wholeUser);
       }
